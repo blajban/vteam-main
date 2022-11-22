@@ -93,7 +93,7 @@ class MessageBroker {
 
     Object.values(eventTypes).forEach((group) => {
       Object.values(group).forEach((type) => {
-        this.channel.bindQueue(q.queue, this.exchange, type);
+        this.channel.bindQueue(q.queue, exchange, type);
       });
     });
 
@@ -112,7 +112,7 @@ class MessageBroker {
     await this.channel.assertExchange(exchange, 'direct', { durable: false });
     Object.values(eventTypes).forEach((group) => {
       Object.values(group).forEach((type) => {
-        this.channel.publish(this.exchange, type, Buffer.from(JSON.stringify(event)));
+        this.channel.publish(exchange, type, Buffer.from(JSON.stringify(event)));
       });
     });
   }
