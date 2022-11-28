@@ -2,7 +2,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "locationservice" ]
+    branches: [ "user_service" ]
 
 jobs:
   build:
@@ -20,7 +20,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    
-    - run: cd locationservice
+
     - run: npm install
+      working-directory: services/user_service
     - run: npm test
+      working-directory: services/user_service
