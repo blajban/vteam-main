@@ -27,7 +27,7 @@ services:
         container_name: "userservice"
         command: npm start
         ports:
-            - "3000:3000"
+            - "3006:3006"
         networks:
             eventdriven:
         volumes:
@@ -79,7 +79,7 @@ services:
         container_name: "dev_gateway"
         command: bash -c "npm install && node dev_gateway.js"
         ports:
-            - "8080:8080"
+            - "8889:8889"
         networks:
             eventdriven:
         working_dir: "/dev_gateway"
@@ -87,5 +87,32 @@ services:
             - "./utility/dev_gateway:/dev_gateway"
             - "./utility/dev_gateway/node_modules:/dev_gateway/node_modules"
             - "./shared:/dev_gateway/shared"
+        restart:
+            "always"
+    logger:
+        image: "node:16"
+        container_name: "logger"
+        command: bash -c "npm install && node logger.js"
+        networks:
+            eventdriven:
+        working_dir: "/logger"
+        volumes:
+            - "./utility/logger:/logger"
+            - "./utility/logger/node_modules:/logger/node_modules"
+            - "./shared:/logger/shared"
+        restart:
+            "always"
+    dev_app:
+        image: "node:16"
+        container_name: "dev_app"
+        command: bash -c "npm install && npm start"
+        ports:
+            - "8989:3000"
+        networks:
+            eventdriven:
+        working_dir: "/dev_app"
+        volumes:
+            - "./utility/dev_app:/dev_app"
+            - "./utility/dev_app/node_modules:/dev_app/node_modules"
         restart:
             "always"

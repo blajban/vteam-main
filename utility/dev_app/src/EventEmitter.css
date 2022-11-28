@@ -1,0 +1,19 @@
+.container {
+  padding: 20px;
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+.log {
+  background-color: aliceblue;
+  color:#282c34;
+  padding: 7px;
+  margin-top: 20px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+}
+
+

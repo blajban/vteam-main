@@ -1,13 +1,13 @@
 
-const { MessageBroker } = require('../../shared/mq')
-const { host, exchanges, eventTypes } = require('../../shared/resources');
+const { MessageBroker } = require('./shared/mq')
+const { host, exchanges, eventTypes } = require('./shared/resources');
 const cors = require('cors');
 
 
 
-const express = require('express')
-const app = express()
-const port = 8080
+const express = require('express');
+const app = express();
+const port = 8889;
 
 
 app.use(async (req, res, next) => {

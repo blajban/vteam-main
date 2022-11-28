@@ -1,4 +1,4 @@
-const host = 'amqp://localhost';
+const host = 'amqp://rabbitmq';
 
 const exchanges = {
     scooters: "scooters",
