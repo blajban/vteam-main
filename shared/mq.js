@@ -45,14 +45,6 @@ class MessageBroker {
   }
 
   /**
-   * Change current default exchange.
-   * @param {string} newExchange 
-   */
-  changeExchange(newExchange) {
-    this.exchange = newExchange;
-  }
-
-  /**
    * Construct event to use in the system. All events are assumed to have a type, an origin and a js object containing the data.
    * @param {string} eventType 
    * @param {object} data
@@ -164,6 +156,10 @@ class MessageBroker {
 
       this.channel.ack(msg);
     })
+  }
+
+  changeExchange(newExchange) {
+    this.exchange = newExchange;
   }
 }
 

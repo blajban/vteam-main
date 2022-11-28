@@ -3,7 +3,7 @@ const host = 'amqp://localhost';
 const exchanges = {
     scooters: "scooters",
     system: "system",
-    tests: "tests"
+    admin: "admin"
 };
 
 const eventTypes = {
@@ -41,14 +41,15 @@ const eventTypes = {
         invoiceCreated: "invoiceCreated",
         invoicePaid: "invoicePaid"
     },
-    testEvents: {
+    adminEvents: {
         testEvent: "testEvent",
-        getData1: "getData1",
+        getLog: "getLog",
         getData2: "getData2"
     }
 };
 
 
 
-module.exports = { host, exchanges, eventTypes }
+
+module.exports = { host, exchanges, eventTypes, eventTypesPlain }
 
