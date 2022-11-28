@@ -1,0 +1,76 @@
+version: "3"
+networks:
+    eventdriven:
+services:
+    db:
+        image: "mongo"
+        container_name: "db"
+        ports:
+            - "27017:27017"
+        volumes:
+            - db:/data/db
+        networks:
+            eventdriven:
+        restart:
+            "always"
+    rabbitmq:
+        image: "rabbitmq"
+        container_name: "rabbitmq"
+        ports:
+            - "5672:5672"
+        networks:
+            eventdriven:
+        restart:
+            "always"
+    userservice:
+        image: "node:8"
+        container-name: "userservice"
+        command: npm start
+        ports:
+            - "3000:3000"
+        networks:
+            eventdriven:
+        volumes:
+            - "/userservice:/userservice"
+            - "/userservice/node_modules:/userservice/node_modules"
+        restart:
+            "always"
+    locationservice:
+        image: "node:8"
+        container-name: "locationservice"
+        command: npm start
+        ports:
+            - "3001:3001"
+        networks:
+            eventdriven:
+        volumes:
+            - "/locationservice:/locationservice"
+            - "/locationservice/node_modules:/locationservice/node_modules"
+        restart:
+            "always"
+    scooterservice:
+        image: "node:8"
+        container-name: "scooterservice"
+        command: npm start
+        ports:
+            - "8080:8080"
+        networks:
+            eventdriven:
+        volumes:
+            - "/scooterservice:/scooterservice"
+            - "/scooterservice/node_modules:/scooterservice/node_modules"
+        restart:
+            "always"
+    paymentservice:
+        image: "node:8"
+        container-name: "paymentservice"
+        command: npm start
+        ports:
+            - "3002:3002"
+        networks:
+            eventdriven:
+        volumes:
+            - "/paymentservice:/paymentservice"
+            - "/paymentservice/node_modules:/paymentservice/node_modules"
+        restart:
+            "always"
