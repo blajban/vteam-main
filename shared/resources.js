@@ -51,5 +51,5 @@ const eventTypes = {
 
 
 
-module.exports = { host, exchanges, eventTypes, eventTypesPlain }
+module.exports = { host, exchanges, eventTypes }
 
