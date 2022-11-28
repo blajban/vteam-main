@@ -8,7 +8,7 @@ services:
         ports:
             - "27017:27017"
         volumes:
-            - db:/data/db
+            - "/db:/data/db"
         networks:
             eventdriven:
         restart:
@@ -24,7 +24,7 @@ services:
             "always"
     userservice:
         image: "node:8"
-        container-name: "userservice"
+        container_name: "userservice"
         command: npm start
         ports:
             - "3000:3000"
@@ -37,7 +37,7 @@ services:
             "always"
     locationservice:
         image: "node:8"
-        container-name: "locationservice"
+        container_name: "locationservice"
         command: npm start
         ports:
             - "3001:3001"
@@ -50,7 +50,7 @@ services:
             "always"
     scooterservice:
         image: "node:8"
-        container-name: "scooterservice"
+        container_name: "scooterservice"
         command: npm start
         ports:
             - "8080:8080"
@@ -63,7 +63,7 @@ services:
             "always"
     paymentservice:
         image: "node:8"
-        container-name: "paymentservice"
+        container_name: "paymentservice"
         command: npm start
         ports:
             - "3002:3002"
@@ -72,5 +72,20 @@ services:
         volumes:
             - "/paymentservice:/paymentservice"
             - "/paymentservice/node_modules:/paymentservice/node_modules"
+        restart:
+            "always"
+    dev_gateway:
+        image: "node:16"
+        container_name: "dev_gateway"
+        command: bash -c "npm install && node dev_gateway.js"
+        ports:
+            - "8080:8080"
+        networks:
+            eventdriven:
+        working_dir: "/dev_gateway"
+        volumes:
+            - "./utility/dev_gateway:/dev_gateway"
+            - "./utility/dev_gateway/node_modules:/dev_gateway/node_modules"
+            - "./shared:/dev_gateway/shared"
         restart:
             "always"
