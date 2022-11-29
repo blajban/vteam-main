@@ -64,7 +64,7 @@ services:
     scooter_service:
         image: "node:16"
         container_name: "scooter_service"
-        command: bash -c "npm install && node scooter_service.js"
+        command: node scooter_service.js
         networks:
             eventdriven:
         working_dir: "/scooter_service"

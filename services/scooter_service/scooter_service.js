@@ -9,14 +9,13 @@ const { host, eventTypes } = require('./shared/resources');
 
 
 const main = async () => {
-    const broker = await new MessageBroker(host, 'scooters', 'scooter_service');
+    const broker = await new MessageBroker(host, 'system', 'scooter_service');
 
     console.log("Scooter service running...");
 
-    broker.onEvent(eventTypes.adminEvents.testEvent, (e) => {
-        console.log(e);
+    broker.onEvent(eventTypes.adminEvents.testEvent, async (e) => {
         const newEvent = broker.constructEvent(eventTypes.adminEvents.getData2, { data: "data" });
-        broker.publish(newEvent);
+        await broker.publish(newEvent);
     })
 }
 
