@@ -48,19 +48,6 @@ services:
             - "/locationservice/node_modules:/locationservice/node_modules"
         restart:
             "always"
-    scooterservice:
-        image: "node:8"
-        container_name: "scooterservice"
-        command: npm start
-        ports:
-            - "8080:8080"
-        networks:
-            eventdriven:
-        volumes:
-            - "/scooterservice:/scooterservice"
-            - "/scooterservice/node_modules:/scooterservice/node_modules"
-        restart:
-            "always"
     paymentservice:
         image: "node:8"
         container_name: "paymentservice"
@@ -72,6 +59,19 @@ services:
         volumes:
             - "/paymentservice:/paymentservice"
             - "/paymentservice/node_modules:/paymentservice/node_modules"
+        restart:
+            "always"
+    scooter_service:
+        image: "node:16"
+        container_name: "scooter_service"
+        command: bash -c "npm install && node scooter_service.js"
+        networks:
+            eventdriven:
+        working_dir: "/scooter_service"
+        volumes:
+            - "./services/scooter_service:/scooter_service"
+            - "./services/scooter_service/node_modules:/scooter_service/node_modules"
+            - "./shared:/scooter_service/shared"
         restart:
             "always"
     dev_gateway:
