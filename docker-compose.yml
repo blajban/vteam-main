@@ -1,18 +1,8 @@
 version: "3"
 networks:
     eventdriven:
+
 services:
-    db:
-        image: "mongo"
-        container_name: "db"
-        ports:
-            - "27017:27017"
-        volumes:
-            - "/db:/data/db"
-        networks:
-            eventdriven:
-        restart:
-            "always"
     rabbitmq:
         image: "rabbitmq"
         container_name: "rabbitmq"
@@ -22,100 +12,29 @@ services:
             eventdriven:
         restart:
             "always"
-    userservice:
-        image: "node:8"
-        container_name: "userservice"
-        command: npm start
-        ports:
-            - "3006:3006"
+    logger:
+        build: 
+            context: .
+            dockerfile: ./utility/logger/Dockerfile
+        container_name: "logger"
+        command: npm run start.dev
         networks:
             eventdriven:
         volumes:
-            - "/userservice:/userservice"
-            - "/userservice/node_modules:/userservice/node_modules"
-        restart:
-            "always"
-    locationservice:
-        image: "node:8"
-        container_name: "locationservice"
-        command: npm start
-        ports:
-            - "3001:3001"
-        networks:
-            eventdriven:
-        volumes:
-            - "/locationservice:/locationservice"
-            - "/locationservice/node_modules:/locationservice/node_modules"
-        restart:
-            "always"
-    paymentservice:
-        image: "node:8"
-        container_name: "paymentservice"
-        command: npm start
-        ports:
-            - "3002:3002"
-        networks:
-            eventdriven:
-        volumes:
-            - "/paymentservice:/paymentservice"
-            - "/paymentservice/node_modules:/paymentservice/node_modules"
-        restart:
-            "always"
-    scooter_service:
-        image: "node:16"
-        container_name: "scooter_service"
-        command: node scooter_service.js
-        networks:
-            eventdriven:
-        working_dir: "/scooter_service"
-        volumes:
-            - "./services/scooter_service:/scooter_service"
-            - "./services/scooter_service/node_modules:/scooter_service/node_modules"
-            - "./shared:/scooter_service/shared"
+            - ./utility/logger:/utility/logger
         restart:
             "always"
     dev_gateway:
-        image: "node:16"
+        build: 
+            context: .
+            dockerfile: ./utility/dev_gateway/Dockerfile
         container_name: "dev_gateway"
-        command: bash -c "npm install && node dev_gateway.js"
+        command: npm run start.dev
+        networks:
+            eventdriven:
+        volumes:
+            - ./utility/dev_gateway:/utility/dev_gateway
+        restart:
+            "always"
         ports:
             - "8889:8889"
-        networks:
-            eventdriven:
-        working_dir: "/dev_gateway"
-        volumes:
-            - "./utility/dev_gateway:/dev_gateway"
-            - "./utility/dev_gateway/node_modules:/dev_gateway/node_modules"
-            - "./shared:/dev_gateway/shared"
-        restart:
-            "always"
-    logger:
-        image: "node:16"
-        container_name: "logger"
-        command: bash -c "npm install && node logger.js"
-        networks:
-            eventdriven:
-        working_dir: "/logger"
-        volumes:
-            - "./utility/logger:/logger"
-            - "./utility/logger/node_modules:/logger/node_modules"
-            - "./shared:/logger/shared"
-        restart:
-            "always"
-    dev_app:
-        image: "node:16"
-        container_name: "dev_app"
-        command: bash -c "npm install && npm start"
-        ports:
-            - "8989:3000"
-        networks:
-            eventdriven:
-        working_dir: "/dev_app"
-        volumes:
-            - "./utility/dev_app:/dev_app"
-            - "./utility/dev_app/node_modules:/dev_app/node_modules"
-        restart:
-            "always"
-        environment:
-            - CHOKIDAR_USEPOLLING=true
-            - WDS_SOCKET_PORT=0

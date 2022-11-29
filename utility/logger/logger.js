@@ -1,7 +1,5 @@
-#!/usr/bin/env node
-
-const { MessageBroker } = require('./shared/mq');
-const { host, exchanges, eventTypes } = require('./shared/resources');
+const { MessageBroker } = require('../../shared/mq');
+const { host, exchanges, eventTypes } = require('../../shared/resources');
 
 const log = [];
 let counter = 0;
@@ -34,5 +32,10 @@ const f = async () => {
 f();
 
 
+/*
+setInterval(() => {
+    console.log("hej!");
+}, 2000);
+*/
 
 
