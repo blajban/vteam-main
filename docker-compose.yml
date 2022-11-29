@@ -116,3 +116,6 @@ services:
             - "./utility/dev_app/node_modules:/dev_app/node_modules"
         restart:
             "always"
+        environment:
+            - CHOKIDAR_USEPOLLING=true
+            - WDS_SOCKET_PORT=0
