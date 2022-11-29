@@ -1,7 +1,7 @@
 import './EventEmitter.css';
 import React from 'react';
 
-const host = "dev_gateway:8889";
+const host = "localhost:8889";
 
 const exchanges = {
     scooters: "scooters",
@@ -54,7 +54,7 @@ class EventEmitter extends React.Component {
             .then((data) => console.log(data));
     }
     updateLog() {
-        fetch('http://${host}/log/', { mode: 'cors' })
+        fetch(`http://${host}/log/`, { mode: 'cors' })
             .then((res) => res.json())
             .then((data) => {
                 this.setState({
