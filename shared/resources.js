@@ -7,6 +7,24 @@ const exchanges = {
 };
 
 const eventTypes = {
+    rentScooterEvents: {
+        rentScooter: "rentScooter",
+        unlockScooter: "unlockScooter",
+        scooterUnlocked: "scooterUnlocked",
+        rideStarted: "rideStarted"
+    },
+    scooterEvents: {
+        scooterIdleReporting: "scooterIdleReporting",
+        scooterMoving: "scooterMoving",
+        batteryLow: "batteryLow"
+    },
+    returnScooterEvents: {
+        parkScooter: "parkScooter",
+        lockScooter: "lockScooter",
+        scooterLocked: "scooterLocked",
+        rideFinished: "rideFinished",
+        establishParkingRate: "establishParkingRate"
+    },
     accountEvents: {
         createAccount: "createAccount",
         accountCreated: "accountCreated",
@@ -17,39 +35,31 @@ const eventTypes = {
         updateUserInfo: "updateUserInfo",
         userInfoUpdated: "userInfoUpdated",
         addMoney: "addMoney",
-        balanceUpdated: "balanceUpdated"
-    },
-    rentScooterEvents: {
-        rentScooter: "rentScooter",
-        unlockScooter: "unlockScooter",
-        scooterUnlocked: "scooterUnlocked",
-        rideStarted: "rideStarted",
-        setSpeedLimitZones: "setSpeedLimitZones"
-    },
-    driveScooterEvents: {
-        scooterMoving: "scooterMoving",
-        batteryLow: "batteryLow"
-    },
-    returnScooterEvents: {
-        parkScooter: "parkScooter",
-        lockScooter: "lockScooter",
-        scooterLocked: "scooterLocked",
-        rideFinished: "rideFinished"
+        moneyAdded: "addMoney"
     },
     paymentEvents: {
-        parkingRateEstablished: "parkingRateEstablished",
         invoiceCreated: "invoiceCreated",
         invoicePaid: "invoicePaid"
+    },
+    rpcEvents: {
+        getScooters: "getScooters",
+        getUsers: "getUsers",
+        getInvoices: "getInvoices",
+        getParkingSpots: "getParkingSpots",
+        getChargingStations: "getChargingStations",
+        getRates: "getRates"
     },
     adminEvents: {
         testEvent: "testEvent",
         getLog: "getLog",
-        getData2: "getData2"
+        getData2: "getData2",
+        adjustParkingSpot: "adjustParkingSpot",
+        adjustChargingStation: "adjustChargingStation",
+        adjustUserBalance: "adjustUserBalance",
+        moveScooter: "moveScooter",
+        adjustRates: "adjustRates"
     }
 };
-
-
-
 
 module.exports = { host, exchanges, eventTypes }
 
