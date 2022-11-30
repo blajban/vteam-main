@@ -83,7 +83,6 @@ class EventEmitter extends React.Component {
     
 
     render() {
-        this.updateLog();
         return (
             <div className='container'>
                 <label>
@@ -102,16 +101,23 @@ class EventEmitter extends React.Component {
                     <button className="button" onClick={ () => {
                         this.sendEvent(this.state.exchange, this.state.event);
                         this.updateLog();
-                        
                     }}>
                     Skicka meddelande
                     </button>
 
-                    <div className='log'>
-                        <strong>Logg</strong>
-                        <ol>{ this.listLog() }</ol>
-                    </div>
+                    <button className="button" onClick={ () => {
+                        this.updateLog();
+                        
+                    }}>
+                    Uppdatera logg
+                    </button>
                 </div>
+                    
+                <div className='log'>
+                    <strong>Logg</strong>
+                    <ol>{ this.listLog() }</ol>
+                </div>
+
             </div>
         );
     }
