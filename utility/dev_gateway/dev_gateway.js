@@ -8,7 +8,7 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const port = 8889;
-const mesBroker = await new MessageBroker(host, exchanges.scooters, "web_server");
+const mesBroker = new MessageBroker(host, exchanges.scooters, "web_server");
 
 app.use(express.json());
 app.use(cors());

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start.dev": "nodemon -x 'node index.js || touch index.js'"
   },
   "author": "",
   "license": "ISC",
