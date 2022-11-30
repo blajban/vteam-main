@@ -17,12 +17,8 @@ services:
             context: .
             dockerfile: ./utility/logger/Dockerfile
         container_name: "logger"
-        command: npm run start.dev
         networks:
             eventdriven:
-        volumes:
-            - ./utility/logger:/utility/logger
-            - /utility/logger/node_modules 
         restart:
             "always"
     dev_gateway:
@@ -30,12 +26,8 @@ services:
             context: .
             dockerfile: ./utility/dev_gateway/Dockerfile
         container_name: "dev_gateway"
-        command: npm run start.dev
         networks:
             eventdriven:
-        volumes:
-            - ./utility/dev_gateway:/utility/dev_gateway
-            - /utility/dev_gateway/node_modules 
         restart:
             "always"
         ports:
@@ -45,12 +37,8 @@ services:
             context: .
             dockerfile: ./utility/dev_app/Dockerfile
         container_name: "dev_app"
-        command: npm start
         networks:
             eventdriven:
-        volumes:
-            - ./utility/dev_app:/utility/dev_app
-            - /utility/dev_app/node_modules 
         restart:
             "always"
         ports:
@@ -60,11 +48,7 @@ services:
             context: .
             dockerfile: ./services/scooter_service/Dockerfile
         container_name: "scooter_service"
-        command: npm run start.dev
         networks:
             eventdriven:
-        volumes:
-            - ./services/scooter_service:/services/scooter_service
-            - /services/scooter_service/node_modules 
         restart:
             "always"

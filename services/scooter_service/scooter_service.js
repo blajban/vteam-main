@@ -1,11 +1,6 @@
 
-// Local
-//const { MessageBroker } = require('../../shared/mq');
-//const { host, eventTypes } = require('../../shared/resources');
-
-// Docker
-const { MessageBroker } = require('./shared/mq');
-const { host, eventTypes, exchanges } = require('./shared/resources');
+const { MessageBroker } = require('../../shared/mq');
+const { host, eventTypes, exchanges } = require('../../shared/resources');
 
 
 

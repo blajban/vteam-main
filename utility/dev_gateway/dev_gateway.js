@@ -1,6 +1,6 @@
 
-const { MessageBroker } = require('./shared/mq')
-const { host, exchanges, eventTypes } = require('./shared/resources');
+const { MessageBroker } = require('../../shared/mq')
+const { host, exchanges, eventTypes } = require('../../shared/resources');
 const cors = require('cors');
 
 
