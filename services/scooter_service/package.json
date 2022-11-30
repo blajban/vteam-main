@@ -4,17 +4,19 @@
     "description": "",
     "main": "scooter_service.js",
     "scripts": {
-      "start": "node scooter_service",
-      "start.dev": "nodemon -x 'node scooter_service.js || touch scooter_service.js'",
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "node scooter_service",
+        "start.dev": "nodemon -x 'node scooter_service.js || touch scooter_service.js'",
+        "test": "jest"
     },
     "author": "",
     "devDependencies": {
-      "eslint": "^8.28.0",
-      "eslint-config-airbnb-base": "^15.0.0",
-      "eslint-plugin-import": "^2.26.0",
-      "jest": "^29.3.1",
-      "nodemon": "^2.0.15"
+        "eslint": "^8.28.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-plugin-import": "^2.26.0",
+        "jest": "^29.3.1",
+        "nodemon": "^2.0.15"
+    },
+    "dependencies": {
+        "eslint-plugin-jest": "^27.1.6"
     }
-  }
-
+}

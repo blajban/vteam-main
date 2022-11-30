@@ -84,4 +84,4 @@ class ScooterManager {
 
 scooterService();
 
-
+module.exports = { ScooterManager };
