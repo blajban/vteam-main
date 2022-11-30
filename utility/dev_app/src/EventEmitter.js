@@ -24,7 +24,7 @@ class EventForm extends React.Component {
         return(
             <>
             <label>
-                Event: 
+                Event:
                 <input
                     value={this.props.event}
                     onChange={this.handleEventInput}
@@ -46,22 +46,22 @@ class EventEmitter extends React.Component {
             exchange: "system",
             event: []
         };
-        
+
     }
     sendEvent(x, e) {
         fetch(`http://${host}/send/${x}/${e}`, { mode: 'cors' })
             .then((res) => res.json())
             .then((data) => console.log(data));
     }
-    updateLog() {
-        fetch(`http://${host}/log/`, { mode: 'cors' })
-            .then((res) => res.json())
-            .then((data) => {
-                this.setState({
-                    log: data
-                });
-            });
-    }
+    //updateLog() {
+    //    fetch(`http://${host}/log/`, { mode: 'cors' })
+    //        .then((res) => res.json())
+    //        .then((data) => {
+    //            this.setState({
+    //                log: data
+    //             });
+    //         });
+    //}
     handleEventInput(e) {
         this.setState({
             event: e
@@ -80,10 +80,10 @@ class EventEmitter extends React.Component {
         const exchanges_arr = Object.keys(exchanges);
         return exchanges_arr.map((exchange) => <option value={exchange}>{exchange}</option>);
     }
-    
+
 
     render() {
-        this.updateLog();
+        //this.updateLog();
         return (
             <div className='container'>
                 <label>
@@ -93,7 +93,7 @@ class EventEmitter extends React.Component {
                     </select>
                 </label>
                 <div className='input'>
-                    <EventForm 
+                    <EventForm
                         event={this.state.event}
                         handleEventInput={this.handleEventInput}
                     />
@@ -101,8 +101,8 @@ class EventEmitter extends React.Component {
                 <div className='buttons'>
                     <button className="button" onClick={ () => {
                         this.sendEvent(this.state.exchange, this.state.event);
-                        this.updateLog();
-                        
+                        //this.updateLog();
+
                     }}>
                     Skicka meddelande
                     </button>
