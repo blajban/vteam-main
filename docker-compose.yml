@@ -13,7 +13,7 @@ services:
         restart:
             "always"
     logger:
-        build: 
+        build:
             context: .
             dockerfile: ./utility/logger/Dockerfile
         container_name: "logger"
@@ -22,11 +22,11 @@ services:
             eventdriven:
         volumes:
             - ./utility/logger:/utility/logger
-            - /utility/logger/node_modules 
+            - /utility/logger/node_modules
         restart:
             "always"
     dev_gateway:
-        build: 
+        build:
             context: .
             dockerfile: ./utility/dev_gateway/Dockerfile
         container_name: "dev_gateway"
@@ -35,13 +35,13 @@ services:
             eventdriven:
         volumes:
             - ./utility/dev_gateway:/utility/dev_gateway
-            - /utility/dev_gateway/node_modules 
+            - /utility/dev_gateway/node_modules
         restart:
             "always"
         ports:
             - "8889:8889"
     dev_app:
-        build: 
+        build:
             context: .
             dockerfile: ./utility/dev_app/Dockerfile
         container_name: "dev_app"
@@ -50,13 +50,13 @@ services:
             eventdriven:
         volumes:
             - ./utility/dev_app:/utility/dev_app
-            - /utility/dev_app/node_modules 
+            - /utility/dev_app/node_modules
         restart:
             "always"
         ports:
             - "8989:3000"
     scooter_service:
-        build: 
+        build:
             context: .
             dockerfile: ./services/scooter_service/Dockerfile
         container_name: "scooter_service"
@@ -65,6 +65,19 @@ services:
             eventdriven:
         volumes:
             - ./services/scooter_service:/services/scooter_service
-            - /services/scooter_service/node_modules 
+            - /services/scooter_service/node_modules
+        restart:
+            "always"
+    location_service:
+        build:
+            context: .
+            dockerfile: ./services/location_service/Dockerfile
+        container_name: "location_service"
+        command: npm run start.dev
+        networks:
+            eventdriven:
+        volumes:
+            - ./services/location_service:/services/location_service
+            - /services/location_service/node_modules
         restart:
             "always"
