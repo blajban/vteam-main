@@ -78,6 +78,7 @@ class ScooterManager {
 
     updateScooter(report) {
         console.log(`Update db with ${JSON.stringify(report)}`);
+        return true;
     }
 }
 
