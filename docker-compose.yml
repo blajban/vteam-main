@@ -38,3 +38,29 @@ services:
             "always"
         ports:
             - "8889:8889"
+    dev_app:
+        build: 
+            context: .
+            dockerfile: ./utility/dev_app/Dockerfile
+        container_name: "dev_app"
+        command: npm start
+        networks:
+            eventdriven:
+        volumes:
+            - ./utility/dev_app:/utility/dev_app
+        restart:
+            "always"
+        ports:
+            - "8989:3000"
+    scooter_service:
+        build: 
+            context: .
+            dockerfile: ./services/scooter_service/Dockerfile
+        container_name: "scooter_service"
+        command: npm run start.dev
+        networks:
+            eventdriven:
+        volumes:
+            - ./services/scooter_service:/services/scooter_service
+        restart:
+            "always"

@@ -1,0 +1,21 @@
+FROM node:16
+
+WORKDIR /shared
+COPY ./shared/mq.js .
+COPY ./shared/resources.js .
+COPY ./shared/package.json .
+RUN npm install
+
+WORKDIR /services/scooter_service
+RUN npm install -g nodemon
+
+
+COPY ./services/scooter_service/package.json .
+COPY ./services/scooter_service/scooter_service.js .
+
+RUN npm install
+
+
+
+CMD [ "npm", "start" ]
+
