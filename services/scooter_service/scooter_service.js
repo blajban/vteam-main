@@ -3,61 +3,85 @@ const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes, exchanges } = require('../../shared/resources');
 
 
-
+/**
+ * Main function to set up event flow. Listens for events and sends events with the correct data.
+ */
 const scooterService = async () => {
-    // Temp
-    const data = {
-        scooterId: 1
-    };
 
-    const broker = await new MessageBroker(host, exchanges.scooters, 'scooter_service');
+    const systemBroker = await new MessageBroker(host, exchanges.system, 'scooter_service');
+    const scooterBroker = await new MessageBroker(host, exchanges.scooters, 'scooter_service');
+    const scooterManager = new ScooterManager();
 
-    // Unlocking scooter
-    broker.onEvent(eventTypes.rentScooterEvents.rentScooter, (e) => {
-        const newEvent = broker.constructEvent(eventTypes.rentScooterEvents.unlockScooter, data);
-        broker.publish(newEvent);
+    systemBroker.onEvent(eventTypes.rentScooterEvents.rentScooter, (e) => {
+        const data = scooterManager.unlockScooter(5);
+        const newEvent = scooterBroker.constructEvent(eventTypes.rentScooterEvents.unlockScooter, data);
+        scooterBroker.publish(newEvent);
     });
 
-    broker.onEvent(eventTypes.rentScooterEvents.scooterUnlocked, (e) => {
-        const newEvent = broker.constructEvent(eventTypes.rentScooterEvents.rideStarted, data);
-        broker.publish(newEvent);
+    scooterBroker.onEvent(eventTypes.rentScooterEvents.scooterUnlocked, (e) => {
+        const newEvent = systemBroker.constructEvent(eventTypes.rentScooterEvents.rideStarted, data);
+        systemBroker.publish(newEvent);
     });
 
     // Scooters reporting
-    broker.onEvent(eventTypes.scooterEvents.scooterIdleReporting, (e) => {
-        console.log("Got report from scooter");
+    scooterBroker.onEvent(eventTypes.scooterEvents.scooterIdleReporting, (e) => {
+        scooterManager.updateScooter({ long: "4343", lat: "3232"});
+        console.log("Scooter reported!");
     })
 
-    broker.onEvent(eventTypes.scooterEvents.scooterMoving, (e) => {
+    scooterBroker.onEvent(eventTypes.scooterEvents.scooterMoving, (e) => {
         console.log("Got report from a moving scooter");
     })
 
-    broker.onEvent(eventTypes.scooterEvents.batteryLow, (e) => {
+    scooterBroker.onEvent(eventTypes.scooterEvents.batteryLow, (e) => {
         console.log("Scooter reported low battery!");
     })
 
     // Locking scooter
-    broker.onEvent(eventTypes.returnScooterEvents.parkScooter, (e) => {
-        const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.lockScooter, data);
-        broker.publish(newEvent);
+    systemBroker.onEvent(eventTypes.returnScooterEvents.parkScooter, (e) => {
+        const newEvent = scooterBroker.constructEvent(eventTypes.returnScooterEvents.lockScooter, data);
+        scooterBroker.publish(newEvent);
     });
 
-    broker.onEvent(eventTypes.returnScooterEvents.scooterLocked, (e) => {
-        const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.rideFinished, data);
-        broker.publish(newEvent);
+    scooterBroker.onEvent(eventTypes.returnScooterEvents.scooterLocked, (e) => {
+        const newEvent = systemBroker.constructEvent(eventTypes.returnScooterEvents.rideFinished, data);
+        systemBroker.publish(newEvent);
     });
 
     // Admin events
-    broker.onEvent(eventTypes.adminEvents.moveScooter, (e) => {
+    systemBroker.onEvent(eventTypes.adminEvents.moveScooter, (e) => {
         console.log("Admin decided to move a scooter!");
     });
 
     // RPC
-    broker.response(eventTypes.rpcEvents.getScooters, (e) => {
+    systemBroker.response(eventTypes.rpcEvents.getScooters, (e) => {
         return data;
     });
 
 
 }
 
+
+class ScooterManager {
+    constructor() {
+        console.log("Scooter manager initialized!");
+        this.data = {
+            scooterId: 1
+        };
+    }
+    
+    unlockScooter(scooterId) {
+        console.log("Scooter manager unlocked scooter!");
+        this.data.scooterId = scooterId;
+        return this.data;
+    }
+
+    updateScooter(report) {
+        console.log(`Update db with ${JSON.stringify(report)}`);
+    }
+}
+
+
 scooterService();
+
+
