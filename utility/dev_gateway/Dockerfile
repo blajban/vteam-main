@@ -15,6 +15,7 @@ RUN npm install -g nodemon
 
 COPY ./utility/dev_gateway/package.json .
 COPY ./utility/dev_gateway/dev_gateway.js .
+
 RUN npm install
 
 
