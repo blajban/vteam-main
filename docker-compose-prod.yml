@@ -15,8 +15,39 @@ services:
     logger:
         build: 
             context: .
-            dockerfile: ./utility/logger/Dockerfile.dev
+            dockerfile: ./utility/logger/Dockerfile
         container_name: "logger"
+        networks:
+            eventdriven:
+        restart:
+            "always"
+    dev_gateway:
+        build: 
+            context: .
+            dockerfile: ./utility/dev_gateway/Dockerfile
+        container_name: "dev_gateway"
+        networks:
+            eventdriven:
+        restart:
+            "always"
+        ports:
+            - "8889:8889"
+    dev_app:
+        build: 
+            context: .
+            dockerfile: ./utility/dev_app/Dockerfile
+        container_name: "dev_app"
+        networks:
+            eventdriven:
+        restart:
+            "always"
+        ports:
+            - "8989:3000"
+    scooter_service:
+        build: 
+            context: .
+            dockerfile: ./services/scooter_service/Dockerfile
+        container_name: "scooter_service"
         networks:
             eventdriven:
         restart:
