@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/send/:exchange/:event', async (req, res) => {
-  let broker = mesBroker;
+  let broker = await mesBroker;
   const e = broker.constructEvent(req.params.event, { data: "data!" });
   broker.changeExchange(req.params.exchange);
   await broker.publish(e);
@@ -27,7 +27,7 @@ app.get('/send/:exchange/:event', async (req, res) => {
 });
 
 app.get('/log', async (req, res) => {
-  let broker = mesBroker;
+  let broker = await mesBroker;
   const e = broker.constructEvent(eventTypes.adminEvents.getLog, { data: "request!" });
   await broker.request(e, (data) => {
     res.json(data);
