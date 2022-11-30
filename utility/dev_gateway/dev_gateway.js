@@ -8,12 +8,8 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const port = 8889;
+const mesBroker = new MessageBroker(host, exchanges.scooters, "web_server");
 
-
-app.use(async (req, res, next) => {
-    req.broker = await new MessageBroker(host, exchanges.scooters, "web_server");
-    next();
-})
 app.use(express.json());
 app.use(cors());
 
@@ -22,16 +18,18 @@ app.get('/', (req, res) => {
 })
 
 app.get('/send/:exchange/:event', async (req, res) => {
-  const e = req.broker.constructEvent(req.params.event, { data: "data!" });
-  req.broker.changeExchange(req.params.exchange);
-  await req.broker.publish(e);
-  req.broker.changeExchange(exchanges.system);
+  let broker = await mesBroker;
+  const e = broker.constructEvent(req.params.event, { data: "data!" });
+  broker.changeExchange(req.params.exchange);
+  await broker.publish(e);
+  broker.changeExchange(exchanges.system);
   res.json({ event_published: e });
 });
 
 app.get('/log', async (req, res) => {
-  const e = req.broker.constructEvent(eventTypes.adminEvents.getLog, { data: "request!" });
-  await req.broker.request(e, (data) => {
+  let broker = await mesBroker;
+  const e = broker.constructEvent(eventTypes.adminEvents.getLog, { data: "request!" });
+  await broker.request(e, (data) => {
     res.json(data);
   })
 
