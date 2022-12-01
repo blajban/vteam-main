@@ -1,6 +1,6 @@
-const stockholm = require("../../../shared/location_service/stockholmLocations.json");
-const goteborg = require("../../../shared/location_service/goteborgLocations.json");
-const malmo = require("../../../shared/location_service/malmoLocations.json");
+const stockholm = require("../../shared/location_service/stockholmLocations.json");
+const goteborg = require("../../shared/location_service/goteborgLocations.json");
+const malmo = require("../../shared/location_service/malmoLocations.json");
 
 const locationHandler = {
     getLocations: (e) => {
@@ -12,6 +12,21 @@ const locationHandler = {
                 return goteborg
             case 'malmo':
                 return malmo
+        }
+        } catch(error) {
+            console.log(error)
+        }
+    },
+    getChargingStations: (e) => {
+        console.log(e)
+        try {
+        switch (e.city) {
+            case 'stockholm':
+                return stockholm.filter((e) => { return e.charging == true })
+            case 'goteborg':
+                return goteborg.filter((e) => { return e.charging == true })
+            case 'malmo':
+                return malmo.filter((e) => { return e.charging == true })
         }
         } catch(error) {
             console.log(error)
