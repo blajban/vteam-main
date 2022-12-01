@@ -17,9 +17,8 @@ const locationService = async () => {
 
     // scooterEvents
     broker.onEvent(eventTypes.returnScooterEvents.lockScooter, (e) => {
-        console.log("Tar emot lockScooter event, Skapar nytt evente")
-        const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.establishParkingRate,{rate:ratesHandler.getRates("a") });
-        console.log(newEvent)
+        let rate = ratesHandler.getRates("b")
+        const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.establishParkingRate,{Price: rate});
         broker.publish(newEvent);
     });
 
