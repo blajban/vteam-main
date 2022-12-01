@@ -3,7 +3,7 @@
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes, exchanges } = require('../../shared/resources');
 
-
+/*
 const scooterInfo = [
     {
         scooterId: 1,
@@ -32,6 +32,36 @@ const scooterInfo = [
         log: []
     }
 ]
+*/
+
+const scooterInfo = [];
+
+const addScooters = (numberOfScooters) => {
+    // Get this info from scooter_service instead?
+    for (let i = 1; i < numberOfScooters; i++) {
+        scooterInfo.push({
+                scooterId: i,
+                status: "available",
+                userId: 0,
+                location: "stockholm",
+                status: {
+                    lat: "58.58502",
+                    long: "58.58502",
+                    speed: "0",
+                    battery: "100"  
+                },
+                log: []
+        });
+    }
+    
+
+}
+
+const simulateDriving = (scooterId) => {
+    scooterInfo[scooterId].status.lat++;
+    scooterInfo[scooterId].status.long++;
+    scooterInfo[scooterId].status.battery--;
+}
 
 const outOfBounds = (long, lat) => {
     return false;
@@ -40,6 +70,7 @@ const outOfBounds = (long, lat) => {
 const f = async () => {
     const intervals = {};
     const logs = {};
+    addScooters(100);
     const broker = await new MessageBroker(host, exchanges.scooters, 'simulation');
 
     for (let i = 0; i < scooterInfo.length; i++) {
@@ -72,9 +103,7 @@ const f = async () => {
                 console.log("driving!!");
 
                 // update scooter status
-                scooterInfo[i].status.lat++;
-                scooterInfo[i].status.long++;
-                scooterInfo[i].status.battery--;
+                simulateDriving(i)
 
                 // Send event
                 const newEvent = broker.constructEvent(eventTypes.scooterEvents.scooterMoving, scooterInfo[i]);
@@ -92,7 +121,7 @@ const f = async () => {
                     broker.publish(newEvent);
                 }
 
-            }, 500);
+            }, 3000);
 
             // Save interval id to be able to remove it later
             intervals[i] = drive;
@@ -120,6 +149,11 @@ const f = async () => {
             // Remove report-while-driving interval
             clearInterval(intervals[i]);
         })
+
+        // RPC (Add event type to resources)
+        broker.response("getScooterInfo", (e) => {
+            return scooterInfo[i];
+        });
     }
 
 }
