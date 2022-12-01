@@ -35,7 +35,7 @@ const eventTypes = {
         updateUserInfo: "updateUserInfo",
         userInfoUpdated: "userInfoUpdated",
         addMoney: "addMoney",
-        moneyAdded: "addMoney"
+        moneyAdded: "moneyAdded"
     },
     paymentEvents: {
         invoiceCreated: "invoiceCreated",

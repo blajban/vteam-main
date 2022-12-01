@@ -1,0 +1,21 @@
+{
+  "name": "user_service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "user_service.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node user_service.js",
+    "start.dev": "nodemon -x 'node user_service.js || touch user_service.js'"
+  },
+  "author": "",
+  "devDependencies": {
+    "eslint": "^8.28.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "jest": "^29.3.1"
+  },
+  "dependencies": {
+    "eslint-plugin-jest": "^27.1.6"
+  }
+}
