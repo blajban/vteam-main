@@ -46,7 +46,7 @@ const f = async () => {
         // Scooter idle
         setInterval(() => {
             console.log("reporting!");
-            const newEvent = broker.constructEvent(eventTypes.adminEvents.testEvent, scooterInfo[i]);
+            const newEvent = broker.constructEvent(eventTypes.scooterEvents.scooterIdleReporting, scooterInfo[i]);
             broker.publish(newEvent);
         }, 10000);
 
@@ -77,12 +77,12 @@ const f = async () => {
                 scooterInfo[i].status.battery--;
 
                 // Send event
-                const newEvent = broker.constructEvent(eventTypes.driveScooterEvents.scooterMoving, scooterInfo[i]);
+                const newEvent = broker.constructEvent(eventTypes.scooterEvents.scooterMoving, scooterInfo[i]);
                 broker.publish(newEvent);
 
                 // Low battery
                 if (scooterInfo[i].status.battery < 20) {
-                    const newEvent = broker.constructEvent(eventTypes.driveScooterEvents.batteryLow, scooterInfo[i]);
+                    const newEvent = broker.constructEvent(eventTypes.scooterEvents.batteryLow, scooterInfo[i]);
                     broker.publish(newEvent);
                 }
 

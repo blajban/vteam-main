@@ -55,6 +55,19 @@ services:
             "always"
         ports:
             - "8989:3000"
+    simulation:
+        build:
+            context: .
+            dockerfile: ./utility/simulation/Dockerfile
+        container_name: "simulation"
+        command: npm run start.dev
+        networks:
+            eventdriven:
+        volumes:
+            - ./utility/simulation:/utility/simulation
+            - /utility/simulation/node_modules
+        restart:
+            "always"
     scooter_service:
         build:
             context: .
