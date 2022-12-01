@@ -41,3 +41,5 @@ const locationService = async () => {
 }
 
 locationService();
+
+module.exports = locationService;
