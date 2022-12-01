@@ -71,7 +71,14 @@ const f = async () => {
     const intervals = {};
     const logs = {};
     addScooters(100);
+
+    
     const broker = await new MessageBroker(host, exchanges.scooters, 'simulation');
+
+    const test = broker.constructEvent("registerScooter", {});
+    broker.request(test, (e) => {
+        console.log(JSON.stringify(e));
+    })
 
     for (let i = 0; i < scooterInfo.length; i++) {
         // Scooter idle
