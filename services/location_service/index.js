@@ -27,7 +27,7 @@ const locationService = async () => {
     });
 
     broker.response(eventTypes.rpcEvents.getChargingStations, (e) => {
-      return data2;
+      return locationHandler.getChargingStations(e.data);
     });
 
     broker.response(eventTypes.rpcEvents.getRates, (e) => {

@@ -1,6 +1,6 @@
-const stockholm = require("../../shared/location_service/stockholmLocations.json");
-const goteborg = require("../../shared/location_service/goteborgLocations.json");
-const malmo = require("../../shared/location_service/malmoLocations.json");
+const stockholm = require("../../../shared/location_service/stockholmLocations.json");
+const goteborg = require("../../../shared/location_service/goteborgLocations.json");
+const malmo = require("../../../shared/location_service/malmoLocations.json");
 
 const locationHandler = {
     getLocations: (e) => {
