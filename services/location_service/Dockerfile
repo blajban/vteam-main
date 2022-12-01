@@ -4,6 +4,7 @@ WORKDIR /shared
 COPY ./shared/mq.js .
 COPY ./shared/resources.js .
 COPY ./shared/package.json .
+COPY ./shared/dummy_data/ .
 RUN npm install
 
 WORKDIR /services/location_service

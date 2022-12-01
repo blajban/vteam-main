@@ -1,13 +1,11 @@
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes, exchanges } = require('../../shared/resources');
+const ratesHandler = require("./models/ratesHandler")
 
 
 
 const locationService = async () => {
     // Temp
-    const data = {
-        rate: 100
-    };
     const data1 = {
       rate: '21232'
     };
@@ -19,8 +17,8 @@ const locationService = async () => {
 
     // scooterEvents
     broker.onEvent(eventTypes.returnScooterEvents.lockScooter, (e) => {
-        console.log("Tar emot lockScooter event, Skapar nytt event")
-        const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.establishParkingRate, data);
+        console.log("Tar emot lockScooter event, Skapar nytt evente")
+        const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.establishParkingRate,{rate:ratesHandler.getRates("a") });
         console.log(newEvent)
         broker.publish(newEvent);
     });
@@ -28,6 +26,7 @@ const locationService = async () => {
 
     // RPC
     broker.response(eventTypes.rpcEvents.getParkingSpots, (e) => {
+      console.log("hello")
         return data1;
     });
 
