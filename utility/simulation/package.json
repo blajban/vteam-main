@@ -1,0 +1,14 @@
+{
+    "name": "simulation",
+    "version": "1.0.0",
+    "description": "",
+    "main": "simulation.js",
+    "scripts": {
+        "start": "node simulation",
+        "start.dev": "nodemon -x 'node simulation.js || touch simulation.js'"
+    },
+    "author": "",
+    "devDependencies": {
+        "nodemon": "^2.0.15"
+    }
+}
