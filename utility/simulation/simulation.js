@@ -70,7 +70,7 @@ const outOfBounds = (long, lat) => {
 const f = async () => {
     const intervals = {};
     const logs = {};
-    addScooters(100);
+    addScooters(1);
 
     
     const broker = await new MessageBroker(host, exchanges.scooters, 'simulation');

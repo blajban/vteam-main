@@ -4,7 +4,7 @@ WORKDIR /shared
 COPY ./shared/mq.js .
 COPY ./shared/resources.js .
 COPY ./shared/package.json .
-COPY ./shared/dummy_data/ ./dummy_data/
+COPY ./shared/dummy_data/scooter_service/scooters.json ./dummy_data/scooter_service
 RUN npm install
 
 WORKDIR /services/scooter_service

@@ -2,7 +2,9 @@
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes, exchanges } = require('../../shared/resources');
 
-const scooters = require('../../shared/dummy_data/scooter_service/scooters');
+const fs = require('fs');
+
+//const scooters = require('../../shared/dummy_data/scooter_service/scooters');
 
 
 /**
@@ -11,9 +13,15 @@ const scooters = require('../../shared/dummy_data/scooter_service/scooters');
 const scooterService = async () => {
 
   // Init
+  let scooters = null;
+  fs.readFile('../../shared/dummy_data/scooter_service/scooters.json', 'utf-8', (err, jsonString) => {
+    console.log(jsonString);
+    scooters = JSON.parse(jsonString);
+  });
+
   const systemBroker = await new MessageBroker(host, exchanges.system, 'scooter_service');
   const scooterBroker = await new MessageBroker(host, exchanges.scooters, 'scooter_service');
-  const scooterManager = new ScooterManager();
+  const scooterManager = new ScooterManager(scooters);
 
   // Unlocking scooter
   systemBroker.onEvent(eventTypes.rentScooterEvents.rentScooter, (e) => {
@@ -81,16 +89,17 @@ const scooterService = async () => {
 // Todo: add fleet manager to handle scooter data. Dummy data for now
 
 class ScooterManager {
-  constructor() {
+  constructor(scooters) {
       console.log("Scooter manager initialized!");
       this.inactiveScooters = scooters;
+    console.log(this.inactiveScooters);
       this.activeScooters = [];
   }
 
   registerScooter() {
     const activatedScooter = this.inactiveScooters.shift();
     this.activeScooters.push(activatedScooter);
-    return this.activeScooters[id];
+    return activatedScooter;
   }
   
   unlockScooter(scooterId, userId) {
