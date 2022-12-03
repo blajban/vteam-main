@@ -94,3 +94,16 @@ services:
             - /services/location_service/node_modules
         restart:
             "always"
+    user_service:
+        build:
+            context: .
+            dockerfile: ./services/user_service/Dockerfile
+        container_name: "user_service"
+        command: npm run start.dev
+        networks:
+            eventdriven:
+        volumes:
+            - ./services/user_service:/services/user_service
+            - /services/user_service/node_modules
+        restart:
+            "always"
