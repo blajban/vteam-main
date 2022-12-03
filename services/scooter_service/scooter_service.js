@@ -4,7 +4,7 @@ const { host, eventTypes, exchanges } = require('../../shared/resources');
 
 const fs = require('fs');
 
-//const scooters = require('../../shared/dummy_data/scooter_service/scooters');
+const scooters = require('../../shared/dummy_data/scooter_service/scooters');
 
 
 /**
@@ -13,15 +13,15 @@ const fs = require('fs');
 const scooterService = async () => {
 
   // Init
-  let scooters = null;
+  /*let scooters = null;
   fs.readFile('../../shared/dummy_data/scooter_service/scooters.json', 'utf-8', (err, jsonString) => {
     console.log(jsonString);
-    scooters = JSON.parse(jsonString);
-  });
+    //scooters = JSON.parse(jsonString);
+  });*/
 
   const systemBroker = await new MessageBroker(host, exchanges.system, 'scooter_service');
   const scooterBroker = await new MessageBroker(host, exchanges.scooters, 'scooter_service');
-  const scooterManager = new ScooterManager(scooters);
+  const scooterManager = new ScooterManager();
 
   // Unlocking scooter
   systemBroker.onEvent(eventTypes.rentScooterEvents.rentScooter, (e) => {
@@ -37,8 +37,7 @@ const scooterService = async () => {
 
   // Scooters reporting
   scooterBroker.onEvent(eventTypes.scooterEvents.scooterIdleReporting, (e) => {
-    scooterManager.updateScooterPosition(1, { long: "4343", lat: "3232"});
-    console.log("Scooter reported!");
+    scooterManager.updateScooterPosition(e.data.scooterId, { long: e.data.properties.long, lat: e.data.properties.lat});
   })
 
   scooterBroker.onEvent(eventTypes.scooterEvents.scooterMoving, (e) => {
@@ -68,7 +67,12 @@ const scooterService = async () => {
   // RPC
   systemBroker.response(eventTypes.rpcEvents.getScooters, (e) => {
     // dummy data
-    return scooters;
+    return scooterManager.getScooters();
+  });
+
+  scooterBroker.response(eventTypes.rpcEvents.getScooters, (e) => {
+    // dummy data
+    return scooterManager.getScooters();
   });
 
   scooterBroker.response("registerScooter", (e) => {
@@ -89,17 +93,14 @@ const scooterService = async () => {
 // Todo: add fleet manager to handle scooter data. Dummy data for now
 
 class ScooterManager {
-  constructor(scooters) {
-      console.log("Scooter manager initialized!");
-      this.inactiveScooters = scooters;
-    console.log(this.inactiveScooters);
-      this.activeScooters = [];
+  constructor() {
+    console.log("Scooter manager initialized!");
+    this.scooters = scooters;
   }
 
-  registerScooter() {
-    const activatedScooter = this.inactiveScooters.shift();
-    this.activeScooters.push(activatedScooter);
-    return activatedScooter;
+  getScooters() {
+    console.log(this.scooters);
+    return this.scooters;
   }
   
   unlockScooter(scooterId, userId) {
