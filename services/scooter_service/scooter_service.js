@@ -12,13 +12,6 @@ const scooters = require('../../shared/dummy_data/scooter_service/scooters');
  */
 const scooterService = async () => {
 
-  // Init
-  /*let scooters = null;
-  fs.readFile('../../shared/dummy_data/scooter_service/scooters.json', 'utf-8', (err, jsonString) => {
-    console.log(jsonString);
-    //scooters = JSON.parse(jsonString);
-  });*/
-
   const systemBroker = await new MessageBroker(host, exchanges.system, 'scooter_service');
   const scooterBroker = await new MessageBroker(host, exchanges.scooters, 'scooter_service');
   const scooterManager = new ScooterManager();

@@ -58,6 +58,7 @@ const eventTypes = {
         adjustUserBalance: "adjustUserBalance",
         moveScooter: "moveScooter",
         adjustRates: "adjustRates",
+        startScooters: "startScooters",
         simulateScooters: "simulateScooters"
     }
 };

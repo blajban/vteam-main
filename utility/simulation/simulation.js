@@ -3,71 +3,118 @@
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes, exchanges } = require('../../shared/resources');
 
-/* 
-            // Fill up with more scooters if scooters in db is not enough? Or make variable amounts of gets from db?
-            if (scooters.length < noOfScooters) {
-                for (let i = 0; i < (noOfScooters - scooters.length); i++) {
-                    // (make id random!)
-                    scooters.push({
-                        scooterId: i,
-                        status: "inactive",
-                        userId: 0,
-                        properties: {
-                            location: "göteborg",
-                            lat: 57.721060344500096,
-                            long: 11.938873333564857,
-                            speed: "0",
-                            battery: "100"  
-                        },
-                        log: []
-                    });
-                    
-                }
-                
-            }
-            */
-
-            // /// // 
-            //console.log(scooters);
-
-
 
 const main = async () => {
 
-    const idleReporting = (scooter) => {
-        console.log(`Scooter ${scooter.scooterId} reporting!`);
-        const newEvent = broker.constructEvent(eventTypes.scooterEvents.scooterIdleReporting, scooter);
-        broker.publish(newEvent);
-    }
+  /**
+   * Scooter reporting while idle.
+   * @param {Object} scooter 
+   */
+  const idleReporting = (scooter) => {
+    console.log(`Scooter ${scooter.scooterId} reporting!`);
+    const newEvent = broker.constructEvent(eventTypes.scooterEvents.scooterIdleReporting, scooter);
+    broker.publish(newEvent);
+  }
+
+  /**
+   * Unlock scooter and update status
+   * @param {Object} scooter 
+   * @param {number} userId 
+   */
+  const unlockScooter = (scooter, userId) => {
+    scooter.status = "claimed";
+    scooter.userId = userId;
+    const newEvent = broker.constructEvent(eventTypes.rentScooterEvents.scooterUnlocked, scooter);
+    broker.publish(newEvent);
+  }
+
+  /**
+   * 
+   * @param {Object} scooter 
+   * @param {Object} startEndTime 
+   */
+  const lockScooter = (scooter, startEndTime) => {
+    scooter.status = "available";
+    scooter.userId = 0;
+    scooter.log.push(startEndTime);
+    const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.scooterLocked, scooter);
+    broker.publish(newEvent);
+  }
+
+  /**
+   * Main program
+   */
+  const serviceName = 'simulation';
+  const intervals = {};
+  const logs = {};
+
+  const broker = await new MessageBroker(host, exchanges.scooters, serviceName);
+  
+
+  /**
+   * Listen for event to start all scooters in db
+   */
+  broker.onEvent(eventTypes.adminEvents.startScooters, (e) => {
+    console.log(`'${e.eventType}' event received. Initialising scooters...`)
     
-    const broker = await new MessageBroker(host, exchanges.scooters, 'simulation');
+    /**
+     * Get scooters from scooter service
+     */
+    const req = broker.constructEvent(eventTypes.rpcEvents.getScooters, {});
+    broker.request(req, (res) => {
+      const scooters = Object.assign([], res);
+      console.log(`Initialised ${scooters.length} scooters from scooter_service...`);
 
-    // Listen for simulation start
-    broker.onEvent(eventTypes.adminEvents.simulateScooters, (e) => {
-        //const noOfScooters = JSON.parse(e.data).scooters;
-        
-        // Get scooters from scooter service
-        const req = broker.constructEvent(eventTypes.rpcEvents.getScooters, {});
-        broker.request(req, (res) => {
-            const scooters = Object.assign([], res);
-            console.log(`Initialized ${scooters.length} scooters from scooter_service...`);
+      /**
+       * Set eventlisteners and intervals for all scooters
+       */
+      for (let i = 0; i < scooters.length; i++) {
+        setInterval(() => {
+            idleReporting(scooters[i]);
+        }, 4000);
 
-            
-            // Set eventlisteners and intervals for all scooters
-            for (let i = 0; i < scooters.length; i++) {
-                setInterval(() => {
-                    idleReporting(scooters[i]);
-                }, 4000);
+        /**
+         * Set the rest of event listeners in for loop
+         */
 
-                // Set the rest of event listeners
+        /**
+         * Unlock scooter
+         */
+        broker.onEvent(eventTypes.rentScooterEvents.unlockScooter, (e) => {
+          // Add if check to see if its the scooter with this id that's being unlocked
+          console.log(`Unlocking scooter ${scooters[i].scooterId}`)
+          const userId = JSON.parse(e.data).userId;
+          unlockScooter(scooters[i], userId);
 
+          // Log start time
+          logs[i] = {
+            start: new Date()
+          };
 
-            }
-
-
+          // Drive scooter using events to steer it + report while driving?
+          // Simulate a number of scooters and report while driving
         });
+
+        /**
+         * Lock scooter
+         */
+        broker.onEvent(eventTypes.returnScooterEvents.lockScooter, (e) => {
+          console.log(`Locking scooter ${scooters[i].scooterId}`)
+          const rideFinished = Object.assign(logs[i], { end: new Date() });
+          lockScooter(scooters[i], logs[i]);
+
+          // Remove report-while-driving interval
+          //clearInterval(intervals[i]);
+
+        })
+        
+
+      }
+
+
     });
-    
+  });
+  
 } 
 
 
