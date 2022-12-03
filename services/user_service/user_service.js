@@ -1,112 +1,126 @@
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes, exchanges } = require('../../shared/resources');
 
+const users = require('../../shared/dummy_data/user_service/users.json');
+
 /**
  * Main function to set up event flow. Listens for events and sends event with correct data.
  */
 const userService = async () => {
-    const systemBroker = await new MessageBroker(host, exchanges.system, 'user_service');
+    const broker = await new MessageBroker(host, exchanges.system, 'user_service');
     const userManager = new UserManager();
 
-    // Account events
-    systemBroker.onEvent(eventTypes.accountEvents.createAccount, (e) => {
-        const data = {
-            id: 1,
-            name: "Eric Samuelsson",
-            mobile: "0701234567",
-            mail: "example@example.com",
-            city: "Karlskrona",
-            address: "Karlskronagatan 45",
-            zip: "4545",
-            admin: false,
-            account: 0
-        };
-        userManager.accountCreated(data);
-        console.log("Account created");
+    const e1 = broker.constructEvent(eventTypes.accountEvents.createAccount, { user: users[1] });
+    broker.request(e1, (res) => {
+        console.log(res);
     });
 
-    systemBroker.onEvent(eventTypes.accountEvents.login, (e) => {
-        const data = {
-            token: "abc3rfg5fhrrye2t3d1gwsfw8ew6r"
-        };
-        userManager.userLoggedin(data);
-        console.log("User logged in");
+    broker.onEvent(eventTypes.accountEvents.createAccount, (e) => {
+        userManager.accountCreated(e.user);
     });
 
-    systemBroker.onEvent(eventTypes.accountEvents.logout, (e) => {
-        const data = {
-            token: "abc3rfg5fhrrye2t3d1gwsfw8ew6r"
-        };
-        userManager.userLoggedout(data);
-        console.log("User logged out");
-    });
-
-    systemBroker.onEvent(eventTypes.accountEvents.updateUserInfo, (e) => {
-        const data = {
-            id: 1,
-            name: "Eric Samuelsson",
-            mobile: "0701234568",
-            mail: "example@example.com",
-            city: "Karlskrona",
-            address: "Karlskronagatan 22",
-            zip: "4540",
-            admin: true,
-            account: 0
-        };
-        userManager.userInfoUpdated(data);
-        console.log("User info updated");
-    });
-
-    systemBroker.onEvent(eventTypes.accountEvents.addMoney, (e) => {
-        const data = {
-            id: 1,
-            name: "Eric Samuelsson",
-            mobile: "0701234568",
-            mail: "example@example.com",
-            city: "Karlskrona",
-            address: "Karlskronagatan 22",
-            zip: "4540",
-            admin: true,
-            account: 250
-        };
-        userManager.moneyAdded(data);
-        console.log("Money added");
-    });
-
-    // RPC
-    systemBroker.response(eventTypes.rpcEvents.getUsers, (e) => {
-        return data;
-    });
-
-    // Admin event
-    systemBroker.onEvent(eventTypes.adminEvents.adjustUserBalance, (e) => {
-        console.log("Admin update user balance");
+    const e2 = broker.constructEvent(eventTypes.accountEvents.login, {token: "abc3rfg5fhrrye2t3d1gwsfw8ew6r"});
+    broker.request(e2, (res) => {
+        console.log(res);
     })
+
+    broker.onEvent(eventTypes.accountEvents.login, (e) => {
+        userManager.userLoggedin(e.token);
+    });
+
+    const e3 = broker.constructEvent(eventTypes.accountEvents.logout, {token: "abc3rfg5fhrrye2t3d1gwsfw8ew6r"});
+    broker.request(e3, (res) => {
+        console.log(res);
+    });
+
+    broker.onEvent(eventTypes.accountEvents.logout, (e) => {
+        userManager.userLoggedout(e.token);
+    });
+
+    const updateUserInfo = {
+        "id": 1,
+        "name": "Selma Helin",
+        "mobile": "0705556747",
+        "mail": "selma.helin@hallaryd.com",
+        "city": "Hällaryd",
+        "address": "Hällarydsvägen 14",
+        "zip": "37470",
+        "admin": true,
+        "account": 250.90
+    };
+
+    const e4 = broker.constructEvent(eventTypes.accountEvents.updateUserInfo, {user: updateUserInfo});
+    broker.request(e4, (res) => {
+        console.log(res);
+    });
+
+    broker.onEvent(eventTypes.accountEvents.updateUserInfo, (e) => {
+        userManager.userInfoUpdated(e.user);
+    });
+
+    const e5 = broker.constructEvent(eventTypes.rpcEvents.getUsers);
+    broker.request(e5, (res) => {
+        console.log(res);
+    })
+
+    broker.response(eventTypes.rpcEvents.getUsers, (e) => {
+        return userManager.getUsers();
+    });
 }
 
 class UserManager {
     constructor() {
         console.log("User manager initialized");
+        this.users = users;
     }
 
-    accountCreated() {
-        return true;
+    accountCreated(newUser) {
+        for (const user of this.users) {
+            if (user.id === newUser.id) {
+                console.log(newUser);
+                return "Konto skapat";
+            }
+        }
+        return "Något gick fel när konto skulle skapas";
     }
 
-    userLoggedin() {
-        return true;
+    userLoggedin(token) {
+        if (token === "abc3rfg5fhrrye2t3d1gwsfw8ew6r") {
+            console.log("Användare inloggad");
+            return "Användare inloggad";
+        }
+        return "Något gick fel när användare skulle logga in";
     }
 
-    userLoggedout() {
-        return true;
+    userLoggedout(token) {
+        if (token === "abc3rfg5fhrrye2t3d1gwsfw8ew6r") {
+            console.log("Användare utloggad");
+            return "Användare utloggad";
+        }
+        return "Något gick fel när användare skulle logga ut";
     }
 
-    userInfoUpdated() {
-        return true;
+    userInfoUpdated(updateUser) {
+        for (const user of this.users) {
+            if (user.id === updateUser.id) {
+                user.name = updateUser.name;
+                user.mobile = updateUser.mobile;
+                user.mail = updateUser.mail;
+                user.city = updateUser.city;
+                user.address = updateUser.address;
+                user.zip = updateUser.zip;
+                user.admin = updateUser.admin;
+                user.account = updateUser.account;
+                console.log(user);
+                return "Användaruppgifter uppdaterade";
+            }
+        }
+        return "Något gick fel för användaruppgifter skulle uppdateras";
     }
 
-    moneyAdded() {
-        return true;
+    getUsers() {
+        console.log(this.users);
+        return this.users;
     }
 }
 
