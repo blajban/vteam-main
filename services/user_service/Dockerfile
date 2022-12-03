@@ -4,6 +4,7 @@ WORKDIR /shared
 COPY ./shared/mq.js .
 COPY ./shared/resources.js .
 COPY ./shared/package.json .
+COPY ./shared/dummy_data/user_service/users.json ./dummy_data/user_service/users.json
 RUN npm install
 
 WORKDIR /services/user_service
