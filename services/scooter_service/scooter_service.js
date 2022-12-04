@@ -15,6 +15,29 @@ const scooterService = async () => {
   const scooterManager = new ScooterManager();
 
   /**
+   * Simulate all scooters
+   */
+  scooterBroker.onEvent(eventTypes.adminEvents.simulateScooters, (e) => {
+    for (const scooter of scooterManager.getScooters()) {
+      const data = scooterManager.unlockScooter(scooter.scooterId, 1000);
+      data.simulate = true;
+      const newEvent = scooterBroker.constructEvent(eventTypes.rentScooterEvents.unlockScooter, data);
+      scooterBroker.publish(newEvent);
+    }
+  });
+
+  /**
+   * Stop simulation
+   */
+  scooterBroker.onEvent(eventTypes.adminEvents.stopSimulation, (e) => {
+    console.log("stopping")
+    for (const scooter of scooterManager.getScooters()) {
+      const newEvent = scooterBroker.constructEvent(eventTypes.returnScooterEvents.lockScooter, scooterManager.lockScooter(scooter.scooterId));
+      scooterBroker.publish(newEvent);
+    }
+  })
+
+  /**
    * Unlock scooter
    */
   systemBroker.onEvent(eventTypes.rentScooterEvents.rentScooter, (e) => {

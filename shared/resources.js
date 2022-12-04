@@ -58,7 +58,9 @@ const eventTypes = {
         adjustChargingStation: "adjustChargingStation",
         adjustUserBalance: "adjustUserBalance",
         moveScooter: "moveScooter",
-        adjustRates: "adjustRates"
+        adjustRates: "adjustRates",
+        simulateScooters: "simulateScooters",
+        stopSimulation: "stopSimulation"
     }
 };
 

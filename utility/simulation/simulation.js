@@ -73,6 +73,7 @@ const main = async () => {
 
   // TODO
   const simulateScooter = (scooter) => {
+    console.log("Simulating!!");
     scooter.properties.lat++;
     scooter.properties.long++;
     scooter.properties.battery--;
@@ -124,8 +125,10 @@ const main = async () => {
           const drive = setInterval(() => {
             reportWhileMoving(scooters[i]);
 
-            // TODO: Check if event has simulate: true - then simulate scooter
-            simulateScooter(scooters[i]);
+            console.log(e.data);
+            if (e.data.simulate) {
+              simulateScooter(scooters[i]);
+            }
           }, 3000);
 
           // Save interval id to be able to remove it later
@@ -144,18 +147,10 @@ const main = async () => {
         if (scooters[i].scooterId === e.data.scooterId) {
           const logRideFinished = Object.assign(logs[i], { end: new Date() });
           lockScooter(scooters[i], e.data.status, e.data.userId, logRideFinished);
-          console.log(scooters[i]);
           
           // Remove report-while-driving interval
           clearInterval(intervals[i]);
         }
-        
-      // Simulate a number of scooters and report while driving
-          // update scooter status
-            //simulateDriving(i)
-
-        
-
       })
       
 
