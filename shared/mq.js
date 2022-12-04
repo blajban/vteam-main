@@ -3,7 +3,7 @@ const { eventTypes } = require('./resources');
 
 /**
  * Handles messages and events.
- * @usage 'const broker = await new MessageBroker('amqp://localhost', 'system', 'userService')'; - Don't forger 'await'.
+ * @usage 'const broker = await new MessageBroker('amqp://localhost', 'userService')'; - Don't forget 'await'.
  * @version 0.9
  * @author Erik Sjöberg
  */
@@ -11,23 +11,21 @@ class MessageBroker {
   /**
    * Constructor
    * @param {string} host - RabbitMQ url.
-   * @param {string} exchange 
    * @param {string} serviceName
    * @returns {object}
    */
-  constructor(host, exchange, serviceName) {
-    return this.#init(host, exchange, serviceName);
+  constructor(host, serviceName) {
+    return this.#init(host, serviceName);
   }
 
   /**
    * Initialize and return object to constructor (used to get around limitations in async in constructor).
    * @param {string} host 
-   * @param {string} exchange 
    * @param {string} serviceName 
    * @returns {object}
    */
-  async #init(host, exchange, serviceName) {
-    this.exchange = exchange;
+  async #init(host, serviceName) {
+    this.exchange = 'system';
     this.serviceName = serviceName;
     this.connection = await amqp.connect(host)
     this.channel = await this.connection.createChannel()
@@ -83,17 +81,16 @@ class MessageBroker {
   }
 
   /**
-   * Subscribe to all events regardless of type. Note that it only subscribes to events to the default exchange (can be changed via optional parameter).
+   * Subscribe to all events regardless of type.
    * @param {function} cb 
-   * @param {string} exchange - optional. Use another exchange than the MessageBroker was initialised with.
    */
-  async onAllEvents(cb, exchange = this.exchange) {
-    await this.channel.assertExchange(exchange, 'direct', { durable: false });
+  async onAllEvents(cb) {
+    await this.channel.assertExchange(this.exchange, 'direct', { durable: false });
     const q = await this.channel.assertQueue('', { exclusive: true });
 
     Object.values(eventTypes).forEach((group) => {
       Object.values(group).forEach((type) => {
-        this.channel.bindQueue(q.queue, exchange, type);
+        this.channel.bindQueue(q.queue, this.exchange, type);
       });
     });
 
@@ -103,16 +100,14 @@ class MessageBroker {
   }
 
   /**
-   * Publish event to all subscribers. Note that it only published to the default exchange (can be changed via optional parameter).
-   * Note that it's only published 
+   * Publish event to all subscribers.
    * @param {function} cb 
-   * @param {string} exchange - optional. Use another exchange than the MessageBroker was initialised with.
    */
-  async publishAll(event, exchange = this.exchange) {
-    await this.channel.assertExchange(exchange, 'direct', { durable: false });
+  async publishAll(event) {
+    await this.channel.assertExchange(this.exchange, 'direct', { durable: false });
     Object.values(eventTypes).forEach((group) => {
       Object.values(group).forEach((type) => {
-        this.channel.publish(exchange, type, Buffer.from(JSON.stringify(event)));
+        this.channel.publish(this.exchange, type, Buffer.from(JSON.stringify(event)));
       });
     });
   }
@@ -156,10 +151,6 @@ class MessageBroker {
 
       this.channel.ack(msg);
     })
-  }
-
-  changeExchange(newExchange) {
-    this.exchange = newExchange;
   }
 }
 
