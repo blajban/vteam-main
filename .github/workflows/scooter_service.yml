@@ -22,6 +22,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - run: npm install
+      working-directory: shared
+    - run: npm install
       working-directory: services/scooter_service
     - run: npm test
       working-directory: services/scooter_service
