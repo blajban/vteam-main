@@ -16,7 +16,8 @@ const eventTypes = {
     scooterEvents: {
         scooterIdleReporting: "scooterIdleReporting",
         scooterMoving: "scooterMoving",
-        batteryLow: "batteryLow"
+        batteryLow: "batteryLow",
+        outOfBounds: "outOfBounds"
     },
     returnScooterEvents: {
         parkScooter: "parkScooter",
@@ -57,9 +58,7 @@ const eventTypes = {
         adjustChargingStation: "adjustChargingStation",
         adjustUserBalance: "adjustUserBalance",
         moveScooter: "moveScooter",
-        adjustRates: "adjustRates",
-        startScooters: "startScooters",
-        simulateScooters: "simulateScooters"
+        adjustRates: "adjustRates"
     }
 };
 

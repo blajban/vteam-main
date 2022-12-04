@@ -8,45 +8,74 @@ const main = async () => {
 
   /**
    * Scooter reporting while idle.
-   * @param {Object} scooter 
+   * @param {object} scooter 
    */
   const idleReporting = (scooter) => {
     //console.log(`Scooter ${scooter.scooterId} reporting!`);
-    const newEvent = broker.constructEvent(eventTypes.scooterEvents.scooterIdleReporting, scooter);
-    broker.publish(newEvent);
+    const idleEvent = broker.constructEvent(eventTypes.scooterEvents.scooterIdleReporting, scooter);
+    broker.publish(idleEvent);
   }
 
   /**
-   * Unlock scooter and update status
-   * @param {Object} scooter 
+   * Unlock scooter and update status.
+   * @param {object} scooter 
+   * @param {string} status 
    * @param {number} userId 
    */
   const unlockScooter = (scooter, status, userId) => {
     scooter.status = status;
     scooter.userId = userId;
-    const newEvent = broker.constructEvent(eventTypes.rentScooterEvents.scooterUnlocked, scooter);
-    broker.publish(newEvent);
+    const unlockEvent = broker.constructEvent(eventTypes.rentScooterEvents.scooterUnlocked, scooter);
+    broker.publish(unlockEvent);
     console.log(`Scooter ${scooter.scooterId} unlocked`)
   }
 
   /**
-   * Lock scooter and update status
-   * @param {Object} scooter 
-   * @param {Object} startEndTime 
+   * Lock scooter and update status.
+   * @param {object} scooter 
+   * @param {string} status 
+   * @param {number} userId 
+   * @param {object} startEndTime 
    */
   const lockScooter = (scooter, status, userId, startEndTime) => {
     scooter.status = status;
     scooter.userId = userId;
     scooter.log.push(startEndTime);
-    const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.scooterLocked, scooter);
-    broker.publish(newEvent);
+    const lockEvent = broker.constructEvent(eventTypes.returnScooterEvents.scooterLocked, scooter);
+    broker.publish(lockEvent);
     console.log(`Scooter ${scooter.scooterId} locked`)
   }
 
+  /**
+   * Report while driving
+   * @param {object} scooter 
+   */
   const reportWhileMoving = (scooter) => {
     console.log(`Scooter ${scooter.scooterId} driving!`);
-    const newEvent = broker.constructEvent(eventTypes.scooterEvents.scooterMoving, scooter);
-    broker.publish(newEvent);
+    const moveEvent = broker.constructEvent(eventTypes.scooterEvents.scooterMoving, scooter);
+    broker.publish(moveEvent);
+
+    if (scooter.battery < 20) {
+      const batteryEvent = broker.constructEvent(eventTypes.scooterEvents.batteryLow, scooter);
+      broker.publish(batteryEvent);
+    }
+
+    if (outOfBounds({lat: scooter.lat, long: scooter.long})) {
+      const outsideEvent = broker.constructEvent(eventTypes.scooterEvents.outOfBounds, scooter);
+      broker.publish(outsideEvent);
+    }
+  }
+
+  // TODO: Check if scooter is still inside permitted zone
+  const outOfBounds = (scooterPosition) => {
+    return false;
+  }
+
+  // TODO
+  const simulateScooter = (scooter) => {
+    scooter.properties.lat++;
+    scooter.properties.long++;
+    scooter.properties.battery--;
   }
 
   /**
@@ -57,101 +86,82 @@ const main = async () => {
   const logs = {};
 
   const broker = await new MessageBroker(host, exchanges.scooters, serviceName);
-  
-
-  /**
-   * Listen for event to start all scooters in db
-   */
-  broker.onEvent(eventTypes.adminEvents.startScooters, (e) => {
-    console.log(`'${e.eventType}' event received. Initialising scooters...`)
     
+  /**
+   * Get scooters from scooter service
+   */
+  const req = broker.constructEvent(eventTypes.rpcEvents.getScooters, {});
+  broker.request(req, (res) => {
+    const scooters = res;
+    console.log(`Initialised ${scooters.length} scooters from scooter_service...`);
+
     /**
-     * Get scooters from scooter service
+     * Set eventlisteners and intervals for all scooters
      */
-    const req = broker.constructEvent(eventTypes.rpcEvents.getScooters, {});
-    broker.request(req, (res) => {
-      const scooters = res;
-      console.log(`Initialised ${scooters.length} scooters from scooter_service...`);
+    for (let i = 0; i < scooters.length; i++) {
+      setInterval(() => {
+          idleReporting(scooters[i]);
+      }, 10000);
 
       /**
-       * Set eventlisteners and intervals for all scooters
+       * Set the rest of event listeners in for loop
        */
-      for (let i = 0; i < scooters.length; i++) {
-        setInterval(() => {
-            idleReporting(scooters[i]);
-        }, 10000);
 
-        /**
-         * Set the rest of event listeners in for loop
-         */
+      /**
+       * Unlock scooter
+       */
+      broker.onEvent(eventTypes.rentScooterEvents.unlockScooter, (e) => {
+        if (scooters[i].scooterId === e.data.scooterId) {
+          unlockScooter(scooters[i], e.data.status, e.data.userId);
+          // Log start time
+          logs[i] = {
+            start: new Date()
+          };
 
-        /**
-         * Unlock scooter
-         */
-        broker.onEvent(eventTypes.rentScooterEvents.unlockScooter, (e) => {
-          if (scooters[i].scooterId === e.data.scooterId) {
-            unlockScooter(scooters[i], e.data.status, e.data.userId);
-            // Log start time
-            logs[i] = {
-              start: new Date()
-            };
+          console.log(scooters[i]);
 
-            console.log(scooters[i]);
+          // Report while driving
+          const drive = setInterval(() => {
+            reportWhileMoving(scooters[i]);
 
-            // Report while driving
-            const drive = setInterval(() => {
-              
+            // TODO: Check if event has simulate: true - then simulate scooter
+            simulateScooter(scooters[i]);
+          }, 3000);
 
-              reportWhileMoving(scooters[i]);
-
-              // update scooter status
-              //simulateDriving(i)
-
-              // Low battery
-              //if (scooterInfo[i].status.battery < 20) {
-                //  const newEvent = broker.constructEvent(eventTypes.scooterEvents.batteryLow, scooterInfo[i]);
-                 // broker.publish(newEvent);
-              //}
-
-              // Outside boundaries
-              //if (outOfBounds(scooterInfo[i].status.long, scooterInfo[i].status.lat)) {
-              //    const newEvent = broker.constructEvent(eventTypes.adminEvents.testEvent, scooterInfo[i]);
-              //    broker.publish(newEvent);
-              //}
-
-            }, 3000);
-
-            // Save interval id to be able to remove it later
-            intervals[i] = drive;
-            // Drive scooter using events to steer it + report while driving?
-            // Simulate a number of scooters and report while driving
-          }
-        });
-
-        /**
-         * Lock scooter
-         */
-        broker.onEvent(eventTypes.returnScooterEvents.lockScooter, (e) => {
-          if (scooters[i].scooterId === e.data.scooterId) {
-            const logRideFinished = Object.assign(logs[i], { end: new Date() });
-            lockScooter(scooters[i], e.data.status, e.data.userId, logRideFinished);
-            console.log(scooters[i]);
-            
-            // Remove report-while-driving interval
-            clearInterval(intervals[i]);
-          }
+          // Save interval id to be able to remove it later
+          intervals[i] = drive;
           
           
+        }
+      });
 
+      
+
+      /**
+       * Lock scooter
+       */
+      broker.onEvent(eventTypes.returnScooterEvents.lockScooter, (e) => {
+        if (scooters[i].scooterId === e.data.scooterId) {
+          const logRideFinished = Object.assign(logs[i], { end: new Date() });
+          lockScooter(scooters[i], e.data.status, e.data.userId, logRideFinished);
+          console.log(scooters[i]);
           
+          // Remove report-while-driving interval
+          clearInterval(intervals[i]);
+        }
+        
+      // Simulate a number of scooters and report while driving
+          // update scooter status
+            //simulateDriving(i)
 
-        })
         
 
-      }
+      })
+      
+
+    }
 
 
-    });
   });
   
 } 

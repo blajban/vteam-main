@@ -18,6 +18,7 @@ const scooterService = async () => {
    * Unlock scooter
    */
   systemBroker.onEvent(eventTypes.rentScooterEvents.rentScooter, (e) => {
+    // TODO: Get scooterId and userId from event
     const newEvent = scooterBroker.constructEvent(eventTypes.rentScooterEvents.unlockScooter, scooterManager.unlockScooter(5, 52));
     scooterBroker.publish(newEvent);
   });
@@ -37,10 +38,14 @@ const scooterService = async () => {
     scooterManager.updateScooterPosition(e.data.scooterId, { long: e.data.properties.long, lat: e.data.properties.lat});
   })
 
+  /**
+   * Reporting while moving
+   */
   scooterBroker.onEvent(eventTypes.scooterEvents.scooterMoving, (e) => {
-    console.log("Got report from a moving scooter");
+    scooterManager.updateScooterPosition(e.data.scooterId, { long: e.data.properties.long, lat: e.data.properties.lat});
   })
 
+  // TODO
   scooterBroker.onEvent(eventTypes.scooterEvents.batteryLow, (e) => {
     console.log("Scooter reported low battery!");
   })
@@ -49,6 +54,7 @@ const scooterService = async () => {
    * Park scooter
    */
   systemBroker.onEvent(eventTypes.returnScooterEvents.parkScooter, (e) => {
+    // TODO: Get scooterId from event
     const newEvent = scooterBroker.constructEvent(eventTypes.returnScooterEvents.lockScooter, scooterManager.lockScooter(5));
     scooterBroker.publish(newEvent);
   });
@@ -61,25 +67,26 @@ const scooterService = async () => {
     systemBroker.publish(newEvent);
   });
 
-  // TODO: Admin events
+  // TODO
   systemBroker.onEvent(eventTypes.adminEvents.moveScooter, (e) => {
     console.log("Admin decided to move a scooter!");
   });
 
-  // TODO: RPC
+  /**
+   * Get scooters, options in event.
+   */
   systemBroker.response(eventTypes.rpcEvents.getScooters, (e) => {
-    // dummy data
-    return scooterManager.getScooters();
+    return scooterManager.getScooters(e.data);
   });
 
-  // TODO: admin registering/adding scooter
+  // TODO: admin registering/adding scooter?
   scooterBroker.response("registerScooter", (e) => {
     return scooterManager.registerScooter();
   });
 
 }
 
-// Todo: add fleet manager to handle scooter data(?). Dummy data for now
+// TODO: add db
 
 class ScooterManager {
   constructor() {
@@ -87,11 +94,8 @@ class ScooterManager {
     this.scooters = scooters;
   }
 
-  /**
-   * Get scooters
-   * @returns {object}
-   */
-  getScooters() {
+  // TODO: db/options
+  getScooters(options) {
     return this.scooters;
   }
   
