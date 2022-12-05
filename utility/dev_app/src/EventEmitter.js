@@ -3,11 +3,6 @@ import React from 'react';
 
 const host = "localhost:8889";
 
-const exchanges = {
-    scooters: "scooters",
-    system: "system",
-    admin: "admin"
-};
 
 
 class EventForm extends React.Component {
@@ -40,16 +35,14 @@ class EventEmitter extends React.Component {
     constructor(props) {
         super(props);
         this.handleEventInput = this.handleEventInput.bind(this);
-        this.handleExchangePick = this.handleExchangePick.bind(this);
         this.state = {
             log: [],
-            exchange: "system",
             event: []
         };
         
     }
-    sendEvent(x, e) {
-        fetch(`http://${host}/send/${x}/${e}`, { mode: 'cors' })
+    sendEvent(e) {
+        fetch(`http://${host}/send/${e}`, { mode: 'cors' })
             .then((res) => res.json())
             .then((data) => console.log(data));
     }
@@ -67,30 +60,15 @@ class EventEmitter extends React.Component {
             event: e
         });
     }
-    handleExchangePick(e) {
-        this.setState({
-            exchange: e.target.value
-        });
-    }
     listLog() {
         const date = Date();
         return this.state.log.map((entry) =>  <li>{JSON.stringify(entry)}</li>);
-    }
-    exchangePicker() {
-        const exchanges_arr = Object.keys(exchanges);
-        return exchanges_arr.map((exchange) => <option value={exchange}>{exchange}</option>);
     }
     
 
     render() {
         return (
             <div className='container'>
-                <label>
-                    Exchange:
-                    <select value={this.state.exchange} onChange={this.handleExchangePick}>
-                        {this.exchangePicker()}
-                    </select>
-                </label>
                 <div className='input'>
                     <EventForm 
                         event={this.state.event}
@@ -99,7 +77,7 @@ class EventEmitter extends React.Component {
                 </div>
                 <div className='buttons'>
                     <button className="button" onClick={ () => {
-                        this.sendEvent(this.state.exchange, this.state.event);
+                        this.sendEvent(this.state.event);
                         this.updateLog();
                     }}>
                     Skicka meddelande

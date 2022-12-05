@@ -1,7 +1,7 @@
 
 
 const { MessageBroker } = require('../../shared/mq');
-const { host, eventTypes, exchanges } = require('../../shared/resources');
+const { host, eventTypes } = require('../../shared/resources');
 
 
 const main = async () => {
@@ -86,7 +86,7 @@ const main = async () => {
   const intervals = {};
   const logs = {};
 
-  const broker = await new MessageBroker(host, exchanges.scooters, serviceName);
+  const broker = await new MessageBroker(host, serviceName);
     
   /**
    * Get scooters from scooter service
