@@ -55,6 +55,21 @@ services:
             "always"
         ports:
             - "8989:3000"
+    web:
+        build:
+            context: .
+            dockerfile: ./services/web/Dockerfile
+        container_name: "web"
+        command: npm start
+        networks:
+            eventdriven:
+        volumes:
+            - ./services/web:/services/web
+            - /services/web/node_modules
+        restart:
+            "always"
+        ports:
+            - "9001:3000"
     simulation:
         build:
             context: .
