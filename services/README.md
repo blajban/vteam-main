@@ -2,7 +2,7 @@
 
 
 ### Paket till services
-
+#### npm install mongodb --save
 #### npm install --save-dev jest
 add script "test": "jest" in package.json
 #### npm init @eslint/config

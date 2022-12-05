@@ -1,5 +1,5 @@
 const { MessageBroker } = require('../../shared/mq');
-const { host, eventTypes, exchanges } = require('../../shared/resources');
+const { host, eventTypes } = require('../../shared/resources');
 const ratesHandler = require("./models/ratesHandler")
 const locationHandler = require("./models/locationHandler")
 
@@ -11,7 +11,7 @@ const locationService = async () => {
       rate: '21242'
     };
 
-    const broker = await new MessageBroker(host, exchanges.system, 'location_service');
+    const broker = await new MessageBroker(host, 'location_service');
 
     // scooterEvents
     broker.onEvent(eventTypes.returnScooterEvents.lockScooter, (e) => {
