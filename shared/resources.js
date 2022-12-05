@@ -1,11 +1,5 @@
 const host = 'amqp://rabbitmq';
 
-const exchanges = {
-    scooters: "scooters",
-    system: "system",
-    admin: "admin"
-};
-
 const eventTypes = {
     rentScooterEvents: {
         rentScooter: "rentScooter",
@@ -64,5 +58,5 @@ const eventTypes = {
     }
 };
 
-module.exports = { host, exchanges, eventTypes }
+module.exports = { host, eventTypes }
 

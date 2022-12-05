@@ -1,5 +1,5 @@
 const { MessageBroker } = require('../../shared/mq');
-const { host, exchanges, eventTypes } = require('../../shared/resources');
+const { host, eventTypes } = require('../../shared/resources');
 
 const log = [];
 let counter = 0;
@@ -11,13 +11,13 @@ function printLog(event) {
 }
 
 const f = async () => {
-    const broker = await new MessageBroker(host, exchanges.system, "logger");
+    const broker = await new MessageBroker(host, "logger");
 
-    for (const x in exchanges) {
-        broker.onAllEvents((e) => {
-            printLog(e);
-        }, x);
-    }
+
+    broker.onAllEvents((e) => {
+        printLog(e);
+    });
+
 
     await broker.response(eventTypes.adminEvents.getLog, (req) => {
         return log;
@@ -31,11 +31,5 @@ const f = async () => {
 
 f();
 
-
-/*
-setInterval(() => {
-    console.log("hej!");
-}, 2000);
-*/
 
 
