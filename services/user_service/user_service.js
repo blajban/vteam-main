@@ -1,5 +1,5 @@
 const { MessageBroker } = require('../../shared/mq');
-const { host, eventTypes, exchanges } = require('../../shared/resources');
+const { host, eventTypes } = require('../../shared/resources');
 
 const users = require('../../shared/dummy_data/user_service/users.json');
 
@@ -7,7 +7,7 @@ const users = require('../../shared/dummy_data/user_service/users.json');
  * Main function to set up event flow. Listens for events and sends event with correct data.
  */
 const userService = async () => {
-    const broker = await new MessageBroker(host, exchanges.system, 'user_service');
+    const broker = await new MessageBroker(host, 'user_service');
     const userManager = new UserManager();
 
     const e1 = broker.constructEvent(eventTypes.accountEvents.createAccount, { user: users[1] });
@@ -119,6 +119,7 @@ class UserManager {
     }
 
     getUsers() {
+        console.log("Hej");
         console.log(this.users);
         return this.users;
     }
