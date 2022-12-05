@@ -107,3 +107,18 @@ services:
             - /services/user_service/node_modules
         restart:
             "always"
+    gateway:
+        build:
+            context: .
+            dockerfile: ./services/gateway/Dockerfile
+        container_name: "gateway"
+        command: npm run start.dev
+        networks:
+            eventdriven:
+        volumes:
+            - ./services/gateway:/services/gateway
+            - /services/gateway/node_modules
+        restart:
+            "always"
+        ports:
+            - "3500:3500"
