@@ -12,6 +12,8 @@ const locationHandler = {
                 return goteborg
             case 'malmo':
                 return malmo
+            default:
+                return stockholm
         }
         } catch(error) {
             console.log(error)
@@ -27,6 +29,8 @@ const locationHandler = {
                 return goteborg.filter((e) => { return e.charging == true })
             case 'malmo':
                 return malmo.filter((e) => { return e.charging == true })
+            default:
+                return stockholm.filter((e) => { return e.charging == true })
         }
         } catch(error) {
             console.log(error)
