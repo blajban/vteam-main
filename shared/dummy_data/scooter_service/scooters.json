@@ -17,7 +17,7 @@
     "status": "inactive",
     "userId": 0,
     "properties": {
-        "location": "göteborg",
+        "location": "stockholm",
         "lat": 57.69061167042925,
         "long": 11.956726116767982,
         "speed": "0",
@@ -43,7 +43,7 @@
     "status": "inactive",
     "userId": 0,
     "properties": {
-        "location": "göteborg",
+        "location": "malmö",
         "lat": 57.721060344500096,
         "long": 11.938873333564857,
         "speed": "0",
