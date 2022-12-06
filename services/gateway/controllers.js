@@ -1,12 +1,21 @@
-exports.getTest = (req, res) => {
-    const testObject = {
-        test: "a test",
-        test2: "another test"
-    };
+const { MessageBroker } = require('../../shared/mq')
+const { host, eventTypes } = require('../../shared/resources');
+const mesBroker = new MessageBroker(host, "gateway");
 
-    res.json(testObject);
+exports.getParkingspots = async (req, res) => {
+    const broker = await mesBroker;
+    const newEvent = broker.constructEvent(eventTypes.rpcEvents.getParkingSpots, {});
+    broker.request(newEvent, (e) => {
+        res.json(e);
+    })
+    console.log(req.params.city);
+    
 }
 
-exports.createTest = (req, res) => {
-    res.status(201).json(req.body);
+exports.getScooters = async (req, res) => {
+    const broker = await mesBroker;
+    const newEvent = broker.constructEvent(eventTypes.rpcEvents.getScooters, { location: req.params.city });
+    broker.request(newEvent, (e) => {
+        res.json(e);
+    })
 }

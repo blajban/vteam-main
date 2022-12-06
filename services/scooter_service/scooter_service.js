@@ -118,6 +118,12 @@ class ScooterManager {
 
   // TODO: db/options
   getScooters(options) {
+    
+    if (options.location) {
+      return this.scooters.filter((scooter) => {
+        return scooter.properties.location === options.location;
+      });
+    }
     return this.scooters;
   }
   

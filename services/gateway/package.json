@@ -2,7 +2,7 @@
   "main": "dev_gateway.js",
   "scripts": {
     "start": "node dev_gateway",
-    "start.dev": "nodemon -x 'node dev_gateway.js || touch dev_gateway.js'"
+    "start.dev": "nodemon -x 'node gateway.js || touch gateway.js'"
   },
   "dependencies": {
     "cors": "^2.8.5",
