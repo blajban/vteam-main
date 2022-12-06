@@ -6,4 +6,4 @@ const scooterModel = {
     }
 }
 
-export
+export default scooterModel;
