@@ -20,7 +20,6 @@ const locationHandler = {
         }
     },
     getChargingStations: (e) => {
-        console.log(e)
         try {
         switch (e.city) {
             case 'stockholm':
