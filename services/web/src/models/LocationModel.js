@@ -6,3 +6,5 @@ const locationModel = {
 
     }
 }
+
+export default locationModel;
