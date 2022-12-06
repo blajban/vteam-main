@@ -1,7 +1,7 @@
 
 
 
-function Navbar() {
+function Navbar(props) {
     return (
     <div className="Navbar" style={{
       height: "100px",
@@ -11,9 +11,9 @@ function Navbar() {
       textAlign: "center"
 
       }}>
-        <button>Show scooters</button>
-        <button>Show Parkingspots</button>
-        <button>Show Chargingspots</button>
+        <button onClick={() => {props.setTargetedcity(1)}}>Stockholm</button>
+        <button onClick={() => {props.setTargetedcity(2)}}>Goteborg</button>
+        <button onClick={() => {props.setTargetedcity(3)}}>Malmö</button>
     </div>
     );
 }
