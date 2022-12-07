@@ -23,6 +23,7 @@ const locationService = async () => {
 
     // RPC
     broker.response(eventTypes.rpcEvents.getParkingSpots, (e) => {
+      console.log(e)
       return locationHandler.getLocations(e.data);
     });
 
