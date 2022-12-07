@@ -5,7 +5,7 @@ const malmo = require("../../../shared/location_service/malmoLocations.json");
 const locationHandler = {
     getLocations: (e) => {
         try {
-        switch (e.city) {
+        switch (e.location) {
             case 'stockholm':
                 return stockholm
             case 'goteborg':
@@ -21,7 +21,7 @@ const locationHandler = {
     },
     getChargingStations: (e) => {
         try {
-        switch (e.city) {
+        switch (e.location) {
             case 'stockholm':
                 return stockholm.filter((e) => { return e.charging == true })
             case 'goteborg':
