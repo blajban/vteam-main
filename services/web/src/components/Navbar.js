@@ -13,7 +13,7 @@ function Navbar(props) {
       }}>
         <button onClick={() => {props.setTargetedcity(1)}}>Stockholm</button>
         <button onClick={() => {props.setTargetedcity(2)}}>Goteborg</button>
-        <button onClick={() => {props.setTargetedcity(3)}}>Malmö</button>
+        <button onClick={() => {props.setTargetedcity(3)}}>Malmo</button>
     </div>
     );
 }

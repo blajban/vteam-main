@@ -6,9 +6,9 @@
     "properties": {
         "location": "göteborg",
         "lat": 57.70217050702175,
-        "long": 11.988655132881263,
+        "lng": 11.988655132881263,
         "speed": "0",
-        "battery": "100"  
+        "battery": "100"
     },
     "log": []
   },
@@ -19,9 +19,9 @@
     "properties": {
         "location": "stockholm",
         "lat": 57.69061167042925,
-        "long": 11.956726116767982,
+        "lng": 11.956726116767982,
         "speed": "0",
-        "battery": "100"  
+        "battery": "100"
     },
     "log": []
   },
@@ -32,9 +32,9 @@
     "properties": {
         "location": "göteborg",
         "lat": 57.6944650257589,
-        "long": 11.987281841865638,
+        "lng": 11.987281841865638,
         "speed": "0",
-        "battery": "100"  
+        "battery": "100"
     },
     "log": []
   },
@@ -45,9 +45,9 @@
     "properties": {
         "location": "malmö",
         "lat": 57.721060344500096,
-        "long": 11.938873333564857,
+        "lng": 11.938873333564857,
         "speed": "0",
-        "battery": "100"  
+        "battery": "100"
     },
     "log": []
   },
@@ -58,9 +58,9 @@
     "properties": {
         "location": "göteborg",
         "lat": 57.68767550557455,
-        "long": 11.975608868232825,
+        "lng": 11.975608868232825,
         "speed": "0",
-        "battery": "100"  
+        "battery": "100"
     },
     "log": []
   },
@@ -71,9 +71,9 @@
     "properties": {
         "location": "göteborg",
         "lat": 57.71005775410401,
-        "long": 11.927200359932044,
+        "lng": 11.927200359932044,
         "speed": "0",
-        "battery": "100"  
+        "battery": "100"
     },
     "log": []
   }

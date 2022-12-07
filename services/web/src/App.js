@@ -5,7 +5,7 @@ import Sidemenu from './components/Sidemenu'
 
 
 function App() {
-  const [targetCity, setTargetedcity] = useState(3);
+  const [targetCity, setTargetedcity] = useState(1);
   const [targetedItems, setTargetedItems] = useState(0);
 
   useEffect(() => {
@@ -17,8 +17,8 @@ function App() {
     <div className="App">
       <Navbar setTargetedcity={setTargetedcity}></Navbar>
       <div style={{display: "inline-grid", gridTemplateColumns: "auto auto"}}>
-        <Sidemenu></Sidemenu>
-        <Map targetCity={targetCity}></Map>
+        <Sidemenu setTargetedcity={setTargetedcity} targetCity={targetCity} setTargetedItems={setTargetedItems}></Sidemenu>
+        <Map targetedItems={targetedItems} targetCity={targetCity}></Map>
       </div>
     </div>
   );
