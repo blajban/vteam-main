@@ -74,8 +74,8 @@ const main = async () => {
   // TODO
   const simulateScooter = (scooter) => {
     console.log("Simulating!!");
-    scooter.properties.lat += 0.05;
-    scooter.properties.lng += 0.05;
+    scooter.properties.lat = scooter.properties.lat + 0.005;
+    scooter.properties.lng = scooter.properties.lng + 0.005;
     scooter.properties.battery--;
   }
 
