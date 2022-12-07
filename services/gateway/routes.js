@@ -1,8 +1,56 @@
 const controllers = require('./controllers.js');
 
 module.exports = (app) => {
-  app.route('/city/:city/parking')
-    .get(controllers.getParkingspots);
+  app.route('/city')
+    .get(controllers.getCities);
+  app.route('/city/:city')
+    .get(controllers.getCities)
+    .put(controllers.updateCities);
   app.route('/city/:city/scooter')
     .get(controllers.getScooters)
+    .post(controllers.addScooters);
+  app.route('/city/:city/scooter/:scooterId')
+    .get(controllers.getScooters)
+    .put(controllers.updateScooters)
+    .delete(controllers.removeScooters);
+  app.route('/city/:city/parking')
+    .get(controllers.getParkingspots)
+    .post(controllers.addParkingspots);
+  app.route('/city/:city/parking/:parkingId')
+    .get(controllers.getParkingspots)
+    .put(controllers.updateParkingspots)
+    .delete(controllers.removeParkingspots);
+  app.route('/city/:city/charging')
+    .get(controllers.getChargingStations)
+    .post(controllers.addChargingStations);
+  app.route('/city/:city/charging/:chargingId')
+    .get(controllers.getChargingStations)
+    .put(controllers.updateChargingStations)
+    .delete(controllers.removeChargingStations);
+  app.route('/users')
+    .get(controllers.getUsers)
+    .post(controllers.addUsers);
+  app.route('/users/:userId')
+    .get(controllers.getUsers)
+    .put(controllers.updateUsers)
+    .delete(controllers.removeUsers);
+  app.route('/admin')
+    .post(controllers.adminLogin);
+  app.route('/login')
+    .get(controllers.login);
+  app.route('/logout')
+    .get(controllers.logout);
+  app.route('/invoice')
+    .post(controllers.addInvoice);
+  app.route('/invoice/user/:userId')
+    .get(controllers.getUserInvoices);
+  app.route('/invoice/:invoiceId')
+    .get(controllers.getInvoice);
+  app.route('/rates')
+    .get(controllers.getRates)
+    .post(controllers.addRates);
+  app.route('/rates/:rateId')
+    .get(controllers.getRates)
+    .put(controllers.updateRates)
+    .delete(controllers.removeRates)
 };

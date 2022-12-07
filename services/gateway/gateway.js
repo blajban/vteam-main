@@ -2,11 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-
-//const { MessageBroker } = require('../../shared/mq')
-//const { host, eventTypes } = require('../../shared/resources');
-//const mesBroker = new MessageBroker(host, "web_server");
-
 const app = express();
 const port = 3500;
 
@@ -35,35 +30,3 @@ app.use(function(req, res) {
     }
   });
 });
-
-
-
-/*
-
-app.get('/', (req, res) => {
-  res.send("Hello!");
-})
-
-app.get('/send/:event', async (req, res) => {
-  let broker = await mesBroker;
-  const e = broker.constructEvent(req.params.event, { data: "data!" });
-  await broker.publish(e);
-  res.json({ event_published: e });
-});
-
-app.get('/log', async (req, res) => {
-  let broker = await mesBroker;
-  const e = broker.constructEvent(eventTypes.adminEvents.getLog, { data: "request!" });
-  await broker.request(e, (data) => {
-    res.json(data);
-  })
-
-});
-
-*/
-
-
-    
-
-
-
