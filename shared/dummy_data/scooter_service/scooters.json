@@ -4,7 +4,7 @@
     "status": "inactive",
     "userId": 0,
     "properties": {
-        "location": "göteborg",
+        "location": "goteborg",
         "lat": 57.70217050702175,
         "lng": 11.988655132881263,
         "speed": "0",
@@ -30,7 +30,7 @@
     "status": "inactive",
     "userId": 0,
     "properties": {
-        "location": "göteborg",
+        "location": "goteborg",
         "lat": 57.6944650257589,
         "lng": 11.987281841865638,
         "speed": "0",
@@ -43,7 +43,7 @@
     "status": "inactive",
     "userId": 0,
     "properties": {
-        "location": "malmö",
+        "location": "malmo",
         "lat": 57.721060344500096,
         "lng": 11.938873333564857,
         "speed": "0",
@@ -56,7 +56,7 @@
     "status": "inactive",
     "userId": 0,
     "properties": {
-        "location": "göteborg",
+        "location": "goteborg",
         "lat": 57.68767550557455,
         "lng": 11.975608868232825,
         "speed": "0",
@@ -69,7 +69,7 @@
     "status": "inactive",
     "userId": 0,
     "properties": {
-        "location": "göteborg",
+        "location": "goteborg",
         "lat": 57.71005775410401,
         "lng": 11.927200359932044,
         "speed": "0",
