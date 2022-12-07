@@ -60,7 +60,7 @@ const main = async () => {
       broker.publish(batteryEvent);
     }
 
-    if (outOfBounds({lat: scooter.lat, long: scooter.long})) {
+    if (outOfBounds({lat: scooter.lat, lng: scooter.lng})) {
       const outsideEvent = broker.constructEvent(eventTypes.scooterEvents.outOfBounds, scooter);
       broker.publish(outsideEvent);
     }
@@ -74,8 +74,8 @@ const main = async () => {
   // TODO
   const simulateScooter = (scooter) => {
     console.log("Simulating!!");
-    scooter.properties.lat++;
-    scooter.properties.long++;
+    scooter.properties.lat += 0.05;
+    scooter.properties.lng += 0.05;
     scooter.properties.battery--;
   }
 

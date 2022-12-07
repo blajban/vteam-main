@@ -57,14 +57,14 @@ const scooterService = async () => {
    * Idle reporting
    */
    broker.onEvent(eventTypes.scooterEvents.scooterIdleReporting, (e) => {
-    scooterManager.updateScooterPosition(e.data.scooterId, { long: e.data.properties.long, lat: e.data.properties.lat});
+    scooterManager.updateScooterPosition(e.data.scooterId, { lng: e.data.properties.lng, lat: e.data.properties.lat});
   })
 
   /**
    * Reporting while moving
    */
    broker.onEvent(eventTypes.scooterEvents.scooterMoving, (e) => {
-    scooterManager.updateScooterPosition(e.data.scooterId, { long: e.data.properties.long, lat: e.data.properties.lat});
+    scooterManager.updateScooterPosition(e.data.scooterId, { lng: e.data.properties.lng, lat: e.data.properties.lat});
   })
 
   // TODO
@@ -211,8 +211,8 @@ class ScooterManager {
     for (const scooter of this.scooters) {
       if (scooter.scooterId === scooterId) {
         scooter.properties.lat = position.lat;
-        scooter.properties.long = position.long;
-        console.log(`Scooter ${scooter.scooterId} at lat: ${scooter.properties.lat} long: ${scooter.properties.long}.`)
+        scooter.properties.lng = position.lng;
+        console.log(`Scooter ${scooter.scooterId} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`)
         return true;
       }
     }
