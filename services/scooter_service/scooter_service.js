@@ -117,14 +117,25 @@ class ScooterManager {
   }
 
   // TODO: db/options
-  getScooters(options) {
+  getScooters(options = {}) {
+    let result = this.scooters;
+
     
-    if (options.location) {
-      return this.scooters.filter((scooter) => {
+    if (options.hasOwnProperty('location')) {
+      result = result.filter((scooter) => {
         return scooter.properties.location === options.location;
       });
     }
-    return this.scooters;
+
+    
+
+    if (options.hasOwnProperty('scooterId')) {
+      result = result.filter((scooter) => {
+        return scooter.scooterId === options.scooterId;
+      });
+    }
+
+    return result;
   }
   
   /**
