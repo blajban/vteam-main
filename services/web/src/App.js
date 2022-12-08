@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import Map from './components/Map'
-import Navbar from './components/Navbar'
-import Sidemenu from './components/Sidemenu'
-
+import { Route, Routes } from 'react-router-dom'
+import { Home } from './pages/Home'
+import { Mapside } from './pages/MapSide'
+import { UserProfile } from './pages/UserProfile'
+import { AdminControll } from './pages/AdminControll'
+import Navbar  from './components/Navbar'
 
 function App() {
-  const [targetCity, setTargetedcity] = useState(1);
-  const [targetedItems, setTargetedItems] = useState(0);
-
-  useEffect(() => {
-    console.log(targetCity)
-  }, [targetCity]);
 
 
   return (
     <div className="App">
-      <Navbar setTargetedcity={setTargetedcity}></Navbar>
-      <div style={{display: "inline-grid", gridTemplateColumns: "auto auto"}}>
-        <Sidemenu setTargetedcity={setTargetedcity} targetCity={targetCity} setTargetedItems={setTargetedItems}></Sidemenu>
-        <Map targetedItems={targetedItems} targetCity={targetCity}></Map>
-      </div>
+      <Navbar></Navbar>
+      <Routes>
+        <Route path="/" element={<Home/>}></Route>
+        <Route path="/Map" element={<Mapside/>}></Route>
+        <Route path="/Userprofile" element={<UserProfile/>}></Route>
+        <Route path="/Admincontroll" element={<AdminControll/>}></Route>
+      </Routes>
     </div>
   );
 }
