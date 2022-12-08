@@ -7,32 +7,32 @@ module.exports = (app) => {
     .get(controllers.getCities)
     .put(controllers.updateCities);
   app.route('/city/:city/scooter')
-    .get(controllers.getScooters)
-    .post(controllers.addScooters);
+    .get(controllers.getScooters) //OK
+    .post(controllers.addScooter); //OK
   app.route('/city/:city/scooter/:scooterId')
-    .get(controllers.getScooters)
-    .put(controllers.updateScooters)
-    .delete(controllers.removeScooters);
+    .get(controllers.getScooters) //OK
+    .put(controllers.updateScooter) //OK
+    .delete(controllers.removeScooter); //OK
   app.route('/city/:city/parking')
-    .get(controllers.getParkingspots)
-    .post(controllers.addParkingspots);
+    .get(controllers.getParkingspots) //OK
+    .post(controllers.addParkingspot); // Todo
   app.route('/city/:city/parking/:parkingId')
     .get(controllers.getParkingspots)
-    .put(controllers.updateParkingspots)
-    .delete(controllers.removeParkingspots);
+    .put(controllers.updateParkingspot) // Todo
+    .delete(controllers.removeParkingspot); // Todo
   app.route('/city/:city/charging')
-    .get(controllers.getChargingStations)
-    .post(controllers.addChargingStations);
+    .get(controllers.getChargingStations) //OK
+    .post(controllers.addChargingStation); // Todo
   app.route('/city/:city/charging/:chargingId')
-    .get(controllers.getChargingStations)
-    .put(controllers.updateChargingStations)
-    .delete(controllers.removeChargingStations);
+    .get(controllers.getChargingStations) //OK
+    .put(controllers.updateChargingStation) // Todo
+    .delete(controllers.removeChargingStation); // Todo
   app.route('/users')
-    .get(controllers.getUsers)
-    .post(controllers.addUsers);
+    .get(controllers.getUsers) //OK
+    .post(controllers.addUser); // Todo
   app.route('/users/:userId')
-    .get(controllers.getUsers)
-    .put(controllers.updateUsers)
+    .get(controllers.getUsers) //OK
+    .put(controllers.updateUser) // Todo
     .delete(controllers.removeUsers);
   app.route('/admin')
     .post(controllers.adminLogin);

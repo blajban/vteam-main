@@ -11,7 +11,10 @@ const eventTypes = {
         scooterIdleReporting: "scooterIdleReporting",
         scooterMoving: "scooterMoving",
         batteryLow: "batteryLow",
-        outOfBounds: "outOfBounds"
+        outOfBounds: "outOfBounds",
+        scooterAdded: "scooterAdded",
+        scooterUpdated: "scooterUpdated",
+        scooterRemoved: "scooterRemoved"
     },
     returnScooterEvents: {
         parkScooter: "parkScooter",
@@ -21,8 +24,8 @@ const eventTypes = {
         establishParkingRate: "establishParkingRate"
     },
     accountEvents: {
-        createAccount: "createAccount",
-        accountCreated: "accountCreated",
+        userAdded: "userAdded",
+        userUpdated: "userUpdated",
         login: "login",
         userLoggedin: "userLoggedin",
         logout: "logout",
@@ -38,23 +41,37 @@ const eventTypes = {
     },
     rpcEvents: {
         getScooters: "getScooters",
+        addScooter: "addScooter",
+        updateScooter: "updateScooter",
+        removeScooter: "removeScooter",
         getUsers: "getUsers",
+        addUser: "addUser",
+        updateUser: "updateUser",
         getInvoices: "getInvoices",
         getParkingSpots: "getParkingSpots",
+        addParkingspot: "addParkingspot",
+        updateParkingspot: "updateParkingspot",
+        removeParkingspot: "removeParkingspot",
         getChargingStations: "getChargingStations",
+        addChargingStation: "addChargingStation",
+        updateChargingStation: "updateChargingStation",
+        removeChargingStation: "removeChargingStation",
         getRates: "getRates"
     },
     adminEvents: {
         testEvent: "testEvent",
         getLog: "getLog",
-        getData2: "getData2",
-        adjustParkingSpot: "adjustParkingSpot",
-        adjustChargingStation: "adjustChargingStation",
+        chargingStationAdded: "chargingStationAdded",
+        chargingStationUpdated: "chargingStationUpdated",
+        chargingStationRemoved: "chargingStationRemoved",
         adjustUserBalance: "adjustUserBalance",
         moveScooter: "moveScooter",
         adjustRates: "adjustRates",
         simulateScooters: "simulateScooters",
-        stopSimulation: "stopSimulation"
+        stopSimulation: "stopSimulation",
+        parkingspotAdded: "parkingspotAdded",
+        parkingspotUpdated: "parkingspotUpdated",
+        parkingspotRemoved: "parkingspotRemoved",
     }
 };
 
