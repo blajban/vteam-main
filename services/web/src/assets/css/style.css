@@ -1,0 +1,97 @@
+/*
+Colors:
+#206A61 dark blue
+#228377 middle blue
+#2A9D8F light blue
+
+#84E1D6 lightest blue
+
+#206A61 dark red
+#228377 middle red
+#2A9D8F light red
+
+*/
+body {
+    padding: 0;
+    margin: 0;
+  }
+
+.container {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    margin: 0 auto;
+    width: 100%;
+    width: 100vw;
+}
+
+.navbar {
+    height: 100px;
+    background-color: #228377;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    text-align: center
+}
+
+.sidemenu{
+    height: 100vh;
+    width: 200px;
+    background-color: #228377;
+    text-align: center;
+}
+
+.user-profile-container {
+    width: 800px;
+    height: 800px;
+    background-color: #84E1D6;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.image-holder {
+    background-color: white;
+    margin: 10px;
+    width: 130px;
+    border-radius: 10px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+td, th {
+    border: 1px solid #dddddd;
+    height: 50px;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+.sidemenu button {
+    display:block
+}
+
+button {
+    background-color: #206A61;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 15px 32px;
+    margin: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+button:hover {
+    background-color: #2A9D8F;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
