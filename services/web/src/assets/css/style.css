@@ -11,17 +11,21 @@ Colors:
 #2A9D8F light red
 
 */
-body {
-    padding: 0;
+* {
     margin: 0;
-  }
+    padding: 0;
+}
 
 .container {
     display: inline-grid;
     grid-template-columns: auto auto;
-    margin: 0 auto;
-    width: 100%;
-    width: 100vw;
+    margin: 0;
+    width: 100vh;
+}
+
+.map {
+    width: 89vw;
+    max-height: 90vh;
 }
 
 .navbar {
@@ -33,8 +37,9 @@ body {
 }
 
 .sidemenu{
-    height: 100vh;
-    width: 200px;
+    height: 90vh;
+    width: 100%;
+    max-width: 250px;
     background-color: #228377;
     text-align: center;
 }
@@ -54,25 +59,48 @@ body {
     border-radius: 10px;
 }
 
-table {
-    font-family: arial, sans-serif;
+.styled-table {
     border-collapse: collapse;
-    width: 100%;
-  }
-
-td, th {
-    border: 1px solid #dddddd;
-    height: 50px;
-    text-align: left;
-    padding: 8px;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
-tr:nth-child(even) {
-    background-color: #dddddd;
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+tr {
+    max-height: 40px;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
 }
 
 .sidemenu button {
     display:block
+}
+
+td button {
+    width: 80px
 }
 
 button {
@@ -86,9 +114,18 @@ button {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    width: 200px
 }
 button:hover {
     background-color: #2A9D8F;
+}
+
+.button-container{
+    background-color: #206A61;
+}
+.button-container button{
+    width: 200px;
+    border-radius: 0;
 }
 
 a {
