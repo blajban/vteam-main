@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import "../assets/css/style.css"
 import Sidemenu from '../components/Sidemenu'
 import Map from '../components/Map'
 
@@ -9,7 +10,7 @@ export function Mapside() {
 
     return (
     <>
-      <div style={{display: "inline-grid", gridTemplateColumns: "auto auto"}}>
+      <div className="container">
         <Sidemenu setTargetedcity={setTargetedcity} targetCity={targetCity} setTargetedItems={setTargetedItems}></Sidemenu>
         <Map targetedItems={targetedItems} targetCity={targetCity}></Map>
       </div>

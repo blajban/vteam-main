@@ -1,3 +1,12 @@
+import SidemenuUser from "../components/SidemenuUser"
+import HisotryTable from "../components/HistoryTable"
+import "../assets/css/style.css"
+
 export function UserProfile() {
-    return <h1>This is userProfile</h1>
+    return (
+        <div style={{display: "inline-grid", gridTemplateColumns: "auto auto"}}>
+    <SidemenuUser></SidemenuUser>
+    <HisotryTable></HisotryTable>
+        </div>
+    )
 }

@@ -1,3 +1,11 @@
+import SidemenuAdmin from "../components/SidemenuAdmin"
+import "../assets/css/style.css"
+
 export function AdminControll() {
-    return <h1>This is adminControll</h1>
+
+    return (
+        <>
+        <SidemenuAdmin></SidemenuAdmin>
+        </>
+        )
 }
