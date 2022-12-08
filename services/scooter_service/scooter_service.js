@@ -205,7 +205,7 @@ class ScooterManager {
   removeScooter(scooterId) {
     for (let i = 0; i < this.scooters.length; i++) {
       if (this.scooters[i].scooterId === scooterId) {
-        const removedScooter = this.scooters.splice(i, 1);
+        const removedScooter = this.scooters.splice(i, 1)[0];
         return removedScooter;
       }
     }

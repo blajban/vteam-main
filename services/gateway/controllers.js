@@ -10,30 +10,11 @@ const success = (description, content) => {
     };
 }
 
-exports.getCities = async (req, res) => {
-
-    // Temp!
-
-    let result = [];
-    if (req.params.hasOwnProperty('city')) {
-        result.push({
-            city: req.params.city
-        })
-    }
-    
-    result.push({
-        data: "data!"
-    });
-    
-    res.json(result);
-}
-
-exports.updateCities = async (req, res) => {
-    // TODO
-    console.log(req);
-    res.json("TODO");
-}
-
+/**
+ * Get all scooters in a city or a specific scooter in a city if scooterId is provided.
+ * @param {object} req 
+ * @param {object} res 
+ */
 exports.getScooters = async (req, res) => {
     const filter = {
         location: req.params.city
@@ -51,6 +32,11 @@ exports.getScooters = async (req, res) => {
     })
 }
 
+/**
+ * Add scooter to a city.
+ * @param {object} req 
+ * @param {object} res 
+ */
 exports.addScooter = async (req, res) => {
     const newScooter = {
         lng: parseFloat(req.body.lng),
@@ -64,10 +50,13 @@ exports.addScooter = async (req, res) => {
     broker.request(addScooterEvent, (e) => {
         res.json(success("Scooter added", e));
     })
-
-    
 }
 
+/**
+ * Update scooter in a city. 
+ * @param {object} req 
+ * @param {object} res 
+ */
 exports.updateScooter = async (req, res) => {
     const scooterToUpdate = {
         scooterId: parseInt(req.params.scooterId)
@@ -96,6 +85,11 @@ exports.updateScooter = async (req, res) => {
 
 }
 
+/**
+ * Remove scooter in a city
+ * @param {object} req 
+ * @param {object} res 
+ */
 exports.removeScooter = async (req, res) => {
     const broker = await mesBroker;
     const removeScooterEvent = broker.constructEvent(eventTypes.rpcEvents.removeScooter, {
@@ -106,16 +100,15 @@ exports.removeScooter = async (req, res) => {
     })
 }
 
-
+/**
+ * Get parking spots and charging stations in a city
+ * @param {object} req 
+ * @param {object} res 
+ */
 exports.getParkingspots = async (req, res) => {
     const filter = {
         location: req.params.city
     };
-
-    
-    if (req.params.hasOwnProperty('parkingId')) {
-        filter.parkingId = parseInt(req.params.parkingId)
-    }
 
     const broker = await mesBroker;
     const getParkingSpotsEvent = broker.constructEvent(eventTypes.rpcEvents.getParkingSpots, filter);
@@ -165,53 +158,12 @@ exports.getChargingStations = async (req, res) => {
         location: req.params.chargingId
     };
 
-    
-    if (req.params.hasOwnProperty('chargingId')) {
-        filter.chargingId = parseInt(req.params.chargingId)
-    }
-
     const broker = await mesBroker;
     const getChargingStationEvent = broker.constructEvent(eventTypes.rpcEvents.getChargingStations, filter);
     broker.request(getChargingStationEvent, (e) => {
         res.json(e);
     })
 
-}
-
-exports.addChargingStation = async (req, res) => {
-    // TODO
-    const newChargingStation = {};
-
-    const broker = await mesBroker;
-    const addChargingStationEvent = broker.constructEvent(eventTypes.rpcEvents.addChargingStation, newChargingStation);
-
-    broker.request(addChargingStationEvent, (e) => {
-        res.json(success("Charging station added", e));
-    })
-}
-
-exports.updateChargingStation = async (req, res) => {
-    // TODO
-    const chargingStationToUpdate = {};
-    
-
-    const broker = await mesBroker;
-    const updateChargingStationEvent = broker.constructEvent(eventTypes.rpcEvents.updateChargingStation, chargingStationToUpdate);
-
-    broker.request(updateChargingStationEvent, (e) => {
-        res.json(success("Updated sharging station", e));
-    })
-}
-
-exports.removeChargingStation = async (req, res) => {
-    // TODO
-    const broker = await mesBroker;
-    const removeChargingStationEvent = broker.constructEvent(eventTypes.rpcEvents.removeChargingStation, {
-        chargingId: parseInt(req.params.chargingId)
-    });
-    broker.request(removeChargingStationEvent, (e) => {
-        res.json(success("Removed charging station", e));
-    })
 }
 
 exports.getUsers = async (req, res) => {
