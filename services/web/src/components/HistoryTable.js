@@ -5,8 +5,8 @@ function HisotryTable(props) {
 
 
     return (
-    <>
-    <table>
+    <div className="table-container">
+    <table className="styled-table">
       <tr>
         <th>Id</th>
         <th>Start Position</th>
@@ -14,6 +14,7 @@ function HisotryTable(props) {
         <th>Time</th>
         <th>Price</th>
         <th>Status</th>
+        <th></th>
       </tr>
       <tr>
         <td>132</td>
@@ -22,9 +23,10 @@ function HisotryTable(props) {
         <td>15:31</td>
         <td>20:-</td>
         <td>Pending</td>
+        <td><button>pay</button></td>
       </tr>
     </table>
-    </>
+    </div>
     );
 }
 

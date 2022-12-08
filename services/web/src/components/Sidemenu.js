@@ -47,10 +47,29 @@ function Sidemenu(props) {
     return (
     <div className="sidemenu">
         <button onClick={() => {props.setTargetedcity(1)}}>Stockholm</button>
+        {(props.targetCity === 1) ?
+        <div className="button-container">
+        <button onClick={() => { getLocations(props.targetCity) }}> Parkingspots</button>
+        <button onClick={() => { getScooters(props.targetCity) }}> Scooters</button>
+        </div>:
+        <></>
+        }
         <button onClick={() => {props.setTargetedcity(2)}}>Goteborg</button>
+        {(props.targetCity === 2) ?
+        <div className="button-container">
+        <button onClick={() => { getLocations(props.targetCity) }}> Parkingspots</button>
+        <button onClick={() => { getScooters(props.targetCity) }}> Scooters</button>
+        </div>:
+        <></>
+        }
         <button onClick={() => {props.setTargetedcity(3)}}>Malmo</button>
-        <button onClick={ () => { getLocations(props.targetCity) }}>Load Parkingspots</button>
-        <button onClick={ () => { getScooters(props.targetCity) }}>Load Scooters</button>
+        {(props.targetCity === 3) ?
+        <div className="button-container">
+        <button onClick={() => { getLocations(props.targetCity) }}> Parkingspots</button>
+        <button onClick={() => { getScooters(props.targetCity) }}> Scooters</button>
+        </div>:
+        <></>
+        }
     </div>
     );
 }
