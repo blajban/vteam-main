@@ -11,10 +11,17 @@ Colors:
 #2A9D8F light red
 
 */
+body {
+    padding: 0;
+    margin: 0;
+  }
 
 .container {
     display: inline-grid;
     grid-template-columns: auto auto;
+    margin: 0 auto;
+    width: 100%;
+    width: 100vw;
 }
 
 .navbar {
@@ -27,9 +34,24 @@ Colors:
 
 .sidemenu{
     height: 100vh;
-    width: 300px;
+    width: 200px;
     background-color: #228377;
     text-align: center;
+}
+
+.user-profile-container {
+    width: 800px;
+    height: 800px;
+    background-color: #84E1D6;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.image-holder {
+    background-color: white;
+    margin: 10px;
+    width: 130px;
+    border-radius: 10px;
 }
 
 table {
