@@ -54,6 +54,9 @@ function Sidemenu(props) {
       textAlign: "center"
 
       }}>
+        <button onClick={() => {props.setTargetedcity(1)}}>Stockholm</button>
+        <button onClick={() => {props.setTargetedcity(2)}}>Goteborg</button>
+        <button onClick={() => {props.setTargetedcity(3)}}>Malmo</button>
         <button onClick={ () => { getLocations(props.targetCity) }}>Load Parkingspots</button>
         <button onClick={ () => { getScooters(props.targetCity) }}>Load Scooters</button>
     </div>

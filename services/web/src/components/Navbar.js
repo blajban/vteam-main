@@ -1,4 +1,4 @@
-
+import { Link } from 'react-router-dom'
 
 
 function Navbar(props) {
@@ -11,9 +11,10 @@ function Navbar(props) {
       textAlign: "center"
 
       }}>
-        <button onClick={() => {props.setTargetedcity(1)}}>Stockholm</button>
-        <button onClick={() => {props.setTargetedcity(2)}}>Goteborg</button>
-        <button onClick={() => {props.setTargetedcity(3)}}>Malmo</button>
+        <button><Link to="/"> Home </Link></button>
+        <button><Link to="/Map"> Map </Link></button>
+        <button><Link to="/UserProfile"> Profile </Link></button>
+        <button><Link to="/AdminControll"> AdminControll </Link></button>
     </div>
     );
 }
