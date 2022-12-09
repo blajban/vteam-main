@@ -42,7 +42,6 @@ const locationHandler = {
         const mongoDbwrapper = new MongoDBWrapper(await database.getDb())
         try {
         const locationsCollection = await mongoDbwrapper.find("locaions", e.location || "stockholm");
-        console.log(locationsCollection)
         return locationsCollection;
         } catch (error) {
         console.log(error);
