@@ -4,6 +4,7 @@ const { host, eventTypes } = require('../../shared/resources');
 
 const scooters = require('../../shared/dummy_data/scooter_service/scooters');
 
+// TODO: add scooter added event and update simulation
 
 /**
  * Main function to set up event flow. Listens for events and sends events with the correct data.
@@ -101,10 +102,29 @@ const scooterService = async () => {
     return scooterManager.getScooters(e.data);
   });
 
-  // TODO: admin registering/adding scooter?
-  broker.response("registerScooter", (e) => {
-    return scooterManager.registerScooter();
+  // TODO
+  broker.response(eventTypes.rpcEvents.addScooter, (e) => {
+    const newScooter = scooterManager.addScooter(e.data);
+    const scooterAddedEvent = broker.constructEvent(eventTypes.scooterEvents.scooterAdded, newScooter);
+    broker.publish(scooterAddedEvent);
+    return newScooter;
   });
+
+  // TODO
+  broker.response(eventTypes.rpcEvents.updateScooter, (e) => {
+    const updatedScooter = scooterManager.updateScooter(e.data);
+    const scooterUpdatedEvent = broker.constructEvent(eventTypes.scooterEvents.updatedScooter, updatedScooter);
+    broker.publish(scooterUpdatedEvent);
+    return updatedScooter;
+  });
+
+  // TODO:
+  broker.response(eventTypes.rpcEvents.removeScooter, (e) => {
+    const removedScooter = scooterManager.removeScooter(e.data.scooterId);
+    const removeScooterEvent = broker.constructEvent(eventTypes.scooterEvents.scooterRemoved, removedScooter);
+    broker.publish(removeScooterEvent);
+    return removedScooter;
+  })
 
 }
 
@@ -136,6 +156,59 @@ class ScooterManager {
     }
 
     return result;
+  }
+
+  addScooter(newScooterInfo) {
+    const newScooter = {
+      scooterId: 500,
+      status: "inactive",
+      userId: 0,
+      properties: {
+          location: newScooterInfo.location,
+          lat: newScooterInfo.lat,
+          lng: newScooterInfo.lng,
+          speed: 0,
+          battery: 100
+      },
+      log: []
+    }
+
+    this.scooters.push(newScooter);
+
+    return newScooter;
+  }
+
+  // TODO
+  updateScooter(updatedScooter) {
+    for (const scooter of this.scooters) {
+      if (scooter.scooterId === updatedScooter.scooterId) {
+
+        if (updatedScooter.hasOwnProperty('status')) {
+          scooter.status = updatedScooter.status;
+        }
+        if (updatedScooter.hasOwnProperty('location')) {
+            scooter.properties.location = updatedScooter.location;
+        }
+        if (updatedScooter.hasOwnProperty('lat')) {
+            scooter.properties.lat = updatedScooter.lat;
+        }
+        if (updatedScooter.hasOwnProperty('lng')) {
+            scooter.properties.lng = updatedScooter.lng;
+        }
+
+        return scooter;
+      }
+    }
+    
+  }
+
+  removeScooter(scooterId) {
+    for (let i = 0; i < this.scooters.length; i++) {
+      if (this.scooters[i].scooterId === scooterId) {
+        const removedScooter = this.scooters.splice(i, 1)[0];
+        return removedScooter;
+      }
+    }
   }
   
   /**

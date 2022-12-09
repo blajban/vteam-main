@@ -1,56 +1,50 @@
 const controllers = require('./controllers.js');
 
 module.exports = (app) => {
-  app.route('/city')
-    .get(controllers.getCities);
-  app.route('/city/:city')
-    .get(controllers.getCities)
-    .put(controllers.updateCities);
+  app.route('/eventflows/rent_scooter/:scooterId/:userId')
+    .get(controllers.rentScooter);
+  app.route('/eventflows/simulate_scooters')
+    .get(controllers.simulateScooters); // Todo
+  app.route('/eventflows/stop_simulation')
+    .get(controllers.stopSimulation); // Todo
   app.route('/city/:city/scooter')
     .get(controllers.getScooters)
-    .post(controllers.addScooters);
+    .post(controllers.addScooter);
   app.route('/city/:city/scooter/:scooterId')
     .get(controllers.getScooters)
-    .put(controllers.updateScooters)
-    .delete(controllers.removeScooters);
+    .put(controllers.updateScooter)
+    .delete(controllers.removeScooter);
   app.route('/city/:city/parking')
     .get(controllers.getParkingspots)
-    .post(controllers.addParkingspots);
+    .post(controllers.addParkingspot);
   app.route('/city/:city/parking/:parkingId')
-    .get(controllers.getParkingspots)
-    .put(controllers.updateParkingspots)
-    .delete(controllers.removeParkingspots);
+    .put(controllers.updateParkingspot)
+    .delete(controllers.removeParkingspot);
   app.route('/city/:city/charging')
-    .get(controllers.getChargingStations)
-    .post(controllers.addChargingStations);
-  app.route('/city/:city/charging/:chargingId')
-    .get(controllers.getChargingStations)
-    .put(controllers.updateChargingStations)
-    .delete(controllers.removeChargingStations);
+    .get(controllers.getChargingStations);
   app.route('/users')
     .get(controllers.getUsers)
-    .post(controllers.addUsers);
+    .post(controllers.addUser);
   app.route('/users/:userId')
     .get(controllers.getUsers)
-    .put(controllers.updateUsers)
-    .delete(controllers.removeUsers);
-  app.route('/admin')
-    .post(controllers.adminLogin);
+    .put(controllers.updateUser)
+    .delete(controllers.removeUser);
   app.route('/login')
-    .get(controllers.login);
+    .get(controllers.login); // TODO
   app.route('/logout')
-    .get(controllers.logout);
+    .get(controllers.logout); // TODO
   app.route('/invoice')
     .post(controllers.addInvoice);
   app.route('/invoice/user/:userId')
-    .get(controllers.getUserInvoices);
+    .get(controllers.getInvoices);
   app.route('/invoice/:invoiceId')
-    .get(controllers.getInvoice);
+    .get(controllers.getInvoices);
   app.route('/rates')
     .get(controllers.getRates)
-    .post(controllers.addRates);
+    .post(controllers.addRate);
   app.route('/rates/:rateId')
     .get(controllers.getRates)
-    .put(controllers.updateRates)
-    .delete(controllers.removeRates)
+    .put(controllers.updateRate)
+    .delete(controllers.removeRate)
 };
+
