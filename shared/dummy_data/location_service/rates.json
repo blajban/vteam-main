@@ -1,8 +1,21 @@
 [
     {
-    "a": 200,
-    "b": 300,
-    "c": 400,
-    "d": 650
+      "a": {
+        "name": "A rate name",
+        "tariff": 200
+      },
+      "b": {
+        "name": "Another rate name",
+        "tariff": 400
+      },
+      "c": {
+        "name": "Yet another rate name",
+        "tariff": 500
+      }
+      ,
+      "d": {
+        "name": "Yet another rate name",
+        "tariff": 700
+      }
     }
 ]

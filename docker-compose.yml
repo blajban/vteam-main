@@ -12,6 +12,15 @@ services:
             eventdriven:
         restart:
             "always"
+    mongodb:
+        image: "mongo"
+        container_name: "mongodb"
+        ports:
+            - "27017:27017"
+        networks:
+            eventdriven:
+        restart:
+            "always"
     logger:
         build:
             context: .
