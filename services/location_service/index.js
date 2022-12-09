@@ -1,7 +1,9 @@
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes } = require('../../shared/resources');
 const ratesHandler = require("./models/ratesHandler")
-const locationHandler = require("./models/locationHandler")
+const locationHandler = require("./models/locationHandler");
+
+
 
 /**
  *  Locationservice
@@ -10,6 +12,8 @@ const locationHandler = require("./models/locationHandler")
  *  Parkingspots/Chargingspots
  *  Rates
  */
+
+
 
 const locationService = async () => {
 
@@ -30,18 +34,18 @@ const locationService = async () => {
      *  Get locations
      *  @returns {Array}  Array of objects(Locations)
      */
-    broker.response(eventTypes.rpcEvents.getParkingSpots, (e) => {
-      return locationHandler.getLocations(e.data);
+    broker.response(eventTypes.rpcEvents.getParkingSpots, async (e) => {
+      return locationHandler.getLocations(await e.data);
     });
 
     /**
      *  Get Chargingsstations
      *  @returns {Array}  Array of objects(Chargingsstations)
-     */
+
     broker.response(eventTypes.rpcEvents.getChargingStations, (e) => {
       return locationHandler.getChargingStations(e.data);
     });
-
+    */
     /**
      * TODO
      *  adjust Parkingspot
