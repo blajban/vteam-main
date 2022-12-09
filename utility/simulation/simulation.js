@@ -151,12 +151,19 @@ const main = async () => {
           // Remove report-while-driving interval
           clearInterval(intervals[i]);
         }
-      })
+      });
+
+      
       
 
     }
 
 
+  });
+
+  // TODO
+  broker.onEvent(eventTypes.scooterEvents.scooterAdded, (e) => {
+    console.log(e);
   });
   
 } 

@@ -45,17 +45,31 @@ function Sidemenu(props) {
     }
 
     return (
-    <div className="Sidemenu" style={{
-      height: "100vh",
-      width: "300px",
-      backgroundColor: "#228377",
-      borderBottomRightRadius: "5px",
-      borderBottomLeftRadius: "5px",
-      textAlign: "center"
-
-      }}>
-        <button onClick={ () => { getLocations(props.targetCity) }}>Load Parkingspots</button>
-        <button onClick={ () => { getScooters(props.targetCity) }}>Load Scooters</button>
+    <div className="sidemenu">
+        <button onClick={() => {props.setTargetedcity(1)}}>Stockholm</button>
+        {(props.targetCity === 1) ?
+        <div className="button-container">
+        <button onClick={() => { getLocations(props.targetCity) }}> Parkingspots</button>
+        <button onClick={() => { getScooters(props.targetCity) }}> Scooters</button>
+        </div>:
+        <></>
+        }
+        <button onClick={() => {props.setTargetedcity(2)}}>Goteborg</button>
+        {(props.targetCity === 2) ?
+        <div className="button-container">
+        <button onClick={() => { getLocations(props.targetCity) }}> Parkingspots</button>
+        <button onClick={() => { getScooters(props.targetCity) }}> Scooters</button>
+        </div>:
+        <></>
+        }
+        <button onClick={() => {props.setTargetedcity(3)}}>Malmo</button>
+        {(props.targetCity === 3) ?
+        <div className="button-container">
+        <button onClick={() => { getLocations(props.targetCity) }}> Parkingspots</button>
+        <button onClick={() => { getScooters(props.targetCity) }}> Scooters</button>
+        </div>:
+        <></>
+        }
     </div>
     );
 }
