@@ -3,12 +3,12 @@ const usersModel = {
     getAllUsers: async function getAllUsers() {
         const response = await fetch('http://localhost:3500/users')
         const data = await response.json();
-        return data
+        return data;
     },
 
-    addUser: async function addUser(newUser) {
+    addUser: async function addUser(user) {
         const response = await fetch('http://localhost:3500/users', {
-            body: JSON.stringify(newUser),
+            body: JSON.stringify(user),
             headers: {
                 'content-type': 'application/json'
             },
@@ -21,12 +21,12 @@ const usersModel = {
     getUser: async function getUser(userId) {
         const response = await fetch(`http://localhost:3500/users/${userId}`);
         const data = await response.json();
-        return data
+        return data;
     },
 
-    updateUser: async function updateUser(userToUpdate) {
-        const response = await fetch(`http://localhost:3500/users/${userToUpdate.id}`, {
-            body: JSON.stringify(userToUpdate),
+    updateUser: async function updateUser(user) {
+        const response = await fetch(`http://localhost:3500/users/${user.userId}`, {
+            body: JSON.stringify(user),
             headers: {
                 'content-type': 'application/json'
             },
@@ -36,8 +36,8 @@ const usersModel = {
         await response.json();
     },
 
-    deleteUser: async function deleteUser(userToDelete) {
-        const response = await fetch(`http://localhost:3500/users/${userToDelete.id}`, {
+    deleteUser: async function deleteUser(user) {
+        const response = await fetch(`http://localhost:3500/users/${user.userId}`, {
             headers: {
                 'content-type': 'application/json'
             },
