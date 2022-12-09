@@ -264,13 +264,15 @@ exports.getUsers = async (req, res) => {
  */
 exports.addUser = async (req, res) => {
     const newUser = {
+        userId: req.body.userId,
         name: req.body.name,
         mobile: req.body.mobile,
         mail: req.body.mail,
         city: req.body.city,
         address: req.body.address,
         zip: req.body.zip,
-        admin: req.body.admin
+        admin: req.body.admin,
+        balance: req.body.balance
     };
 
     const broker = await mesBroker;
@@ -340,9 +342,21 @@ exports.removeUser = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
-    // TODO
-    console.log(req);
-    res.json("TODO");
+    const url = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}` +
+    `&redirect_uri=http://localhost:9001/callback`;
+    res.redirect(url)
+}
+
+exports.callback = async (req, res) => {
+    const broker = await mesBroker;
+    const loginEvent = broker.constructEvent(eventTypes.accountEvents.login, {
+        code: req.query.code
+    });
+
+    broker.request(loginEvent, (e) => {
+        // redirect till UserProfile sidan?
+        res.json(success("Login user", e));
+    });
 }
 
 exports.logout = async (req, res) => {
