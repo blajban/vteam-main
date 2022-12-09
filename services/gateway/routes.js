@@ -1,6 +1,12 @@
 const controllers = require('./controllers.js');
 
 module.exports = (app) => {
+  app.route('/eventflows/rent_scooter/:scooterId/:userId')
+    .get(controllers.rentScooter);
+  app.route('/eventflows/simulate_scooters')
+    .get(controllers.simulateScooters); // Todo
+  app.route('/eventflows/stop_simulation')
+    .get(controllers.stopSimulation); // Todo
   app.route('/city/:city/scooter')
     .get(controllers.getScooters)
     .post(controllers.addScooter);
@@ -8,36 +14,37 @@ module.exports = (app) => {
     .get(controllers.getScooters)
     .put(controllers.updateScooter)
     .delete(controllers.removeScooter);
-    app.route('/city/:city/parking')
+  app.route('/city/:city/parking')
     .get(controllers.getParkingspots)
-    .post(controllers.addParkingspot); // Docs / Service
+    .post(controllers.addParkingspot);
+  app.route('/city/:city/parking/:parkingId')
+    .put(controllers.updateParkingspot)
+    .delete(controllers.removeParkingspot);
   app.route('/city/:city/charging')
-    .get(controllers.getChargingStations); // Docs / service
+    .get(controllers.getChargingStations);
   app.route('/users')
-    .get(controllers.getUsers) // Docs / service
-    .post(controllers.addUser); // Docs / service
+    .get(controllers.getUsers)
+    .post(controllers.addUser);
   app.route('/users/:userId')
-    .get(controllers.getUsers) // Docs / service
-    .put(controllers.updateUser) // Docs / service
-    .delete(controllers.removeUsers); // TODO
-  app.route('/admin')
-    .post(controllers.adminLogin); // TODO
+    .get(controllers.getUsers)
+    .put(controllers.updateUser)
+    .delete(controllers.removeUser);
   app.route('/login')
     .get(controllers.login); // TODO
   app.route('/logout')
     .get(controllers.logout); // TODO
   app.route('/invoice')
-    .post(controllers.addInvoice); // TODO
+    .post(controllers.addInvoice);
   app.route('/invoice/user/:userId')
-    .get(controllers.getUserInvoices); // TODO
+    .get(controllers.getInvoices);
   app.route('/invoice/:invoiceId')
-    .get(controllers.getInvoice); // TODO
+    .get(controllers.getInvoices);
   app.route('/rates')
-    .get(controllers.getRates) // TODO
-    .post(controllers.addRates); // TODO
+    .get(controllers.getRates)
+    .post(controllers.addRate);
   app.route('/rates/:rateId')
-    .get(controllers.getRates) // TODO
-    .put(controllers.updateRates) // TODO
-    .delete(controllers.removeRates) // TODO
+    .get(controllers.getRates)
+    .put(controllers.updateRate)
+    .delete(controllers.removeRate)
 };
 
