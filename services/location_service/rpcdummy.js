@@ -6,7 +6,7 @@ const rpcdum = async () => {
 
     const e = broker.constructEvent(eventTypes.rpcEvents.getParkingSpots, {location: "malmo"});
     broker.request(e, async (res) => {
-        console.log(res)
+        console.log(await res)
     })
 
     /**const ev = broker.constructEvent(eventTypes.rpcEvents.getChargingStations, {});

@@ -8,7 +8,8 @@ const { mongowrapper } = require('../../shared/mongowrapper');
 async function dbFiller(){
 
 const mongoWrapper = new mongowrapper();
-/*
+await mongoWrapper.connectClient();
+
 let result = await mongoWrapper.insertMany("locaions", "stockholm", stockholm);
 console.log(result)
 result = await mongoWrapper.insertMany("locaions", "goteborg", goteborg);

@@ -12,7 +12,6 @@ class mongowrapper {
     constructor() {
       this.client;
       this.url = "mongodb://mongodb:27017/mydb"
-      this.connectClient();
     }
 
     async connectClient(){
@@ -50,7 +49,6 @@ class mongowrapper {
      * @returns {Object} - The result of the insert operation.
      */
     async insertOne(dbName, collectionName, document) {
-      this.connectClient();
       const collection = await this.getCollection(dbName, collectionName);
       return collection.insertOne(document);
     }
@@ -63,7 +61,6 @@ class mongowrapper {
      * @returns {Object} - The result of the insert operation.
      */
     async insertMany(dbName, collectionName, arrayOfDocuments) {
-        await this.connectClient();
         const collection = await this.getCollection(dbName, collectionName);
         return collection.insertMany(arrayOfDocuments);
       }
@@ -76,7 +73,6 @@ class mongowrapper {
      * @returns {Object} - The result of the insert operation.
      */
     async updateOne(dbName, collectionName, update) {
-      await this.connectClient();
       const collection = await this.getCollection(dbName, collectionName);
       return collection.updateOne( {"_id" : ObjectID(update._id)}, {$set: update});
     }
@@ -89,7 +85,6 @@ class mongowrapper {
      * @returns {Object} - The result of the insert operation.
      */
     async deleteOne(dbName, collectionName, deleteObject) {
-      await this.connectClient();
       const collection = await this.getCollection(dbName, collectionName);
       return collection.deleteOne( { "_id" : ObjectID(deleteObject._id) });
     }
@@ -101,7 +96,6 @@ class mongowrapper {
      * @returns {Object[]} - The documents.
      */
     async find(dbName, collectionName) {
-      await this.connectClient();
       const collection = await this.getCollection(dbName, collectionName);
       return collection.find({}).toArray();
     }
@@ -114,7 +108,6 @@ class mongowrapper {
      * @returns {Object} - The result of the insert operation.
      */
     async findOne(dbName, collectionName, findObject) {
-      await this.connectClient();
       const collection = await this.getCollection(dbName, collectionName);
       return collection.findOne( { "_id" : ObjectID(findObject._id) });
     }

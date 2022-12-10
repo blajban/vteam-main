@@ -1,8 +1,6 @@
 const stockholm = require("../../../shared/location_service/stockholmLocations.json");
 const goteborg = require("../../../shared/location_service/goteborgLocations.json");
 const malmo = require("../../../shared/location_service/malmoLocations.json");
-const { mongowrapper } = require('../../../shared/mongowrapper');
-
 
 
 /**
@@ -36,10 +34,9 @@ const locationHandler = {
      * @param {string} e.location - The name of the location.
      * @returns {object} The location object.
      */
-    getLocations: async (e) => {
-        const mongoWrapper = new mongowrapper()
+    getLocations: async (mongo, e) => {
         try {
-        const locationsCollection = await mongoWrapper.find("locaions", e.location || "stockholm");
+        const locationsCollection = await mongo.find("locaions", e.location || "stockholm");
         return locationsCollection;
         } catch (error) {
         console.log(error);
@@ -55,10 +52,10 @@ const locationHandler = {
    * getChargingStations({ location: "stockholm" });
    * // Returns all charging stations in Stockholm.
     */
-    getChargingStations: (e) => {
+    getChargingStations: (mongo, e) => {
         try {
           // Get the charging stations for the specified location.
-          const locationCollection = this.getLocations(e)
+          const locationCollection = this.getLocations(mongo, e)
 
           // Filter the charging stations by the "charging" property.
           return locationCollection.filter((parking) => parking.charging);
@@ -75,10 +72,9 @@ const locationHandler = {
      * @param {string} e.location - Name of collection.
      * @returns {Object} - The result of the adjust operation.
      */
-    adjustLocation: async (e) => {
-        const mongoWrapper = new mongowrapper()
+    adjustLocation: async (mongo, e) => {
     try {
-        const result = await mongoWrapper.updateOne("locaions", e.location, e);
+        const result = await mongo.updateOne("locaions", e.location, e);
         return result
 
     } catch (error) {
@@ -94,10 +90,9 @@ const locationHandler = {
      * @param {string} e.location - Name of collection.
      * @returns {Object} - The result of the insert operation.
      */
-    insertLocation: async (e) => {
-        const mongoWrapper = new mongowrapper()
+    insertLocation: async (mongo, e) => {
     try {
-        const result = await mongoWrapper.insertOne("locaions", e.location, e);
+        const result = await mongo.insertOne("locaions", e.location, e);
         return result
 
     } catch (error) {
@@ -112,10 +107,9 @@ const locationHandler = {
      * @param {string} e.location - Name of collection.
      * @returns {Object} - The result of the delete operation.
      */
-    deleteLocation: async (e) => {
-        const mongoWrapper = new mongowrapper()
+    deleteLocation: async (mongo, e) => {
     try {
-        const result = await mongoWrapper.deleteOne("locaions", e.location, e);
+        const result = await mongo.deleteOne("locaions", e.location, e);
         return result
 
     } catch (error) {
