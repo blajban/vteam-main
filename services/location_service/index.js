@@ -44,19 +44,11 @@ const locationService = async () => {
     });
 
     /**
-     *  Get Chargingsstations
-     *  @returns {Array}  Array of objects(Chargingsstations)
-
-    broker.response(eventTypes.rpcEvents.getChargingStations, (e) => {
-      return locationHandler.getChargingStations(e.data);
-    });
-    */
-    /**
      * TODO
      *  adjust Parkingspot
      *  @returns {Array}  Array of objects(Rates)
      */
-    broker.response(eventTypes.rpcEvents.adjustParkingspot, async (e) => {
+    broker.response(eventTypes.rpcEvents.updateParkingSpot, async (e) => {
       return await locationHandler.adjustLocations(mongoWrapper, e.data);
     });
 
@@ -65,7 +57,7 @@ const locationService = async () => {
      *  insert Parkingspot
      *  @returns {Array}  Array of objects(Rates)
      */
-    broker.response(eventTypes.rpcEvents.insertParkingspot, async (e) => {
+    broker.response(eventTypes.rpcEvents.addParkingSpot, async (e) => {
       return await locationHandler.insertLocations(mongoWrapper, e.data);
     });
 
@@ -93,7 +85,7 @@ const locationService = async () => {
      *  Adjust Rate
      *  @returns {Array}  Array of objects(Rates)
      */
-    broker.response(eventTypes.rpcEvents.adjustRates, async (e) => {
+    broker.response(eventTypes.rpcEvents.updateRate, async (e) => {
       return await ratesHandler.adjustRate(mongoWrapper, e.data);
     });
 
@@ -102,7 +94,16 @@ const locationService = async () => {
      *  insert Rate
      *  @returns {Array}  Array of objects(Rates)
      */
-    broker.response(eventTypes.rpcEvents.insertRate, async (e) => {
+    broker.response(eventTypes.rpcEvents.addRate, async (e) => {
+      return await ratesHandler.insertRate(mongoWrapper, e.data);
+    });
+
+    /**
+     *  TODO
+     *  delete Rate
+     *  @returns {Array}  Array of objects(Rates)
+     */
+    broker.response(eventTypes.rpcEvents.removeRate, async (e) => {
       return await ratesHandler.insertRate(mongoWrapper, e.data);
     });
 

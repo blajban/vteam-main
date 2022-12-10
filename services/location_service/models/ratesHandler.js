@@ -16,38 +16,49 @@ const ratesHandler = {
      * @example
      * // returns all rates
      */
-    getRates: (e) => {
+    getRates: async (mongo, e) => {
         try {
-            switch (e) {
-                case 'a':
-                    return rateDok[0][e]
-                case 'b':
-                    return rateDok[0][e]
-                case 'c':
-                    return rateDok[0][e]
-                case 'd':
-                    return rateDok[0][e]
-                default:
-                    return rateDok[0]
-            }
-            } catch(error) {
-                console.log(error)
-            }
-        return rateDok[0][e]
+        const ratesCollection = await mongo.find("rates", e.rate);
+        return ratesCollection;
+        } catch (error) {
+        console.log(error);
+        }
     },
     /**
      * Todo
      * @param {*} e
      */
-    adjustRate: (e) => {
-
+    adjustRate: async (mongo, e) => {
+        try {
+        const ratesCollection = await mongo.updateOne("rates", e.rate);
+        return ratesCollection;
+        } catch (error) {
+        console.log(error);
+        }
     },
     /**
      * Todo
      * @param {*} e
      */
-    insertRate: (e) => {
-
-    }
+    insertRate: async (mongo, e) => {
+        try {
+        const ratesCollection = await mongo.insertOne("rates", e.rate);
+        return ratesCollection;
+        } catch (error) {
+        console.log(error);
+        }
+    },
+    /**
+     * Todo
+     * @param {*} e
+     */
+    deleteRate: async (mongo, e) => {
+        try {
+        const ratesCollection = await mongo.deleteOne("rates", e.rate);
+        return ratesCollection;
+        } catch (error) {
+        console.log(error);
+        }
+    },
 }
 module.exports = ratesHandler;

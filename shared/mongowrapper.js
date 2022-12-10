@@ -69,12 +69,13 @@ class mongowrapper {
      * updates one document into a collection.
      * @param {string} dbName - The name of the database.
      * @param {string} collectionName - The name of the collection.
+     * @param {string} objectId - MongoDB Object id of object to be updated
      * @param {Object} update - Object to be updated
      * @returns {Object} - The result of the insert operation.
      */
-    async updateOne(dbName, collectionName, update) {
+    async updateOne(dbName, collectionName, objectId, update) {
       const collection = await this.getCollection(dbName, collectionName);
-      return collection.updateOne( {"_id" : ObjectID(update._id)}, {$set: update});
+      return collection.updateOne( {"_id" : ObjectID(objectId._id)}, {$set: update});
     }
 
     /**
