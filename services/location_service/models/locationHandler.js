@@ -1,23 +1,5 @@
-const stockholm = require("../../../shared/location_service/stockholmLocations.json");
-const goteborg = require("../../../shared/location_service/goteborgLocations.json");
-const malmo = require("../../../shared/location_service/malmoLocations.json");
-const database = require("../database/database")
-
-const { MongoDBWrapper } = require('../../../shared/mongowrapper');
 
 
-
-/**
-     * An object containing the locations.
-     * @property {object} stockholm - The Stockholm location.
-     * @property {object} goteborg - The Goteborg location.
-     * @property {object} malmo - The Malmo location.
-     */
-const locations = {
-    stockholm: stockholm,
-    goteborg: goteborg,
-    malmo: malmo
-};
 
 /**
  *  locationHandler
@@ -26,11 +8,6 @@ const locations = {
  */
 const locationHandler = {
 
-    chargingStations: new Map([
-        ["stockholm", stockholm.filter((station) => station.charging)],
-        ["goteborg", goteborg.filter((station) => station.charging)],
-        ["malmo", malmo.filter((station) => station.charging)],
-      ]),
 
     /**
      * Returns the location with the specified name.
@@ -38,10 +15,9 @@ const locationHandler = {
      * @param {string} e.location - The name of the location.
      * @returns {object} The location object.
      */
-    getLocations: async (e) => {
-        const mongoDbwrapper = new MongoDBWrapper(await database.getDb())
+    getLocations: async (mongo, e) => {
         try {
-        const locationsCollection = await mongoDbwrapper.find("locaions", e.location || "stockholm");
+        const locationsCollection = await mongo.find("locaions", e.location || "stockholm");
         return locationsCollection;
         } catch (error) {
         console.log(error);
@@ -49,60 +25,53 @@ const locationHandler = {
     },
 
     /**
-   * Returns the charging stations for the specified location.
-   * @param {object} e - The event object.
-   * @param {string} e.location - The name of the location.
-   * @returns {Array} An array of charging station objects.
-   * @example
-   * getChargingStations({ location: "stockholm" });
-   * // Returns all charging stations in Stockholm.
-    */
-    getChargingStations: (e) => {
-        try {
-          // Get the charging stations for the specified location.
-          const locationCollection = this.getLocations(e)
-
-          // Filter the charging stations by the "charging" property.
-          return locationCollection.filter((parking) => parking.charging);
-        } catch (error) {
-          console.log(error);
-        }
-      },
-
-    /**
-    * Adjust the locations of the charging stations.
-    * @param {object} e
-    * @param {string} e.
-    * @param {Array} e.chargingStations - The new list of charging stations for the location.
-    */
-    adjustLocations: (e) => {
+     * adjust a location from the database.
+     *
+     * @async
+     * @param {Object} e - The event object containing the location to adjust.
+     * @param {string} e.location - Name of collection.
+     * @returns {Object} - The result of the adjust operation.
+     */
+    adjustLocation: async (mongo, e) => {
     try {
-        const stationsCollection = db.collection("stations");
-        stationsCollection.findOneAndUpdate(
-        { location: e.location },
-        { $set: { stations: e.chargingStations } },
-        { returnOriginal: false }
-    );
+        const result = await mongo.updateOne("locaions", e.location, e);
+        return result
+
     } catch (error) {
         console.log(error);
     }
     },
 
     /**
-    *Insert a new location and its charging stations.
-    *@param {object} e
-    *@param {string} e.location - The name of the new location.
-    *@param {Array} e.chargingStations - The list of charging stations for the new location.
-    */
-insertLocations: (e) => {
+     * inserts a location from the database.
+     *
+     * @async
+     * @param {Object} e - The event object containing the location to insert.
+     * @param {string} e.location - Name of collection.
+     * @returns {Object} - The result of the insert operation.
+     */
+    insertLocation: async (mongo, e) => {
     try {
-    // Insert the new location into the "locations" collection.
-        const locationsCollection = db.collection("locations");
-        locationsCollection.insertOne({ name: e.location });
+        const result = await mongo.insertOne("locaions", e.location, e);
+        return result
 
-        // Insert the new charging stations into the "stations" collection.
-        const stationsCollection = db.collection("stations");
-        stationsCollection.insertOne({ location: e.location, stations: e.chargingStations });
+    } catch (error) {
+        console.log(error);
+    }
+    },
+    /**
+     * Deletes a location from the database.
+     *
+     * @async
+     * @param {Object} e - The event object containing the location to delete.
+     * @param {string} e.location - Name of collection.
+     * @returns {Object} - The result of the delete operation.
+     */
+    deleteLocation: async (mongo, e) => {
+    try {
+        const result = await mongo.deleteOne("locaions", e.location, e);
+        return result
+
     } catch (error) {
         console.log(error);
     }

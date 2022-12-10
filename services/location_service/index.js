@@ -2,6 +2,7 @@ const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes } = require('../../shared/resources');
 const ratesHandler = require("./models/ratesHandler")
 const locationHandler = require("./models/locationHandler");
+const { mongowrapper } = require('../../shared/mongowrapper');
 
 
 
@@ -18,6 +19,9 @@ const locationHandler = require("./models/locationHandler");
 const locationService = async () => {
 
     const broker = await new MessageBroker(host, 'location_service');
+    const mongoWrapper = new mongowrapper();
+    await mongoWrapper.connectClient();
+
 
     /**
      *  Listen on event lockScooter
@@ -35,24 +39,17 @@ const locationService = async () => {
      *  @returns {Array}  Array of objects(Locations)
      */
     broker.response(eventTypes.rpcEvents.getParkingSpots, async (e) => {
-      return locationHandler.getLocations(await e.data);
+      console.log(await locationHandler.getLocations(mongoWrapper, e.data))
+      return await locationHandler.getLocations(mongoWrapper, e.data);
     });
 
-    /**
-     *  Get Chargingsstations
-     *  @returns {Array}  Array of objects(Chargingsstations)
-
-    broker.response(eventTypes.rpcEvents.getChargingStations, (e) => {
-      return locationHandler.getChargingStations(e.data);
-    });
-    */
     /**
      * TODO
      *  adjust Parkingspot
      *  @returns {Array}  Array of objects(Rates)
      */
-    broker.response(eventTypes.rpcEvents.adjustParkingspot, (e) => {
-      return locationHandler.adjustLocations(e.data);
+    broker.response(eventTypes.rpcEvents.updateParkingSpot, async (e) => {
+      return await locationHandler.adjustLocations(mongoWrapper, e.data);
     });
 
     /**
@@ -60,16 +57,27 @@ const locationService = async () => {
      *  insert Parkingspot
      *  @returns {Array}  Array of objects(Rates)
      */
-    broker.response(eventTypes.rpcEvents.insertParkingspot, (e) => {
-      return locationHandler.insertLocations(e.data);
+    broker.response(eventTypes.rpcEvents.addParkingSpot, async (e) => {
+      return await locationHandler.insertLocations(mongoWrapper, e.data);
+    });
+
+    /**
+     * Registers a response handler for a specific event type.
+     *
+     * @param {string} eventType - The type of event to handle.
+     * @param {function} handler - The function to handle the event.
+     * @returns {undefined}
+     */
+    broker.response(eventTypes.rpcEvents.removeParkingSpot, async (e) => {
+      return await locationHandler.insertLocations(mongoWrapper, e.data);
     });
 
     /**
      *  Get Rates
      *  @returns {Array}  Array of objects(Rates)
      */
-    broker.response(eventTypes.rpcEvents.getRates, (e) => {
-      return ratesHandler.getRates(e.data);
+    broker.response(eventTypes.rpcEvents.getRates, async (e) => {
+      return await ratesHandler.getRates(mongoWrapper, e.data);
     });
 
     /**
@@ -77,8 +85,8 @@ const locationService = async () => {
      *  Adjust Rate
      *  @returns {Array}  Array of objects(Rates)
      */
-    broker.response(eventTypes.rpcEvents.adjustRates, (e) => {
-      return ratesHandler.adjustRate(e.data);
+    broker.response(eventTypes.rpcEvents.updateRate, async (e) => {
+      return await ratesHandler.adjustRate(mongoWrapper, e.data);
     });
 
     /**
@@ -86,8 +94,17 @@ const locationService = async () => {
      *  insert Rate
      *  @returns {Array}  Array of objects(Rates)
      */
-    broker.response(eventTypes.rpcEvents.insertRate, (e) => {
-      return ratesHandler.insertRate(e.data);
+    broker.response(eventTypes.rpcEvents.addRate, async (e) => {
+      return await ratesHandler.insertRate(mongoWrapper, e.data);
+    });
+
+    /**
+     *  TODO
+     *  delete Rate
+     *  @returns {Array}  Array of objects(Rates)
+     */
+    broker.response(eventTypes.rpcEvents.removeRate, async (e) => {
+      return await ratesHandler.insertRate(mongoWrapper, e.data);
     });
 
 }
