@@ -24,16 +24,8 @@ const eventTypes = {
         establishParkingRate: "establishParkingRate"
     },
     accountEvents: {
-        userAdded: "userAdded",
-        userUpdated: "userUpdated",
         login: "login",
-        userLoggedin: "userLoggedin",
         logout: "logout",
-        userLoggedout: "userLoggedout",
-        updateUserInfo: "updateUserInfo",
-        userInfoUpdated: "userInfoUpdated",
-        addMoney: "addMoney",
-        moneyAdded: "moneyAdded"
     },
     paymentEvents: {
         invoiceCreated: "invoiceCreated",

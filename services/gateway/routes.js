@@ -33,6 +33,8 @@ module.exports = (app) => {
     .get(controllers.login); // TODO
   app.route('/logout')
     .get(controllers.logout); // TODO
+  app.route('/callback')
+    .get(controllers.callback);
   app.route('/invoice')
     .post(controllers.addInvoice);
   app.route('/invoice/user/:userId')
