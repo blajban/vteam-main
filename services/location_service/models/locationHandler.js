@@ -1,9 +1,7 @@
 const stockholm = require("../../../shared/location_service/stockholmLocations.json");
 const goteborg = require("../../../shared/location_service/goteborgLocations.json");
 const malmo = require("../../../shared/location_service/malmoLocations.json");
-const database = require("../database/database")
-
-const { MongoDBWrapper } = require('../../../shared/mongowrapper');
+const { mongowrapper } = require('../../../shared/mongowrapper');
 
 
 
@@ -39,9 +37,9 @@ const locationHandler = {
      * @returns {object} The location object.
      */
     getLocations: async (e) => {
-        const mongoDbwrapper = new MongoDBWrapper(await database.getDb())
+        const mongoWrapper = new mongowrapper()
         try {
-        const locationsCollection = await mongoDbwrapper.find("locaions", e.location || "stockholm");
+        const locationsCollection = await mongoWrapper.find("locaions", e.location || "stockholm");
         return locationsCollection;
         } catch (error) {
         console.log(error);
@@ -78,9 +76,9 @@ const locationHandler = {
      * @returns {Object} - The result of the adjust operation.
      */
     adjustLocation: async (e) => {
-        const mongoDbwrapper = new MongoDBWrapper(await database.getDb())
+        const mongoWrapper = new mongowrapper()
     try {
-        const result = await mongoDbwrapper.updateOne("locaions", e.location, e);
+        const result = await mongoWrapper.updateOne("locaions", e.location, e);
         return result
 
     } catch (error) {
@@ -97,9 +95,9 @@ const locationHandler = {
      * @returns {Object} - The result of the insert operation.
      */
     insertLocation: async (e) => {
-        const mongoDbwrapper = new MongoDBWrapper(await database.getDb())
+        const mongoWrapper = new mongowrapper()
     try {
-        const result = await mongoDbwrapper.insertOne("locaions", e.location, e);
+        const result = await mongoWrapper.insertOne("locaions", e.location, e);
         return result
 
     } catch (error) {
@@ -115,9 +113,9 @@ const locationHandler = {
      * @returns {Object} - The result of the delete operation.
      */
     deleteLocation: async (e) => {
-        const mongoDbwrapper = new MongoDBWrapper(await database.getDb())
+        const mongoWrapper = new mongowrapper()
     try {
-        const result = await mongoDbwrapper.deleteOne("locaions", e.location, e);
+        const result = await mongoWrapper.deleteOne("locaions", e.location, e);
         return result
 
     } catch (error) {

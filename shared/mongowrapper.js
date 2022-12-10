@@ -1,16 +1,35 @@
 const  ObjectID = require('mongodb').ObjectId;
+const mongo = require("mongodb").MongoClient;
 
 /**
  * A class for creating MongoDB wrapper objects.
  */
-class MongoDBWrapper {
+class mongowrapper {
     /**
      * Creates a MongoDB wrapper object.
      * @param {Object} client - A MongoClient object.
      */
-    constructor(client) {
-      this.client = client;
+    constructor() {
+      this.client;
+      this.url = "mongodb://mongodb:27017/mydb"
+      this.connectClient();
     }
+
+    async connectClient(){
+      try {
+        const client = await mongo.connect(this.url, { useNewUrlParser: true,
+        useUnifiedTopology: true, });
+        this.client = client;
+        return client;
+      } catch(e) {
+            return {
+                errors: {
+                    message: "could not connect to mongo",
+                }
+            };
+      }
+    }
+
 
     /**
      * Gets a collection from MongoDB.
@@ -31,6 +50,7 @@ class MongoDBWrapper {
      * @returns {Object} - The result of the insert operation.
      */
     async insertOne(dbName, collectionName, document) {
+      this.connectClient();
       const collection = await this.getCollection(dbName, collectionName);
       return collection.insertOne(document);
     }
@@ -43,6 +63,7 @@ class MongoDBWrapper {
      * @returns {Object} - The result of the insert operation.
      */
     async insertMany(dbName, collectionName, arrayOfDocuments) {
+        await this.connectClient();
         const collection = await this.getCollection(dbName, collectionName);
         return collection.insertMany(arrayOfDocuments);
       }
@@ -55,6 +76,7 @@ class MongoDBWrapper {
      * @returns {Object} - The result of the insert operation.
      */
     async updateOne(dbName, collectionName, update) {
+      await this.connectClient();
       const collection = await this.getCollection(dbName, collectionName);
       return collection.updateOne( {"_id" : ObjectID(update._id)}, {$set: update});
     }
@@ -67,6 +89,7 @@ class MongoDBWrapper {
      * @returns {Object} - The result of the insert operation.
      */
     async deleteOne(dbName, collectionName, deleteObject) {
+      await this.connectClient();
       const collection = await this.getCollection(dbName, collectionName);
       return collection.deleteOne( { "_id" : ObjectID(deleteObject._id) });
     }
@@ -78,6 +101,7 @@ class MongoDBWrapper {
      * @returns {Object[]} - The documents.
      */
     async find(dbName, collectionName) {
+      await this.connectClient();
       const collection = await this.getCollection(dbName, collectionName);
       return collection.find({}).toArray();
     }
@@ -90,9 +114,10 @@ class MongoDBWrapper {
      * @returns {Object} - The result of the insert operation.
      */
     async findOne(dbName, collectionName, findObject) {
+      await this.connectClient();
       const collection = await this.getCollection(dbName, collectionName);
       return collection.findOne( { "_id" : ObjectID(findObject._id) });
     }
   }
 
-  module.exports = { MongoDBWrapper }
+  module.exports = { mongowrapper }
