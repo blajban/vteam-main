@@ -70,39 +70,56 @@ const locationHandler = {
       },
 
     /**
-    * Adjust the locations of the charging stations.
-    * @param {object} e
-    * @param {string} e.
-    * @param {Array} e.chargingStations - The new list of charging stations for the location.
-    */
-    adjustLocations: (e) => {
+     * adjust a location from the database.
+     *
+     * @async
+     * @param {Object} e - The event object containing the location to adjust.
+     * @param {string} e.location - Name of collection.
+     * @returns {Object} - The result of the adjust operation.
+     */
+    adjustLocation: async (e) => {
+        const mongoDbwrapper = new MongoDBWrapper(await database.getDb())
     try {
-        const stationsCollection = db.collection("stations");
-        stationsCollection.findOneAndUpdate(
-        { location: e.location },
-        { $set: { stations: e.chargingStations } },
-        { returnOriginal: false }
-    );
+        const result = await mongoDbwrapper.updateOne("locaions", e.location, e);
+        return result
+
     } catch (error) {
         console.log(error);
     }
     },
 
     /**
-    *Insert a new location and its charging stations.
-    *@param {object} e
-    *@param {string} e.location - The name of the new location.
-    *@param {Array} e.chargingStations - The list of charging stations for the new location.
-    */
-insertLocations: (e) => {
+     * inserts a location from the database.
+     *
+     * @async
+     * @param {Object} e - The event object containing the location to insert.
+     * @param {string} e.location - Name of collection.
+     * @returns {Object} - The result of the insert operation.
+     */
+    insertLocation: async (e) => {
+        const mongoDbwrapper = new MongoDBWrapper(await database.getDb())
     try {
-    // Insert the new location into the "locations" collection.
-        const locationsCollection = db.collection("locations");
-        locationsCollection.insertOne({ name: e.location });
+        const result = await mongoDbwrapper.insertOne("locaions", e.location, e);
+        return result
 
-        // Insert the new charging stations into the "stations" collection.
-        const stationsCollection = db.collection("stations");
-        stationsCollection.insertOne({ location: e.location, stations: e.chargingStations });
+    } catch (error) {
+        console.log(error);
+    }
+    },
+    /**
+     * Deletes a location from the database.
+     *
+     * @async
+     * @param {Object} e - The event object containing the location to delete.
+     * @param {string} e.location - Name of collection.
+     * @returns {Object} - The result of the delete operation.
+     */
+    deleteLocation: async (e) => {
+        const mongoDbwrapper = new MongoDBWrapper(await database.getDb())
+    try {
+        const result = await mongoDbwrapper.deleteOne("locaions", e.location, e);
+        return result
+
     } catch (error) {
         console.log(error);
     }

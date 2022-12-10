@@ -65,6 +65,17 @@ const locationService = async () => {
     });
 
     /**
+     * Registers a response handler for a specific event type.
+     *
+     * @param {string} eventType - The type of event to handle.
+     * @param {function} handler - The function to handle the event.
+     * @returns {undefined}
+     */
+    broker.response(eventTypes.rpcEvents.removeParkingSpot, (e) => {
+      return locationHandler.insertLocations(e.data);
+    });
+
+    /**
      *  Get Rates
      *  @returns {Array}  Array of objects(Rates)
      */
