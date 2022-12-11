@@ -126,7 +126,7 @@ class MongoWrapper {
    */
   async find(collectionName) {
     const collection = await this.getCollection(collectionName);
-    return collection.find({}).toArray();
+    return await collection.find({}).toArray();
   }
 
   /**

@@ -15,12 +15,11 @@ const locationHandler = {
      * @param {string} e.location - The name of the location.
      * @returns {object} The location object.
      */
-    getLocations: async (mongo, e) => {
+    getLocations: (mongo, e) => {
         try {
-        const locationsCollection = await mongo.find(e.location || "stockholm");
-        return locationsCollection;
+            return mongo.find(e.location || "stockholm");
         } catch (error) {
-        console.log(error);
+            console.log(error);
         }
     },
 
@@ -34,9 +33,7 @@ const locationHandler = {
      */
     adjustLocation: async (mongo, e) => {
     try {
-        const result = await mongo.updateOne(e.location, e);
-        return result
-
+        return await mongo.updateOne(e.location, e);
     } catch (error) {
         console.log(error);
     }
@@ -52,8 +49,7 @@ const locationHandler = {
      */
     insertLocation: async (mongo, e) => {
     try {
-        const result = await mongo.insertOne(e.location, e);
-        return result
+        return await mongo.insertOne(e.location, e);
 
     } catch (error) {
         console.log(error);
@@ -69,8 +65,7 @@ const locationHandler = {
      */
     deleteLocation: async (mongo, e) => {
     try {
-        const result = await mongo.deleteOne(e.location, e);
-        return result
+        return await mongo.deleteOne(e.location, e);
 
     } catch (error) {
         console.log(error);

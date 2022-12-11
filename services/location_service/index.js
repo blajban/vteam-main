@@ -38,6 +38,7 @@ const locationService = async () => {
      *  @returns {Array}  Array of objects(Locations)
      */
     broker.response(eventTypes.rpcEvents.getParkingSpots, async (e) => {
+      console.log(e)
       console.log(await locationHandler.getLocations(mongoWrapper, e.data))
       return await locationHandler.getLocations(mongoWrapper, e.data);
     });
