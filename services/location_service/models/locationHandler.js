@@ -17,7 +17,7 @@ const locationHandler = {
      */
     getLocations: async (mongo, e) => {
         try {
-        const locationsCollection = await mongo.find("locaions", e.location || "stockholm");
+        const locationsCollection = await mongo.find(e.location || "stockholm");
         return locationsCollection;
         } catch (error) {
         console.log(error);
@@ -34,7 +34,7 @@ const locationHandler = {
      */
     adjustLocation: async (mongo, e) => {
     try {
-        const result = await mongo.updateOne("locaions", e.location, e);
+        const result = await mongo.updateOne(e.location, e);
         return result
 
     } catch (error) {
@@ -52,7 +52,7 @@ const locationHandler = {
      */
     insertLocation: async (mongo, e) => {
     try {
-        const result = await mongo.insertOne("locaions", e.location, e);
+        const result = await mongo.insertOne(e.location, e);
         return result
 
     } catch (error) {
@@ -69,7 +69,7 @@ const locationHandler = {
      */
     deleteLocation: async (mongo, e) => {
     try {
-        const result = await mongo.deleteOne("locaions", e.location, e);
+        const result = await mongo.deleteOne(e.location, e);
         return result
 
     } catch (error) {

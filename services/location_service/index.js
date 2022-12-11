@@ -2,7 +2,7 @@ const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes } = require('../../shared/resources');
 const ratesHandler = require("./models/ratesHandler")
 const locationHandler = require("./models/locationHandler");
-const { mongowrapper } = require('../../shared/mongowrapper');
+const { MongoWrapper } = require('../../shared/mongowrapper');
 
 
 
@@ -19,8 +19,7 @@ const { mongowrapper } = require('../../shared/mongowrapper');
 const locationService = async () => {
 
     const broker = await new MessageBroker(host, 'location_service');
-    const mongoWrapper = new mongowrapper();
-    await mongoWrapper.connectClient();
+    const mongoWrapper = await new MongoWrapper("locations");
 
 
     /**
