@@ -80,7 +80,7 @@ class MongoWrapper {
    * @param {object} document - The document to insert.
    * @returns {object} - The result of the insert operation.
    */
-  async insertOne(collectionName, document, idName) {
+  async insertOne(collectionName, document) {
     const collection = await this.getCollection(collectionName);
     return collection.insertOne(document);
   }
