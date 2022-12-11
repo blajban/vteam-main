@@ -341,12 +341,22 @@ exports.removeUser = async (req, res) => {
     })
 }
 
+/**
+ * Log in user.
+ * @param {object} req 
+ * @param {object} res 
+ */
 exports.login = async (req, res) => {
     const url = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}` +
     `&redirect_uri=http://localhost:9001/callback`;
     res.redirect(url)
 }
 
+/**
+ * Callback where the user is send after logging in.
+ * @param {object} req 
+ * @param {object} res 
+ */
 exports.callback = async (req, res) => {
     const broker = await mesBroker;
     const loginEvent = broker.constructEvent(eventTypes.accountEvents.login, {
@@ -354,11 +364,16 @@ exports.callback = async (req, res) => {
     });
 
     broker.request(loginEvent, (e) => {
-        // redirect till UserProfile sidan?
-        res.json(success("Login user", e));
+        const url = "http://localhost:9001/UserProfile";
+        res.redirect(url)
     });
 }
 
+/**
+ * Log out user.
+ * @param {object} req 
+ * @param {object} res 
+ */
 exports.logout = async (req, res) => {
     // TODO
     console.log(req);
