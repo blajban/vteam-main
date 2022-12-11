@@ -140,11 +140,11 @@ class MessageBroker {
    * @param {function} cb - expects a callback function that returns data as a js object. 
    */
   async response(eventType, cb) {
-    const q = await this.channel.assertQueue(eventType, { durable: false });
+    //const q = await this.channel.assertQueue(eventType, { durable: false });
     this.channel.prefetch(1);
 
-    this.channel.consume(eventType, (msg) => {
-      const data = cb(JSON.parse(msg.content));
+    this.channel.consume(eventType, async (msg) => {
+      const data = await cb(JSON.parse(msg.content));
       this.channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(data)), {
         correlationId: msg.properties.correlationId
       });
