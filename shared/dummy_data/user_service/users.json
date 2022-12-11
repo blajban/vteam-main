@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "userId": 1,
     "name": "Selma Helin",
     "mobile": "0705556747",
     "mail": "selma.helin@hallaryd.se",
@@ -8,10 +8,10 @@
     "address": "Hällarydsvägen 14",
     "zip": "37470",
     "admin": false,
-    "account": 0
+    "balance": 0
   },
   {
-    "id": 2,
+    "userId": 2,
     "name": "Sanna Wahlgren",
     "mobile": "0705554933",
     "mail": "sanna.wahlgren@torhamn.com",
@@ -19,10 +19,10 @@
     "address": "Torhamnsstigen 35",
     "zip": "37042",
     "admin": false,
-    "account": 0
+    "balance": 0
   },
   {
-    "id": 3,
+    "userId": 3,
     "name": "Anni Öhrn",
     "mobile": "0705554085",
     "mail": "anni.ohrn@karlskrona.com",
@@ -30,10 +30,10 @@
     "address": "Karlskronagatan 24",
     "zip": "37130",
     "admin": false,
-    "account": 0
+    "balance": 0
   },
   {
-    "id": 4,
+    "userId": 4,
     "name": "Thilda Brandt",
     "mobile": "0705551979",
     "mail": "thilda.brandt@olofstrom.se",
@@ -41,10 +41,10 @@
     "address": "Olofströmsvägen 19",
     "zip": "29330",
     "admin": false,
-    "account": 0
+    "balance": 0
   },
   {
-    "id": 5,
+    "userId": 5,
     "name": "Alexander Sjölin",
     "mobile": "0705551906",
     "mail": "alexander.sjolin@karlshamn.se",
@@ -52,10 +52,10 @@
     "address": "Karlshamnsgatan 27",
     "zip": "37446",
     "admin": false,
-    "account": 0
+    "balance": 0
   },
   {
-    "id": 6,
+    "userId": 6,
     "name": "Ingemar Kihlström",
     "mobile": "0705553622",
     "mail": "ingemar.kihlstrom@solvesborg.com",
@@ -63,6 +63,6 @@
     "address": "Sölvesstigen 42",
     "zip": "29435",
     "admin": false,
-    "account": 0
+    "balance": 0
   }
 ]
