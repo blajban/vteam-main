@@ -1,7 +1,6 @@
-const { MongoWrapper } = require('../../../shared/mongowrapper');
+const { MongoWrapper } = require('../../shared/mongowrapper');
 const scooters = require('../../../shared/dummy_data/scooter_service/scooters');
-
-
+const { TopologyDescriptionChangedEvent } = require('mongodb');
 
 
 class ScooterHandler {
@@ -10,34 +9,13 @@ class ScooterHandler {
     }
 
     async #init() {
-      this.db = await new MongoWrapper("scoooooooooters");
+      this.db = await new MongoWrapper("scooters");
+      this.collectionName = "scooters";
       return this;
     }
 
-    async test() {
-      const newScooter = {
-        scooterId: await this.db.getNextId("scoooooooooters", "scooterId"),
-        status: "inactive",
-        userId: 0,
-        properties: {
-            location: "goteborg",
-            lat: 43.43434,
-            lng: 65.655656,
-            speed: 0,
-            battery: 100
-        },
-        log: []
-      }
-
-      const insertedObj = await this.db.insertOne("scoooooooooters", newScooter);
-
-      console.log(await this.db.find("scoooooooooters"));
-
-    }
-  
-    // TODO: db/options
     getScooters(options = {}) {
-      let result = this.scooters;
+      /*let result = this.scooters;
   
       
       if (options.hasOwnProperty('location')) {
@@ -46,20 +24,20 @@ class ScooterHandler {
         });
       }
   
-      
-  
       if (options.hasOwnProperty('scooterId')) {
         result = result.filter((scooter) => {
           return scooter.scooterId === options.scooterId;
         });
       }
   
-      return result;
+      return result;*/
+
+      return this.db.find(this.collectionName);
     }
   
-    addScooter(newScooterInfo) {
+    async addScooter(newScooterInfo) {
       const newScooter = {
-        scooterId: 500,
+        scooterId: await this.db.getNextId(this.collectionName, "scooterId"),
         status: "inactive",
         userId: 0,
         properties: {
@@ -71,13 +49,14 @@ class ScooterHandler {
         },
         log: []
       }
-  
-      this.scooters.push(newScooter);
-  
+
+      this.db.insertOne(this.collectionName, newScooter);
+
       return newScooter;
+     
     }
   
-    // TODO
+
     updateScooter(updatedScooter) {
       for (const scooter of this.scooters) {
         if (scooter.scooterId === updatedScooter.scooterId) {
@@ -110,12 +89,14 @@ class ScooterHandler {
       }
     }
     
+
     /**
      * Unlock scooter: change info and return scooter data.
      * @param {number} scooterId 
      * @param {number} userId 
      * @returns {object}
      */
+
     unlockScooter(scooterId, userId) {
       for (const scooter of this.scooters) {
         if (scooter.scooterId === scooterId) {
@@ -125,12 +106,13 @@ class ScooterHandler {
         }
       }
     }
-  
+
     /**
      * Scooter unlocked: change info and return scooter data.
      * @param {object} unlockedScooter 
      * @returns {object}
      */
+
     scooterUnlocked(unlockedScooter) {
       for (const scooter of this.scooters) {
         if (scooter.scooterId === unlockedScooter.scooterId) {
@@ -141,12 +123,13 @@ class ScooterHandler {
         }
       }
     }
-  
+
     /**
      * Lock scooter. Change info and return scooter data.
      * @param {number} scooterId 
      * @returns {object}
      */
+
     lockScooter(scooterId) {
       for (const scooter of this.scooters) {
         if (scooter.scooterId === scooterId) {
@@ -156,12 +139,14 @@ class ScooterHandler {
         }
       }
     }
+
   
     /**
      * Scooter locked. Change info and return locked scooter.
      * @param {object} lockedScooter 
      * @returns 
      */
+
     scooterLocked(lockedScooter) {
       for (const scooter of this.scooters) {
         if (scooter.scooterId === lockedScooter.scooterId) {
@@ -172,7 +157,7 @@ class ScooterHandler {
         }
       }
     }
-  
+
     /**
      * Update scooter position info
      * @param {number} scooterId 
@@ -190,15 +175,7 @@ class ScooterHandler {
       }
       return false;
     }
-  }
-  
-  const test = async () => {
-    const sh = await new ScooterHandler();
+}
 
-    await sh.test();
-  }
 
-  test();
-
-  
-  //module.exports = { ScooterHandler };
+module.exports = { ScooterHandler };

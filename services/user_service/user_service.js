@@ -1,40 +1,68 @@
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes } = require('../../shared/resources');
-const userHandler = require('./models/userHandler');
-const authHandler = require('./models/authHandler');
+const { UserHandler } = require('./models/userHandler');
+const { AuthHandler } = require('./models/authHandler');
 
 /**
- * Main function to set up event flow. Listens for events and sends event with correct data.
+ * User service
+ * Handles events and RPC calls when it comes to:
+ * Login and logout users
+ * Add, update information and remove users
  */
 const userService = async () => {
     const broker = await new MessageBroker(host, 'user_service');
+    const uh = await new UserHandler();
+    const ah = await new AuthHandler();
 
+    /**
+     * Get all users or one user if userId is specified
+     */
     broker.response(eventTypes.rpcEvents.getUsers, (e) => {
         if (e.data.userId) {
-            return userHandler.getUser(e.data.userId);
+            console.log(uh.getUser(e.data.userId));
+            return uh.getUser(e.data.userId);
         }
-        return userHandler.getUsers();
+        console.log(uh.getUsers());
+        return uh.getUsers();
     });
 
+    /**
+     * Add user
+     */
     broker.response(eventTypes.rpcEvents.addUser, (e) => {
-        return userHandler.addUser(e.data);
+        console.log(uh.addUser(e.data));
+        return uh.addUser(e.data);
     });
 
+    /**
+     * Update user
+     */
     broker.response(eventTypes.rpcEvents.updateUser, (e) => {
-        return userHandler.updateUser(e.data);
+        console.log(uh.updateUser(e.data));
+        return uh.updateUser(e.data);
     })
 
+    /**
+     * Remove user
+     */
     broker.response(eventTypes.rpcEvents.removeUser, (e) => {
-        return userHandler.removeUser(e.data.userId);
+        console.log(uh.removeUser(e.data.userId));
+        return uh.removeUser(e.data.userId);
     })
 
+    /**
+     * Login user
+     */
     broker.response(eventTypes.accountEvents.login, (e) => {
-        return authHandler.login(e.data.code);
+        return ah.login(e.data.code);
     })
 
+    /**
+     * TODO
+     */
     broker.response(eventTypes.accountEvents.logout, (e) => {
         // TODO
-        return authHandler.logout(e.data.code);
+        return ah.logout(e.data.code);
     })
 }
 
