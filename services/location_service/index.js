@@ -33,75 +33,91 @@ const locationService = async () => {
     });
 
 
-    /**
-     *  Get locations
-     *  @returns {Array}  Array of objects(Locations)
-     */
-    broker.response(eventTypes.rpcEvents.getParkingSpots, async (e) => {
-      console.log(e)
-      console.log(await locationHandler.getLocations(mongoWrapper, e.data))
-      return await locationHandler.getLocations(mongoWrapper, e.data);
-    });
-
-    /**
-     * TODO
-     *  adjust Parkingspot
-     *  @returns {Array}  Array of objects(Rates)
-     */
-    broker.response(eventTypes.rpcEvents.updateParkingSpot, async (e) => {
-      return await locationHandler.adjustLocations(mongoWrapper, e.data);
-    });
-
-    /**
-     * TODO ??
-     *  insert Parkingspot
-     *  @returns {Array}  Array of objects(Rates)
-     */
-    broker.response(eventTypes.rpcEvents.addParkingSpot, async (e) => {
-      return await locationHandler.insertLocations(mongoWrapper, e.data);
-    });
-
-    /**
-     * Registers a response handler for a specific event type.
+     /**
+     * Registers a response to getParkingSpots event.
      *
      * @param {string} eventType - The type of event to handle.
      * @param {function} handler - The function to handle the event.
-     * @returns {undefined}
+     * @returns {function}
      */
-    broker.response(eventTypes.rpcEvents.removeParkingSpot, async (e) => {
-      return await locationHandler.insertLocations(mongoWrapper, e.data);
+    broker.response(eventTypes.rpcEvents.getParkingSpots, async (e) => {
+      return await locationHandler.getLocations(mongoWrapper, e.data);
+    });
+
+     /**
+     * Registers a response to updateParkingSpot event.
+     *
+     * @param {string} eventType - The type of event to handle.
+     * @param {function} handler - The function to handle the event.
+     * @returns {function}
+     */
+    broker.response(eventTypes.rpcEvents.updateParkingSpot, async (e) => {
+      return await locationHandler.adjustLocation(mongoWrapper, e.data);
+    });
+
+     /**
+     * Registers a response to addParkingSpot event.
+     *
+     * @param {string} eventType - The type of event to handle.
+     * @param {function} handler - The function to handle the event.
+     * @returns {function}
+     */
+    broker.response(eventTypes.rpcEvents.addParkingSpot, async (e) => {
+      return await locationHandler.insertLocation(mongoWrapper, e.data);
     });
 
     /**
-     *  Get Rates
-     *  @returns {Array}  Array of objects(Rates)
+     * Registers a response to removeParkingSpot event.
+     *
+     * @param {string} eventType - The type of event to handle.
+     * @param {function} handler - The function to handle the event.
+     * @returns {function}
+     */
+    broker.response(eventTypes.rpcEvents.removeParkingSpot, async (e) => {
+      return await locationHandler.deleteLocation(mongoWrapper, e.data);
+    });
+
+
+
+     /**
+     * Registers a response to getRates event.
+     *
+     * @param {string} eventType - The type of event to handle.
+     * @param {function} handler - The function to handle the event.
+     * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.getRates, async (e) => {
       return await ratesHandler.getRates(mongoWrapper, e.data);
     });
 
     /**
-     *  TODO
-     *  Adjust Rate
-     *  @returns {Array}  Array of objects(Rates)
+     * Registers a response to updateRate event.
+     *
+     * @param {string} eventType - The type of event to handle.
+     * @param {function} handler - The function to handle the event.
+     * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.updateRate, async (e) => {
       return await ratesHandler.adjustRate(mongoWrapper, e.data);
     });
 
     /**
-     *  TODO
-     *  insert Rate
-     *  @returns {Array}  Array of objects(Rates)
+     * Registers a response to addRates event.
+     *
+     * @param {string} eventType - The type of event to handle.
+     * @param {function} handler - The function to handle the event.
+     * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.addRate, async (e) => {
       return await ratesHandler.insertRate(mongoWrapper, e.data);
     });
 
     /**
-     *  TODO
-     *  delete Rate
-     *  @returns {Array}  Array of objects(Rates)
+     * Registers a response to removeRate event.
+     *
+     * @param {string} eventType - The type of event to handle.
+     * @param {function} handler - The function to handle the event.
+     * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.removeRate, async (e) => {
       return await ratesHandler.insertRate(mongoWrapper, e.data);

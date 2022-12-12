@@ -15,6 +15,8 @@ result = await mongoWrapper.insertMany("goteborg", goteborg);
 console.log(result)
 result = await mongoWrapper.insertMany("malmo", malmo);
 console.log(result)
+result = await mongoWrapper.insertMany("rates", rates);
+console.log(result)
 
 /*
 result = await mongoWrapper.deleteOne(""malmo", {_id: "63945e552f9838569eb8f2a9" });

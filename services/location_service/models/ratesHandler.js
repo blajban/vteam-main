@@ -24,6 +24,15 @@ const ratesHandler = {
         console.log(error);
         }
     },
+
+    getRate: async (mongo, e) => {
+        try {
+        const ratesCollection = await mongo.findOne("rates", e.rate, {"tariff": 1});
+        return ratesCollection;
+        } catch (error) {
+        console.log(error);
+        }
+    },
     /**
      * Todo
      * @param {*} e
