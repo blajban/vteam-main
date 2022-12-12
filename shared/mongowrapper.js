@@ -56,12 +56,12 @@ class MongoWrapper {
         _id: idName,
         seq: 0
       };
-  
+
       collection.insertOne(newId);
-  
+
       return newId.seq;
     }
-    
+
     collection.deleteOne({ _id: lastId._id });
     const newId = {
       _id: idName,
@@ -114,7 +114,7 @@ class MongoWrapper {
    * @param {Object} deleteObject - Object to be deleted
    * @returns {Object} - The result of the insert operation.
    */
-  async deleteOne(dbName, collectionName, deleteObject) {
+  async deleteOne(collectionName, deleteObject) {
     const collection = await this.getCollection(collectionName);
     return collection.deleteOne( { "_id" : ObjectID(deleteObject._id) });
   }
@@ -126,7 +126,7 @@ class MongoWrapper {
    */
   async find(collectionName) {
     const collection = await this.getCollection(collectionName);
-    return collection.find({}).toArray();
+    return await collection.find({}).toArray();
   }
 
   /**

@@ -3,30 +3,25 @@ const goteborg = require("../../shared/location_service/goteborgLocations.json")
 const malmo = require("../../shared/location_service/malmoLocations.json");
 const rates = require("../../shared/location_service/rates.json");
 
-const { mongowrapper } = require('../../shared/mongowrapper');
+const { MongoWrapper } = require('../../shared/mongowrapper');
 
 async function dbFiller(){
 
-const mongoWrapper = new mongowrapper();
-await mongoWrapper.connectClient();
-/*
-let result = await mongoWrapper.insertMany("locaions", "stockholm", stockholm);
+const mongoWrapper = await new MongoWrapper("locations");
+
+let result = await mongoWrapper.insertMany("stockholm", stockholm);
 console.log(result)
-result = await mongoWrapper.insertMany("locaions", "goteborg", goteborg);
+result = await mongoWrapper.insertMany("goteborg", goteborg);
 console.log(result)
-result = await mongoWrapper.insertMany("locaions", "malmo", malmo);
+result = await mongoWrapper.insertMany("malmo", malmo);
+console.log(result)
+result = await mongoWrapper.insertMany("rates", rates);
 console.log(result)
 
 /*
 
-result = await mongoWrapper.deleteOne("locaions", "malmo", {_id: "63945e552f9838569eb8f2a9" });
+result = await mongoWrapper.updateOne("stockholm", {_id: "639738fe943f0965c4d7304b" }, {parkingId: 18});
 console.log(result)
 */
-
-
-result = await mongoWrapper.updateOne("locaions", "stockholm", {_id: "6394862bc01e1509db076b4c" }, {parkingId: 18});
-console.log(result)
-
-
 }
 dbFiller()

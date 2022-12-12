@@ -15,12 +15,11 @@ const locationHandler = {
      * @param {string} e.location - The name of the location.
      * @returns {object} The location object.
      */
-    getLocations: async (mongo, e) => {
+    getLocations: (mongo, e) => {
         try {
-        const locationsCollection = await mongo.find("locaions", e.location || "stockholm");
-        return locationsCollection;
+            return mongo.find(e.location || "stockholm");
         } catch (error) {
-        console.log(error);
+            console.log(error);
         }
     },
 
@@ -34,9 +33,11 @@ const locationHandler = {
      */
     adjustLocation: async (mongo, e) => {
     try {
-        const result = await mongo.updateOne("locaions", e.location, e);
-        return result
-
+        // Copy of object because cant update a object with _id
+        let objectWithoutId = JSON.parse(JSON.stringify(e.object));
+        // Remove _id from object to be updated
+        delete objectWithoutId._id
+        return await mongo.updateOne(e.location, {_id:e.object._id}, objectWithoutId);
     } catch (error) {
         console.log(error);
     }
@@ -52,8 +53,7 @@ const locationHandler = {
      */
     insertLocation: async (mongo, e) => {
     try {
-        const result = await mongo.insertOne("locaions", e.location, e);
-        return result
+        return await mongo.insertOne(e.location, e.object);
 
     } catch (error) {
         console.log(error);
@@ -69,8 +69,7 @@ const locationHandler = {
      */
     deleteLocation: async (mongo, e) => {
     try {
-        const result = await mongo.deleteOne("locaions", e.location, e);
-        return result
+        return await mongo.deleteOne(e.location, e.object);
 
     } catch (error) {
         console.log(error);
