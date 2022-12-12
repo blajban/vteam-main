@@ -33,7 +33,11 @@ const locationHandler = {
      */
     adjustLocation: async (mongo, e) => {
     try {
-        return await mongo.updateOne(e.location, e);
+        // Copy of object because cant update a object with _id
+        let objectWithoutId = JSON.parse(JSON.stringify(e.object));
+        // Remove _id from object to be updated
+        delete objectWithoutId._id
+        return await mongo.updateOne(e.location, {_id:e.object._id}, objectWithoutId);
     } catch (error) {
         console.log(error);
     }
@@ -49,7 +53,7 @@ const locationHandler = {
      */
     insertLocation: async (mongo, e) => {
     try {
-        return await mongo.insertOne(e.location, e);
+        return await mongo.insertOne(e.location, e.object);
 
     } catch (error) {
         console.log(error);
@@ -65,7 +69,7 @@ const locationHandler = {
      */
     deleteLocation: async (mongo, e) => {
     try {
-        return await mongo.deleteOne(e.location, e);
+        return await mongo.deleteOne(e.location, e.object);
 
     } catch (error) {
         console.log(error);

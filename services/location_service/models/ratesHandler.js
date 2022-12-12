@@ -18,7 +18,7 @@ const ratesHandler = {
      */
     getRates: async (mongo, e) => {
         try {
-        const ratesCollection = await mongo.find("rates", e.rate);
+        const ratesCollection = await mongo.find("rates");
         return ratesCollection;
         } catch (error) {
         console.log(error);
