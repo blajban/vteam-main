@@ -1,16 +1,93 @@
 const { MongoWrapper } = require('../../../shared/mongowrapper');
 
+/**
+ * UserHandler handles add users, update information and remove users.
+ */
 class UserHandler {
     constructor() {
         return this.#init();
     }
 
     async #init() {
-        this.db = await new MongoWrapper("usersb");
+        this.db = await new MongoWrapper('users');
+        this.collectionName = 'users';
         return this;
     }
 
-    async testUser() {
+    /**
+     * Returns the user with the specified userID.
+     * @param {number} userId - the user's id.
+     * @returns {Object} The user object.
+     */
+    async getUser(userId) {
+        try {
+            const user = await this.db.findOne(this.collectionName, {userId: userId});
+            return user;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    /**
+     * Returns all users.
+     * @returns {Object} The users object.
+     */
+    async getUsers() {
+        try {
+            const users = await this.db.find(this.collectionName);
+            return users;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    /**
+     * Inserts a new user to the database.
+     * @param {Object} newUser - The new user's data.
+     * @returns {Object} The result of the insert operation.
+     */
+    async addUser(newUser) {
+        try {
+            const user = await this.db.insertOne(this.collectionName, newUser);
+            return user;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    /**
+     * Updates information about the user.
+     * @param {Object} userToUpdate - The user's updated data.
+     * @returns {Object} - The result of the update operation.
+     */
+    async updateUser(userToUpdate) {
+        try {
+            // Copy of object because can't update a object with _id
+            let objectWithoutId = JSON.parse(JSON.stringify(userToUpdate));
+            // Remove _id from object to be updated
+            delete objectWithoutId._id;
+            const user = await this.db.updateOne(this.collectionName, {_id: userToUpdate._id}, objectWithoutId);
+            return user;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    /**
+     * Removes a user from the database.
+     * @param {number} userToRemove - The user to delete.
+     * @returns {Object} - The result of the delete operation.
+     */
+    async removeUser(userToRemove) {
+        try {
+            const user = await this.db.deleteOne(this.collectionName, userToRemove);
+            return user;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async newTestUser() {
         const newUser = {
             "userId": 1,
             "name": "Selma Helin",
@@ -22,17 +99,61 @@ class UserHandler {
             "admin": false,
             "balance": 0
         }
-        const addUser = await this.db.insertOne("usersb", newUser);
-        console.log("Har lagt till en användare");
-        const findUser = await this.db.find("usersb");
-        console.log(findUser);
+        //const addUser = await this.db.insertOne(this.collectionName, newUser);
+        const addUser = await this.addUser(newUser);
+        console.log(addUser);
+
+        //const findOneUser = await this.db.findOne(this.collectionName, { "userId" : 1 });
+        const findOneUser = await this.getUser(1);
+        if (findOneUser) {
+            console.log("Användaren 1 finns");
+            console.log(findOneUser);
+        } else {
+            console.log("Användaren 1 finns inte");
+        }
+
+        const findOneUser2 = await this.getUser(2);
+        //const findOneUser2 = await this.db.findOne(this.collectionName, { "userId" : 2 });
+        if (findOneUser2) {
+            console.log("Användaren 2 finns");
+        } else {
+            console.log("Användaren 2 finns inte");
+        }
+
+        const updateUser = {
+            "userId": 1,
+            "name": "Arne Nilsson",
+            "mobile": "0705556747",
+            "mail": "selma.helin@hallaryd.se",
+            "city": "Hällaryd",
+            "address": "Hällarydsvägen 14",
+            "zip": "37470",
+            "admin": false,
+            "balance": 20
+        }
+
+        findOneUser.balance = 20;
+        findOneUser.name = "Arne Nilsson";
+        const updateUser2 = await this.updateUser(findOneUser);
+        console.log(updateUser2);
+        const findOneUser3 = await this.getUser(1);
+        console.log(findOneUser3);
+        console.log("Användare 1 uppdaterad");
+        console.log("");
+
+        console.log("Tar bort användare 1");
+        const remove2 = await this.removeUser(findOneUser3);
+        console.log(remove2);
+        const findOneUser4 = await this.getUser(1);
+        console.log(findOneUser4);
+        console.log("Användare 1 borttagen");
     }
 }
 
 const testFunc = async () => {
     const sh = await new UserHandler();
-    await sh.testUser();
+    await sh.newTestUser();
 }
 testFunc();
 
-// module.exports = { UserHandler };
+module.exports = { UserHandler };
