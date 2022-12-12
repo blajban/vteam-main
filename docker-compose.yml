@@ -146,3 +146,12 @@ services:
             "always"
         ports:
             - "3500:3500"
+    payment_service:
+        build: 
+            context: .
+            dockerfile: ./services/payment_service/Dockerfile
+        container_name: "payment_service"
+        networks:
+            eventdriven:
+        restart:
+            "always"

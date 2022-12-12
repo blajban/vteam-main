@@ -52,3 +52,12 @@ services:
             eventdriven:
         restart:
             "always"
+    payment_service:
+        build: 
+            context: .
+            dockerfile: ./services/payment_service/Dockerfile
+        container_name: "payment_service"
+        networks:
+            eventdriven:
+        restart:
+            "always"
