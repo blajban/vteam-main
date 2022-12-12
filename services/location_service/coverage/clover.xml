@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1670880027980" clover="3.2.0">
+  <project timestamp="1670880027980" name="All files">
+    <metrics statements="37" coveredstatements="25" conditionals="2" coveredconditionals="1" methods="9" coveredmethods="8" elements="48" coveredelements="34" complexity="0" loc="37" ncloc="37" packages="1" files="2" classes="2"/>
+    <file name="locationHandler.js" path="C:\Users\Alex\Desktop\vteams\vteam-main\services\location_service\models\locationHandler.js">
+      <metrics statements="16" coveredstatements="12" conditionals="2" coveredconditionals="1" methods="4" coveredmethods="4"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="19" count="1" type="stmt"/>
+      <line num="20" count="1" type="cond" truecount="1" falsecount="1"/>
+      <line num="22" count="0" type="stmt"/>
+      <line num="35" count="1" type="stmt"/>
+      <line num="37" count="1" type="stmt"/>
+      <line num="39" count="1" type="stmt"/>
+      <line num="40" count="1" type="stmt"/>
+      <line num="42" count="0" type="stmt"/>
+      <line num="55" count="1" type="stmt"/>
+      <line num="56" count="1" type="stmt"/>
+      <line num="59" count="0" type="stmt"/>
+      <line num="71" count="1" type="stmt"/>
+      <line num="72" count="1" type="stmt"/>
+      <line num="75" count="0" type="stmt"/>
+      <line num="79" count="1" type="stmt"/>
+    </file>
+    <file name="ratesHandler.js" path="C:\Users\Alex\Desktop\vteams\vteam-main\services\location_service\models\ratesHandler.js">
+      <metrics statements="21" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="4"/>
+      <line num="6" count="1" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="13" count="1" type="stmt"/>
+      <line num="14" count="1" type="stmt"/>
+      <line num="16" count="0" type="stmt"/>
+      <line num="21" count="0" type="stmt"/>
+      <line num="22" count="0" type="stmt"/>
+      <line num="23" count="0" type="stmt"/>
+      <line num="25" count="0" type="stmt"/>
+      <line num="33" count="1" type="stmt"/>
+      <line num="35" count="1" type="stmt"/>
+      <line num="37" count="1" type="stmt"/>
+      <line num="38" count="1" type="stmt"/>
+      <line num="40" count="0" type="stmt"/>
+      <line num="48" count="1" type="stmt"/>
+      <line num="49" count="1" type="stmt"/>
+      <line num="51" count="0" type="stmt"/>
+      <line num="59" count="1" type="stmt"/>
+      <line num="60" count="1" type="stmt"/>
+      <line num="62" count="0" type="stmt"/>
+      <line num="66" count="1" type="stmt"/>
+    </file>
+  </project>
+</coverage>
