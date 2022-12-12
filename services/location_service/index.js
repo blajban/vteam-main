@@ -109,6 +109,7 @@ const locationService = async () => {
      * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.addRate, async (e) => {
+      console.log(e)
       return await ratesHandler.insertRate(mongoWrapper, e.data);
     });
 
@@ -120,7 +121,7 @@ const locationService = async () => {
      * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.removeRate, async (e) => {
-      return await ratesHandler.insertRate(mongoWrapper, e.data);
+      return await ratesHandler.deleteRate(mongoWrapper, e.data);
     });
 
 }

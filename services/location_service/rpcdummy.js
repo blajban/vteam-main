@@ -2,30 +2,24 @@ const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes } = require('../../shared/resources');
 
 const rpcdum = async () => {
+
+
+    /*
     const broker = await new MessageBroker(host, 'dummyBroker');
-    const a = broker.constructEvent(eventTypes.rpcEvents.getParkingSpots, {location: "stockholm"});
-    broker.request(a, async(res) => {
-        console.log( res)
-    })
 
-    const d = broker.constructEvent(eventTypes.rpcEvents.updateParkingSpot, {
-        location: "stockholm",
+    const b = broker.constructEvent(eventTypes.rpcEvents.removeParkingSpot, {location: "malmo",
         object: {
-            _id: '6397438a57ae0d246f0127f0',
-            parkingId: 18,
-            properties: { lat: 59.34214241843199, lng: 18.057390907092845 },
-            charging: true,
-            rate: 'd'
-          }
-        });
-    broker.request(d, async(res) => {
+            _id: "639760bf4b86a3674b421bf1"
+        }});
+    broker.request(b, async(res) => {
         console.log( res)
     })
 
+    const a = broker.constructEvent(eventTypes.rpcEvents.getParkingSpots, {location: "malmo"});
     broker.request(a, async(res) => {
         console.log( res)
     })
-
+    */
 
     //const e = broker.constructEvent(eventTypes.rpcEvents.updateParkingSpot, {
     //location: "stockholm",

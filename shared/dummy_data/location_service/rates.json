@@ -1,21 +1,24 @@
 [
+
     {
-      "a": {
-        "name": "A rate name",
-        "tariff": 200
-      },
-      "b": {
-        "name": "Another rate name",
-        "tariff": 400
-      },
-      "c": {
-        "name": "Yet another rate name",
-        "tariff": 500
-      }
-      ,
-      "d": {
-        "name": "Yet another rate name",
-        "tariff": 700
-      }
+      "id": "a",
+      "name": "A rate name",
+      "tariff": 200
+    },
+    {
+      "id": "b",
+      "name": "Another rate name",
+      "tariff": 400
+    },
+    {
+      "id": "c",
+      "name": "Yet another rate name",
+      "tariff": 500
+    },
+    {
+      "id": "d",
+      "name": "Yet another rate name",
+      "tariff": 700
     }
+
 ]
