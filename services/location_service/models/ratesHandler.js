@@ -1,5 +1,3 @@
-const rateDok = require("../../../shared/location_service/rates");
-
 /**
  *  ratesHandler
  *  rates
@@ -9,12 +7,6 @@ const ratesHandler = {
     /**
      *  @param {object} e
      *  @returns {Number}  Array of object(Rates)
-     * getRates({city:"a"})
-     * @example
-     * // returns rate for a
-     *  getRates()
-     * @example
-     * // returns all rates
      */
     getRates: async (mongo, e) => {
         try {
@@ -38,13 +30,11 @@ const ratesHandler = {
      * @param {*} e
      */
     adjustRate: async (mongo, e) => {
-        console.log(e)
         try {
             // Copy of object because cant update a object with _id
             let objectWithoutId = JSON.parse(JSON.stringify(e));
             // Remove _id from object to be updated
             delete objectWithoutId._id
-            console.log(e._id)
             return await mongo.updateOne("rates",{_id:e._id}, objectWithoutId);
         } catch (error) {
             console.log(error);
@@ -66,11 +56,8 @@ const ratesHandler = {
      * @param {*} e
      */
     deleteRate: async (mongo, e) => {
-        console.log(e)
         try {
-            const result = await mongo.deleteOne("rates", e);
-            console.log(result)
-        return result;
+            return await mongo.deleteOne("rates", e);
         } catch (error) {
             console.log(error);
         }

@@ -1,34 +1,45 @@
 const ratesHandler = require('./ratesHandler');
 
-jest.mock('../../../shared/location_service/rates', () => (
-  [{
-      "a": 200,
-      "b": 300,
-      "c": 400,
-      "d": 650
-  }]), { virtual: true });
-
-
+const mongo = {
+  find: jest.fn(() => {
+    return { id: 'a', rate: 0.5 };
+  }),
+  insertOne: jest.fn(() => {
+    return "function called";
+  }),
+  updateOne: jest.fn(() => {
+    return "function called";
+  }),
+  deleteOne: jest.fn(() => {
+    return "function called";
+  })
+};
 
 describe('ratesHandler', () => {
+  const e = { name: 'a' };
+  const ed = { _id: 'a', name: 'a'} ;
 
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
-    it('tests getRate with a', () => {
-      expect(ratesHandler.getRates("a")).toEqual(expect.any(Number));
-    });
-    it('tests getRate with b', () => {
-      expect(ratesHandler.getRates("b")).toEqual(expect.any(Number));
-    });
-    it('tests getRate with c', () => {
-      expect(ratesHandler.getRates("c")).toEqual(expect.any(Number));
-    });
-    it('tests getRate with d', () => {
-      expect(ratesHandler.getRates("d")).toEqual(expect.any(Number));
-    });
-    it('tests getRate without input', () => {
-      expect(ratesHandler.getRates()).toEqual(expect.any(Object));
-    });
+  it('tests getRate', async () => {
+    expect(await ratesHandler.getRates(mongo)).toEqual({ id: 'a', rate: 0.5 });
+    expect(mongo.find).toHaveBeenCalledWith("rates");
+  });
+
+  it('tests adjustRate', async () => {
+    expect(await ratesHandler.adjustRate(mongo, ed)).toEqual("function called");
+    expect(mongo.updateOne).toHaveBeenCalledWith("rates",{_id: "a"} ,{ name: 'a'});
+  });
+
+  it('tests insertRate', async () => {
+    expect(await ratesHandler.insertRate(mongo, e)).toEqual("function called");
+    expect(mongo.insertOne).toHaveBeenCalledWith("rates", { name: 'a' });
+  });
+
+  it('tests deleteRate', async () => {
+    expect(await ratesHandler.deleteRate(mongo, e)).toEqual("function called");
+    expect(mongo.deleteOne).toHaveBeenCalledWith("rates", { name: 'a' });
+  });
 });
