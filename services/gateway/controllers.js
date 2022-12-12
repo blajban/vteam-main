@@ -348,7 +348,7 @@ exports.removeUser = async (req, res) => {
  */
 exports.login = async (req, res) => {
     const url = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}` +
-    `&redirect_uri=http://localhost:9001/callback`;
+    `&redirect_uri=http://localhost:9001/UserProfile`;
     res.redirect(url)
 }
 
@@ -365,7 +365,7 @@ exports.callback = async (req, res) => {
 
     broker.request(loginEvent, (e) => {
         const url = "http://localhost:9001/UserProfile";
-        res.redirect(url)
+        res.json(success("Login success", e));
     });
 }
 
