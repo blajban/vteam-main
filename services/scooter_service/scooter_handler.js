@@ -1,7 +1,12 @@
 const { MongoWrapper } = require('../../shared/mongowrapper');
 const scooters = require('../../../shared/dummy_data/scooter_service/scooters');
-const { TopologyDescriptionChangedEvent } = require('mongodb');
 
+
+
+// TODO
+// - db
+// - ändra till _id
+// 
 
 class ScooterHandler {
     constructor() {
@@ -14,30 +19,28 @@ class ScooterHandler {
       return this;
     }
 
-    getScooters(options = {}) {
-      /*let result = this.scooters;
-  
-      
-      if (options.hasOwnProperty('location')) {
-        result = result.filter((scooter) => {
-          return scooter.properties.location === options.location;
-        });
-      }
-  
-      if (options.hasOwnProperty('scooterId')) {
-        result = result.filter((scooter) => {
-          return scooter.scooterId === options.scooterId;
-        });
-      }
-  
-      return result;*/
+    async getScooters(options = {}) {
+      const filter = {};
 
-      return this.db.find(this.collectionName);
+      if (options.hasOwnProperty('_id')) {
+        filter._id = options._id;
+
+        const scooter = this.db.findOne(this.collectionName, filter);
+        if (scooter === null) {
+          return [];
+        }
+      }
+
+      if (options.hasOwnProperty('location')) {
+        filter['properties.location'] = options.location;
+      }
+
+      return await this.db.find(this.collectionName, filter);
+
     }
   
     async addScooter(newScooterInfo) {
       const newScooter = {
-        scooterId: await this.db.getNextId(this.collectionName, "scooterId"),
         status: "inactive",
         userId: 0,
         properties: {
@@ -50,43 +53,52 @@ class ScooterHandler {
         log: []
       }
 
-      this.db.insertOne(this.collectionName, newScooter);
+      await this.db.insertOne(this.collectionName, newScooter);
 
       return newScooter;
      
     }
   
 
-    updateScooter(updatedScooter) {
-      for (const scooter of this.scooters) {
-        if (scooter.scooterId === updatedScooter.scooterId) {
-  
-          if (updatedScooter.hasOwnProperty('status')) {
-            scooter.status = updatedScooter.status;
-          }
-          if (updatedScooter.hasOwnProperty('location')) {
-              scooter.properties.location = updatedScooter.location;
-          }
-          if (updatedScooter.hasOwnProperty('lat')) {
-              scooter.properties.lat = updatedScooter.lat;
-          }
-          if (updatedScooter.hasOwnProperty('lng')) {
-              scooter.properties.lng = updatedScooter.lng;
-          }
-  
-          return scooter;
-        }
+    async updateScooter(updatedScooter) {
+      const id = {};
+      const filter = {};
+
+      if (updatedScooter.hasOwnProperty('_id')) {
+        id._id = updatedScooter._id;
       }
+
+      console.log(id._id);
+
+      if (updatedScooter.hasOwnProperty('status')) {
+        filter.status = updatedScooter.status;
+      }
+
+      if (updatedScooter.hasOwnProperty('location')) {
+        filter['properties.location'] = updatedScooter.location;
+      }
+
+      if (updatedScooter.hasOwnProperty('lat')) {
+        filter['properties.lat'] = updatedScooter.lat;
+      }
+
+      if (updatedScooter.hasOwnProperty('lng')) {
+        filter['properties.lng'] = updatedScooter.lng;
+      }
+
+      await this.db.updateOne(this.collectionName, id, filter);
+
+      return await this.db.findOne(this.collectionName, filter);
       
     }
   
-    removeScooter(scooterId) {
-      for (let i = 0; i < this.scooters.length; i++) {
-        if (this.scooters[i].scooterId === scooterId) {
-          const removedScooter = this.scooters.splice(i, 1)[0];
-          return removedScooter;
-        }
-      }
+    async removeScooter(id) {
+
+      const deletedScooter = await this.db.findOne(this.collectionName, id);
+
+      await this.db.deleteOne(this.collectionName, id);
+
+      return deletedScooter;
     }
     
 
