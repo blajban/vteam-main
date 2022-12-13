@@ -4,9 +4,9 @@ const mesBroker = new MessageBroker(host, "gateway");
 
 /**
  * Formulate a rest answer.
- * @param {string} description 
- * @param {object} content 
- * @returns 
+ * @param {string} description
+ * @param {object} content
+ * @returns
  */
 const success = (description, content) => {
     return {
@@ -44,15 +44,15 @@ exports.stopSimulation = async (req, res) => {
 
 /**
  * Get all scooters in a city or a specific scooter in a city if scooterId is provided.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.getScooters = async (req, res) => {
     const filter = {
         location: req.params.city
     };
 
-    
+
     if (req.params.hasOwnProperty('scooterId')) {
         filter.scooterId = parseInt(req.params.scooterId)
     }
@@ -66,8 +66,8 @@ exports.getScooters = async (req, res) => {
 
 /**
  * Add scooter to a city.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.addScooter = async (req, res) => {
     const newScooter = {
@@ -85,9 +85,9 @@ exports.addScooter = async (req, res) => {
 }
 
 /**
- * Update scooter in a city. 
- * @param {object} req 
- * @param {object} res 
+ * Update scooter in a city.
+ * @param {object} req
+ * @param {object} res
  */
 exports.updateScooter = async (req, res) => {
     const scooterToUpdate = {
@@ -106,7 +106,7 @@ exports.updateScooter = async (req, res) => {
     if (req.body.hasOwnProperty('lng')) {
         scooterToUpdate.lng = parseFloat(req.body.lng);
     }
-    
+
 
     const broker = await mesBroker;
     const updateScooterEvent = broker.constructEvent(eventTypes.rpcEvents.updateScooter, scooterToUpdate);
@@ -119,8 +119,8 @@ exports.updateScooter = async (req, res) => {
 
 /**
  * Remove scooter in a city
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.removeScooter = async (req, res) => {
     const broker = await mesBroker;
@@ -134,8 +134,8 @@ exports.removeScooter = async (req, res) => {
 
 /**
  * Get parking spots and charging stations in a city
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.getParkingspots = async (req, res) => {
     const filter = {
@@ -151,16 +151,13 @@ exports.getParkingspots = async (req, res) => {
 
 /**
  * Add parking spot (or charging station) to a city.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.addParkingspot = async (req, res) => {
     const newParkingSpot = {
-        lng: parseFloat(req.body.lng),
-        lat: parseFloat(req.body.lat),
-        charging: req.body.charging,
-        rate: req.body.rate,
-        location: req.params.city
+        location: req.body.location,
+        object: req.body.object
     };
 
     const broker = await mesBroker;
@@ -173,29 +170,14 @@ exports.addParkingspot = async (req, res) => {
 
 /**
  * Update parking spot (or charging station) in a city.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.updateParkingspot = async (req, res) => {
     const parkingspotToUpdate = {
-        parkingId: parseInt(req.params.parkingId)
+        location: req.body.location,
+        object: req.body.object
     };
-
-    if (req.body.hasOwnProperty('location')) {
-        parkingspotToUpdate.status = req.body.location;
-    }
-    if (req.body.hasOwnProperty('lng')) {
-        parkingspotToUpdate.lng = parseFloat(req.body.lng);
-    }
-    if (req.body.hasOwnProperty('lat')) {
-        parkingspotToUpdate.lat = parseFloat(req.body.lat);
-    }
-    if (req.body.hasOwnProperty('charging')) {
-        parkingspotToUpdate.charging = req.body.charging;
-    }
-    if (req.body.hasOwnProperty('rate')) {
-        parkingspotToUpdate.rate = req.body.rate;
-    }
 
     const broker = await mesBroker;
     const updateParkingspotEvent = broker.constructEvent(eventTypes.rpcEvents.updateParkingSpot, parkingspotToUpdate);
@@ -207,14 +189,16 @@ exports.updateParkingspot = async (req, res) => {
 
 /**
  * Remove parking spot (or charging station) in a city.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.removeParkingspot = async (req, res) => {
+    const parkingspotToDelete = {
+        location: req.body.location,
+        object: req.body.object
+    };
     const broker = await mesBroker;
-    const removeParkingspotEvent = broker.constructEvent(eventTypes.rpcEvents.removeParkingSpot, {
-        parkingId: parseInt(req.params.parkingId)
-    });
+    const removeParkingspotEvent = broker.constructEvent(eventTypes.rpcEvents.removeParkingSpot, parkingspotToDelete);
     broker.request(removeParkingspotEvent, (e) => {
         res.json(success("Removed parkingspot", e));
     })
@@ -222,8 +206,8 @@ exports.removeParkingspot = async (req, res) => {
 
 /**
  * Get charging stations in a city (parking spots where charging is true)
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.getChargingStations = async (req, res) => {
     const filter = {
@@ -240,12 +224,12 @@ exports.getChargingStations = async (req, res) => {
 
 /**
  * Get all users or a specific user if userId is provided.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.getUsers = async (req, res) => {
     const filter = {};
-    
+
     if (req.params.hasOwnProperty('userId')) {
         filter.userId = parseInt(req.params.userId)
     }
@@ -259,8 +243,8 @@ exports.getUsers = async (req, res) => {
 
 /**
  * Add user.
- * @param {object} req 
- * @param {objec} res 
+ * @param {object} req
+ * @param {objec} res
  */
 exports.addUser = async (req, res) => {
     const newUser = {
@@ -285,8 +269,8 @@ exports.addUser = async (req, res) => {
 
 /**
  * Update user.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.updateUser = async (req, res) => {
     const userToUpdate = {
@@ -328,8 +312,8 @@ exports.updateUser = async (req, res) => {
 
 /**
  * Remove user.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.removeUser = async (req, res) => {
     const broker = await mesBroker;
@@ -343,8 +327,8 @@ exports.removeUser = async (req, res) => {
 
 /**
  * Log in user.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.login = async (req, res) => {
     const url = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}` +
@@ -354,8 +338,8 @@ exports.login = async (req, res) => {
 
 /**
  * Callback where the user is send after logging in.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.callback = async (req, res) => {
     const broker = await mesBroker;
@@ -371,8 +355,8 @@ exports.callback = async (req, res) => {
 
 /**
  * Log out user.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.logout = async (req, res) => {
     // TODO
@@ -401,8 +385,8 @@ exports.addInvoice = async (req, res) => {
 
 /**
  * Get all invoices for a specific user or an invoice with a specific ID.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.getInvoices = async (req, res) => {
     const filter = {};
@@ -423,8 +407,8 @@ exports.getInvoices = async (req, res) => {
 
 /**
  * Get all rates or rate with specific id.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.getRates = async (req, res) => {
     const filter = {};
@@ -441,8 +425,8 @@ exports.getRates = async (req, res) => {
 
 /**
  * Add rate.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.addRate = async (req, res) => {
     const newRate = {
@@ -460,8 +444,8 @@ exports.addRate = async (req, res) => {
 
 /**
  * Update rate with specific id.
- * @param {object} req 
- * @param {objec} res 
+ * @param {object} req
+ * @param {objec} res
  */
 exports.updateRate = async (req, res) => {
     const rateToUpdate = {
@@ -486,8 +470,8 @@ exports.updateRate = async (req, res) => {
 
 /**
  * Remove rate with id.
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  */
 exports.removeRate = async (req, res) => {
     const broker = await mesBroker;
