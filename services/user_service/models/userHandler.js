@@ -21,7 +21,7 @@ class UserHandler {
      */
     async getUser(userId) {
         try {
-            const user = await this.db.findOne(this.collectionName, {userId: userId});
+            const user = await this.db.findOne(this.collectionName, {_id: userId});
             return user;
         } catch (error) {
             console.log(error);
@@ -66,7 +66,8 @@ class UserHandler {
             let objectWithoutId = JSON.parse(JSON.stringify(userToUpdate));
             // Remove _id from object to be updated
             delete objectWithoutId._id;
-            const user = await this.db.updateOne(this.collectionName, {_id: userToUpdate._id}, objectWithoutId);
+            const user = await this.db.updateOne(this.collectionName, {_id: userToUpdate._id},
+                objectWithoutId);
             return user;
         } catch (error) {
             console.log(error);
@@ -80,7 +81,7 @@ class UserHandler {
      */
     async removeUser(userToRemove) {
         try {
-            const user = await this.db.deleteOne(this.collectionName, userToRemove);
+            const user = await this.db.deleteOne2(this.collectionName, userToRemove);
             return user;
         } catch (error) {
             console.log(error);
@@ -88,8 +89,13 @@ class UserHandler {
     }
 
     async newTestUser() {
+        // testar att hämta alla användare
+        const allUsers = await this.getUsers();
+        console.log("Alla användare");
+        console.log(allUsers);
+
         const newUser = {
-            "userId": 1,
+            "_id": 1,
             "name": "Selma Helin",
             "mobile": "0705556747",
             "mail": "selma.helin@hallaryd.se",
@@ -99,11 +105,13 @@ class UserHandler {
             "admin": false,
             "balance": 0
         }
-        //const addUser = await this.db.insertOne(this.collectionName, newUser);
+        // testar ett lägga till en användare
         const addUser = await this.addUser(newUser);
+        console.log("");
+        console.log("Lägger till användare");
         console.log(addUser);
 
-        //const findOneUser = await this.db.findOne(this.collectionName, { "userId" : 1 });
+        // testar att hitta en användare
         const findOneUser = await this.getUser(1);
         if (findOneUser) {
             console.log("Användaren 1 finns");
@@ -112,27 +120,16 @@ class UserHandler {
             console.log("Användaren 1 finns inte");
         }
 
+        // testar att hitta en användare som inte finns
         const findOneUser2 = await this.getUser(2);
-        //const findOneUser2 = await this.db.findOne(this.collectionName, { "userId" : 2 });
         if (findOneUser2) {
             console.log("Användaren 2 finns");
         } else {
             console.log("Användaren 2 finns inte");
         }
 
-        const updateUser = {
-            "userId": 1,
-            "name": "Arne Nilsson",
-            "mobile": "0705556747",
-            "mail": "selma.helin@hallaryd.se",
-            "city": "Hällaryd",
-            "address": "Hällarydsvägen 14",
-            "zip": "37470",
-            "admin": false,
-            "balance": 20
-        }
-
-        findOneUser.balance = 20;
+        // testar att uppdatera en användare
+        findOneUser.balance = 20.90;
         findOneUser.name = "Arne Nilsson";
         const updateUser2 = await this.updateUser(findOneUser);
         console.log(updateUser2);
@@ -141,6 +138,7 @@ class UserHandler {
         console.log("Användare 1 uppdaterad");
         console.log("");
 
+        // testar att ta bort en användare
         console.log("Tar bort användare 1");
         const remove2 = await this.removeUser(findOneUser3);
         console.log(remove2);
@@ -150,10 +148,10 @@ class UserHandler {
     }
 }
 
-const testFunc = async () => {
-    const sh = await new UserHandler();
-    await sh.newTestUser();
-}
-testFunc();
+//const testFunc = async () => {
+    //const sh = await new UserHandler();
+    //await sh.newTestUser();
+//}
+//testFunc();
 
 module.exports = { UserHandler };
