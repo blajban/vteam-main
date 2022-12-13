@@ -18,7 +18,7 @@ const success = (description, content) => {
 
 exports.rentScooter = async (req, res) => {
     const data = {
-        scooterId: req.params.scooterId,
+        _id: req.params.scooterId,
         userId: req.params.userId
     }
 
@@ -54,7 +54,7 @@ exports.getScooters = async (req, res) => {
 
     
     if (req.params.hasOwnProperty('scooterId')) {
-        filter.scooterId = parseInt(req.params.scooterId)
+        filter._id = req.params.scooterId
     }
 
     const broker = await mesBroker;
@@ -91,7 +91,7 @@ exports.addScooter = async (req, res) => {
  */
 exports.updateScooter = async (req, res) => {
     const scooterToUpdate = {
-        scooterId: parseInt(req.params.scooterId)
+        _id: req.params.scooterId
     };
 
     if (req.body.hasOwnProperty('status')) {
@@ -123,10 +123,11 @@ exports.updateScooter = async (req, res) => {
  * @param {object} res 
  */
 exports.removeScooter = async (req, res) => {
+    const id = {
+        _id: req.params.scooterId
+    }
     const broker = await mesBroker;
-    const removeScooterEvent = broker.constructEvent(eventTypes.rpcEvents.removeScooter, {
-        scooterId: parseInt(req.params.scooterId)
-    });
+    const removeScooterEvent = broker.constructEvent(eventTypes.rpcEvents.removeScooter, id);
     broker.request(removeScooterEvent, (e) => {
         res.json(success("Removed scooter", e));
     })

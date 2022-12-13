@@ -9,7 +9,7 @@ class MongoWrapper {
    * Creates a MongoDB wrapper object.
    */
   constructor(dbName) {
-    return this.#connectClient();
+    return this.#connectClient(dbName);
   }
 
   /**
@@ -124,9 +124,14 @@ class MongoWrapper {
    * @param {string} collectionName - The name of the collection.
    * @returns {Object[]} - The documents.
    */
-  async find(collectionName) {
+  async find(collectionName, query = {}) {
+
+    if (query.hasOwnProperty('_id')) {
+      query._id = ObjectID(query._id);
+    }
+
     const collection = await this.getCollection(collectionName);
-    return await collection.find({}).toArray();
+    return await collection.find(query).toArray();
   }
 
   /**
@@ -137,9 +142,12 @@ class MongoWrapper {
    * @returns {Object} - The result of the insert operation.
    */
   async findOne(collectionName, query, projection = {}) {
+    if (query.hasOwnProperty('_id')) {
+      query._id = ObjectID(query._id);
+    }
     const collection = await this.getCollection(collectionName);
     return collection.findOne(query, projection);
-}
+  }
 }
 
   module.exports = { MongoWrapper }

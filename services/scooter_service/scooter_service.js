@@ -122,7 +122,7 @@ const scooterService = async () => {
 
   // TODO:
   broker.response(eventTypes.rpcEvents.removeScooter, (e) => {
-    const removedScooter = scooterManager.removeScooter(e.data.scooterId);
+    const removedScooter = scooterManager.removeScooter(e.data);
     const removeScooterEvent = broker.constructEvent(eventTypes.scooterEvents.scooterRemoved, removedScooter);
     broker.publish(removeScooterEvent);
     return removedScooter;
