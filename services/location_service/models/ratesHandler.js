@@ -10,19 +10,19 @@ const ratesHandler = {
      */
     getRates: async (mongo, e) => {
         try {
-        const ratesCollection = await mongo.find("rates");
-        return ratesCollection;
+            const ratesCollection = await mongo.find("rates");
+            return ratesCollection;
         } catch (error) {
-        console.log(error);
+            return error;
         }
     },
     //Done
     getRate: async (mongo, e) => {
         try {
-        const ratesCollection = await mongo.findOne("rates", e.rate, {"id": "a"});
-        return ratesCollection;
+            const ratesCollection = await mongo.findOne("rates", e.rate, {"id": "a"});
+            return ratesCollection;
         } catch (error) {
-        console.log(error);
+            return error;
         }
     },
     /**
@@ -34,7 +34,7 @@ const ratesHandler = {
             let _id = e._id
             return await mongo.updateOne("rates",{_id: _id}, JSON.parse(e.object));
         } catch (error) {
-            console.log(error);
+            return error;
         }
         },
     /**
@@ -45,7 +45,7 @@ const ratesHandler = {
         try {
             return await mongo.insertOne("rates", e);
         } catch (error) {
-            console.log(error);
+            return error;
         }
     },
     /**
@@ -56,7 +56,7 @@ const ratesHandler = {
         try {
             return await mongo.deleteOne("rates", {_id: e._id});
         } catch (error) {
-            console.log(error);
+            return error;
         }
     },
 }

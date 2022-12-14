@@ -19,7 +19,7 @@ const locationHandler = {
         try {
             return mongo.find(e.location);
         } catch (error) {
-            console.log(error);
+            return error;
         }
     },
 
@@ -41,7 +41,7 @@ const locationHandler = {
         delete objectWithoutId._id
         return await mongo.updateOne(e.location, {_id:_id}, objectWithoutId);
     } catch (error) {
-        console.log(error);
+        return error;
     }
     },
 
@@ -58,7 +58,7 @@ const locationHandler = {
         return await mongo.insertOne(e.location, JSON.parse(e.object));
 
     } catch (error) {
-        console.log(error);
+        return error;
     }
     },
     /**
@@ -76,7 +76,7 @@ const locationHandler = {
         return await mongo.deleteOne(e.location, object);
 
     } catch (error) {
-        console.log(error);
+        return error;
     }
     }
 }
