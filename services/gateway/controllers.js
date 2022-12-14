@@ -412,10 +412,6 @@ exports.getInvoices = async (req, res) => {
  */
 exports.getRates = async (req, res) => {
     const filter = {};
-
-    if (req.params.hasOwnProperty('rateId')) {
-        filter.rateId = parseInt(req.params.rateId);
-    }
     const broker = await mesBroker;
     const getRatesEvent = broker.constructEvent(eventTypes.rpcEvents.getRates, filter);
     broker.request(getRatesEvent, (e) => {
@@ -430,6 +426,7 @@ exports.getRates = async (req, res) => {
  */
 exports.addRate = async (req, res) => {
     const newRate = {
+        id: req.body.id,
         name: req.body.name,
         tariff: parseInt(req.body.tariff)
     };
@@ -449,17 +446,9 @@ exports.addRate = async (req, res) => {
  */
 exports.updateRate = async (req, res) => {
     const rateToUpdate = {
-        rateId: parseInt(req.params.rateId)
+        _id: req.body._id,
+        object: req.body.object
     };
-
-    if (req.body.hasOwnProperty('name')) {
-        rateToUpdate.name = req.body.name;
-    }
-    if (req.body.hasOwnProperty('tariff')) {
-        rateToUpdate.tariff = req.body.tariff;
-    }
-
-
     const broker = await mesBroker;
     const updateRate = broker.constructEvent(eventTypes.rpcEvents.updateRate, rateToUpdate);
 
@@ -476,7 +465,7 @@ exports.updateRate = async (req, res) => {
 exports.removeRate = async (req, res) => {
     const broker = await mesBroker;
     const removeRateEvent = broker.constructEvent(eventTypes.rpcEvents.removeRate, {
-        rateId: parseInt(req.params.rateId)
+        _id: req.body._id
     });
     broker.request(removeRateEvent, (e) => {
         res.json(success("Removed rate", e));

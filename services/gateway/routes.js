@@ -40,9 +40,7 @@ module.exports = (app) => {
     .get(controllers.getInvoices);
   app.route('/rates')
     .get(controllers.getRates)
-    .post(controllers.addRate);
-  app.route('/rates/:rateId')
-    .get(controllers.getRates)
+    .post(controllers.addRate)
     .put(controllers.updateRate)
     .delete(controllers.removeRate)
 };

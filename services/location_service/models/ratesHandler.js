@@ -31,11 +31,8 @@ const ratesHandler = {
      */
     adjustRate: async (mongo, e) => {
         try {
-            // Copy of object because cant update a object with _id
-            let objectWithoutId = JSON.parse(JSON.stringify(e));
-            // Remove _id from object to be updated
-            delete objectWithoutId._id
-            return await mongo.updateOne("rates",{_id:e._id}, objectWithoutId);
+            let _id = e._id
+            return await mongo.updateOne("rates",{_id: _id}, JSON.parse(e.object));
         } catch (error) {
             console.log(error);
         }
@@ -57,7 +54,7 @@ const ratesHandler = {
      */
     deleteRate: async (mongo, e) => {
         try {
-            return await mongo.deleteOne("rates", e);
+            return await mongo.deleteOne("rates", {_id: e._id});
         } catch (error) {
             console.log(error);
         }
