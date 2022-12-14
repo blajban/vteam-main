@@ -129,6 +129,8 @@ services:
         volumes:
             - ./services/user_service:/services/user_service
             - /services/user_service/node_modules
+        env_file:
+            - .env
         restart:
             "always"
     gateway:
@@ -142,6 +144,8 @@ services:
         volumes:
             - ./services/gateway:/services/gateway
             - /services/gateway/node_modules
+        env_file:
+            - .env
         restart:
             "always"
         ports:
