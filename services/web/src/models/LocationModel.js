@@ -1,6 +1,14 @@
 
 
 const locationModel = {
+    fetchAllLocations: async function fetchAllLocations() {
+        const stockholm  = await this.fetchStockholmLocations()
+        const goteborg  = await this.fetchGoteborgLocations()
+        const malmo  = await this.fetchMalmoLocations()
+        let data = stockholm.concat(goteborg)
+        data = data.concat(malmo)
+        return data
+    },
 
     fetchStockholmLocations: async function fetchStockholmLocations() {
         const response = await fetch('http://localhost:3500/city/stockholm/parking')
@@ -40,6 +48,7 @@ const locationModel = {
         return data
     },
     deleteLocation: async function updateLocation(city, deleteLocation) {
+        console.log("tjohej")
         const response = await fetch(`http://localhost:3500/city/${city}/parking`, {
             body: JSON.stringify(deleteLocation),
             headers: {
@@ -48,6 +57,7 @@ const locationModel = {
             method: 'DELETE'
         });
         const data = await response.json();
+        console.log(data)
         return data
     }
 }

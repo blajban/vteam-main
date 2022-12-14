@@ -1,6 +1,7 @@
 import SidemenuAdmin from "../components/SidemenuAdmin"
 import "../assets/css/style.css"
 import React, { useState, useEffect } from 'react';
+import LocationTable from "../components/LocationTable";
 
 export function AdminControll() {
     const [loadedAdminPage, setLoadedAdminPage] = useState(1);
@@ -11,7 +12,7 @@ export function AdminControll() {
         {(loadedAdminPage === 1)?
         <div>Profile</div>:
         (loadedAdminPage === 2) ?
-        <div>Locations</div>:
+        <LocationTable></LocationTable>:
         (loadedAdminPage === 3) ?
         <div>Scooters</div>:
         (loadedAdminPage === 4) ?
