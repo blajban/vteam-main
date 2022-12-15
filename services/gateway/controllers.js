@@ -248,7 +248,7 @@ exports.getUsers = async (req, res) => {
     const filter = {};
     
     if (req.params.hasOwnProperty('userId')) {
-        filter.userId = parseInt(req.params.userId)
+        filter._id = parseInt(req.params.userId)
     }
 
     const broker = await mesBroker;
@@ -265,16 +265,21 @@ exports.getUsers = async (req, res) => {
  */
 exports.addUser = async (req, res) => {
     const newUser = {
-        userId: req.body.userId,
+        _id: parseInt(req.body._id),
         name: req.body.name,
         mobile: req.body.mobile,
         mail: req.body.mail,
         city: req.body.city,
         address: req.body.address,
         zip: req.body.zip,
-        admin: req.body.admin,
-        balance: req.body.balance
+        balance: parseFloat(req.body.balance)
     };
+
+    if (req.body.admin === 'true') {
+        newUser.admin = true;
+    } else {
+        newUser.admin = false;
+    }
 
     const broker = await mesBroker;
     const addUserEvent = broker.constructEvent(eventTypes.rpcEvents.addUser, newUser);
@@ -291,7 +296,7 @@ exports.addUser = async (req, res) => {
  */
 exports.updateUser = async (req, res) => {
     const userToUpdate = {
-        userId: parseInt(req.params.userId)
+        _id: parseInt(req.params.userId)
     };
 
     if (req.body.hasOwnProperty('name')) {
@@ -313,10 +318,14 @@ exports.updateUser = async (req, res) => {
         userToUpdate.zip = req.body.zip;
     }
     if (req.body.hasOwnProperty('admin')) {
-        userToUpdate.admin = req.body.admin;
+        if (req.body.admin === 'true') {
+            userToUpdate.admin = true;
+        } else {
+            userToUpdate.admin = false;
+        }
     }
     if (req.body.hasOwnProperty('balance')) {
-        userToUpdate.balance = req.body.balance;
+        userToUpdate.balance = parseFloat(req.body.balance);
     }
 
     const broker = await mesBroker;
@@ -335,7 +344,7 @@ exports.updateUser = async (req, res) => {
 exports.removeUser = async (req, res) => {
     const broker = await mesBroker;
     const removeUserEvent = broker.constructEvent(eventTypes.rpcEvents.removeUser, {
-        userId: parseInt(req.params.userId)
+        _id: parseInt(req.params.userId)
     });
     broker.request(removeUserEvent, (e) => {
         res.json(success("Removed user", e));
@@ -348,8 +357,7 @@ exports.removeUser = async (req, res) => {
  * @param {object} res 
  */
 exports.login = async (req, res) => {
-    const url = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}` +
-    `&redirect_uri=http://localhost:9001/UserProfile`;
+    const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=http://localhost:9001/callback`;
     res.redirect(url)
 }
 
@@ -365,7 +373,6 @@ exports.callback = async (req, res) => {
     });
 
     broker.request(loginEvent, (e) => {
-        const url = "http://localhost:9001/UserProfile";
         res.json(success("Login success", e));
     });
 }
