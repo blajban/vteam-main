@@ -1,106 +1,52 @@
-const { MongoWrapper } = require('../../shared/mongowrapper');
-const scooters = require('../../../shared/dummy_data/scooter_service/scooters');
-
-
-
-// TODO
-// - db
-// - ändra till _id
-// 
 
 class ScooterHandler {
-    constructor() {
-      return this.#init();
+    constructor(scooters) {
+      this.scooters = [];
+      for (const scooter of scooters) {
+        scooter._id = scooter._id.toString();
+        this.scooters.push(scooter);
+      }
     }
 
-    async #init() {
-      this.db = await new MongoWrapper("scooters");
-      this.collectionName = "scooters";
-      return this;
+    /**
+     * Add scooter to active scooters.
+     * @param {object} newScooter 
+     */
+    addActiveScooter(newScooter) {
+      this.scooters.push(newScooter);
     }
 
-    async getScooters(options = {}) {
-      const filter = {};
+    /**
+     * Returns array of active scooters.
+     * @returns {Array}
+     */
+    activeScooters() {
+      return this.scooters;
+    }
 
-      if (options.hasOwnProperty('_id')) {
-        filter._id = options._id;
-
-        const scooter = this.db.findOne(this.collectionName, filter);
-        if (scooter === null) {
-          return [];
+    /**
+     * Update active scooter
+     * @param {object} scooterToUpdate 
+     */
+    updateActiveScooter(scooterToUpdate) {
+      for (let scooter of this.scooters) {
+        if (scooter._id === scooterToUpdate._id) {
+          scooter = scooterToUpdate;
         }
       }
-
-      if (options.hasOwnProperty('location')) {
-        filter['properties.location'] = options.location;
-      }
-
-      return await this.db.find(this.collectionName, filter);
-
     }
-  
-    async addScooter(newScooterInfo) {
-      const newScooter = {
-        status: "inactive",
-        userId: 0,
-        properties: {
-            location: newScooterInfo.location,
-            lat: newScooterInfo.lat,
-            lng: newScooterInfo.lng,
-            speed: 0,
-            battery: 100
-        },
-        log: []
+
+    /**
+     * Remove active scooter
+     * @param {object} scooterToDelete 
+     */
+    removeActiveScooter(scooterToDelete) {
+      for (let i = 0; i < this.scooters.length; i++) {
+        if (this.scooters[i]._id === scooterToDelete._id) {
+          this.scooters.splice(i, 1);
+        }
       }
-
-      await this.db.insertOne(this.collectionName, newScooter);
-
-      return newScooter;
-     
     }
-  
-
-    async updateScooter(updatedScooter) {
-      const id = {};
-      const filter = {};
-
-      if (updatedScooter.hasOwnProperty('_id')) {
-        id._id = updatedScooter._id;
-      }
-
-      console.log(id._id);
-
-      if (updatedScooter.hasOwnProperty('status')) {
-        filter.status = updatedScooter.status;
-      }
-
-      if (updatedScooter.hasOwnProperty('location')) {
-        filter['properties.location'] = updatedScooter.location;
-      }
-
-      if (updatedScooter.hasOwnProperty('lat')) {
-        filter['properties.lat'] = updatedScooter.lat;
-      }
-
-      if (updatedScooter.hasOwnProperty('lng')) {
-        filter['properties.lng'] = updatedScooter.lng;
-      }
-
-      await this.db.updateOne(this.collectionName, id, filter);
-
-      return await this.db.findOne(this.collectionName, filter);
-      
-    }
-  
-    async removeScooter(id) {
-
-      const deletedScooter = await this.db.findOne(this.collectionName, id);
-
-      await this.db.deleteOne(this.collectionName, id);
-
-      return deletedScooter;
-    }
-    
 
     /**
      * Unlock scooter: change info and return scooter data.
@@ -111,7 +57,7 @@ class ScooterHandler {
 
     unlockScooter(scooterId, userId) {
       for (const scooter of this.scooters) {
-        if (scooter.scooterId === scooterId) {
+        if (scooter._id === scooterId) {
           scooter.status = "claimed";
           scooter.userId = userId;
           return scooter;
@@ -127,10 +73,10 @@ class ScooterHandler {
 
     scooterUnlocked(unlockedScooter) {
       for (const scooter of this.scooters) {
-        if (scooter.scooterId === unlockedScooter.scooterId) {
+        if (scooter._id === unlockedScooter._id) {
           scooter.status = unlockedScooter.status;
           scooter.userId = unlockedScooter.userId;
-          console.log(`Scooter ${scooter.scooterId} unlocked`)
+          console.log(`Scooter ${scooter._id} unlocked`)
           return scooter;
         }
       }
@@ -144,7 +90,7 @@ class ScooterHandler {
 
     lockScooter(scooterId) {
       for (const scooter of this.scooters) {
-        if (scooter.scooterId === scooterId) {
+        if (scooter._id === scooterId) {
           scooter.status = "available";
           scooter.userId = 0;
           return scooter;
@@ -161,10 +107,10 @@ class ScooterHandler {
 
     scooterLocked(lockedScooter) {
       for (const scooter of this.scooters) {
-        if (scooter.scooterId === lockedScooter.scooterId) {
+        if (scooter._id === lockedScooter._id) {
           scooter.status = lockedScooter.status;
           scooter.userId = lockedScooter.userId;
-          console.log(`Scooter ${scooter.scooterId} locked`)
+          console.log(`Scooter ${scooter._id} locked`)
           return scooter;
         }
       }
@@ -176,12 +122,12 @@ class ScooterHandler {
      * @param {object} position 
      * @returns {boolean}
      */
-    updateScooterPosition(scooterId, position) {
+    updateScooterPosition(reportingScooter) {
       for (const scooter of this.scooters) {
-        if (scooter.scooterId === scooterId) {
-          scooter.properties.lat = position.lat;
-          scooter.properties.lng = position.lng;
-          console.log(`Scooter ${scooter.scooterId} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`)
+        if (scooter._id === reportingScooter._id) {
+          scooter.properties.lat = reportingScooter.properties.lat;
+          scooter.properties.lng = reportingScooter.properties.lng;
+          console.log(`Scooter ${scooter._id} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`)
           return true;
         }
       }

@@ -11,7 +11,6 @@ const main = async () => {
    * @param {object} scooter 
    */
   const idleReporting = (scooter) => {
-    //console.log(`Scooter ${scooter.scooterId} reporting!`);
     const idleEvent = broker.constructEvent(eventTypes.scooterEvents.scooterIdleReporting, scooter);
     broker.publish(idleEvent);
   }
@@ -23,11 +22,12 @@ const main = async () => {
    * @param {number} userId 
    */
   const unlockScooter = (scooter, status, userId) => {
+    console.log("UNLOCKING")
     scooter.status = status;
     scooter.userId = userId;
     const unlockEvent = broker.constructEvent(eventTypes.rentScooterEvents.scooterUnlocked, scooter);
     broker.publish(unlockEvent);
-    console.log(`Scooter ${scooter.scooterId} unlocked`)
+    console.log(`Scooter ${scooter._id} unlocked`)
   }
 
   /**
@@ -43,7 +43,7 @@ const main = async () => {
     scooter.log.push(startEndTime);
     const lockEvent = broker.constructEvent(eventTypes.returnScooterEvents.scooterLocked, scooter);
     broker.publish(lockEvent);
-    console.log(`Scooter ${scooter.scooterId} locked`)
+    console.log(`Scooter ${scooter._id} locked`)
   }
 
   /**
@@ -51,7 +51,7 @@ const main = async () => {
    * @param {object} scooter 
    */
   const reportWhileMoving = (scooter) => {
-    console.log(`Scooter ${scooter.scooterId} driving!`);
+    console.log(`Scooter ${scooter._id} driving!`);
     const moveEvent = broker.constructEvent(eventTypes.scooterEvents.scooterMoving, scooter);
     broker.publish(moveEvent);
 
@@ -102,7 +102,7 @@ const main = async () => {
     for (let i = 0; i < scooters.length; i++) {
       setInterval(() => {
           idleReporting(scooters[i]);
-      }, 10000);
+      }, 30000);
 
       /**
        * Set the rest of event listeners in for loop
@@ -112,7 +112,8 @@ const main = async () => {
        * Unlock scooter
        */
       broker.onEvent(eventTypes.rentScooterEvents.unlockScooter, (e) => {
-        if (scooters[i].scooterId === e.data.scooterId) {
+        console.log(e.data);
+        if (scooters[i]._id === e.data._id) {
           unlockScooter(scooters[i], e.data.status, e.data.userId);
           // Log start time
           logs[i] = {
@@ -144,7 +145,7 @@ const main = async () => {
        * Lock scooter
        */
       broker.onEvent(eventTypes.returnScooterEvents.lockScooter, (e) => {
-        if (scooters[i].scooterId === e.data.scooterId) {
+        if (scooters[i]._id === e.data._id) {
           const logRideFinished = Object.assign(logs[i], { end: new Date() });
           lockScooter(scooters[i], e.data.status, e.data.userId, logRideFinished);
           
@@ -175,6 +176,44 @@ const main = async () => {
 main();
 
 
+// Function to calculate distance between two coordinates
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  // Convert degrees to radians
+  lat1 = lat1 * (Math.PI / 180);
+  lon1 = lon1 * (Math.PI / 180);
+  lat2 = lat2 * (Math.PI / 180);
+  lon2 = lon2 * (Math.PI / 180);
+
+  // Calculate distance using the "flat Earth" formula
+  let x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
+  let y = lat2 - lat1;
+  let d = Math.sqrt(x * x + y * y) * 6371; // 6371 is the approximate radius of the Earth in kilometers
+
+  return d;
+}
+
+// Example usage
+//let distance = calculateDistance(50.0755, 14.4378, 52.5186, 13.4083);
+//console.log(distance); // Output: 281.4 (kilometers)
 
 
+// Function to calculate current speed
+function calculateSpeed(lat1, lon1, lat2, lon2, time1, time2) {
+  // Calculate distance between coordinates
+  let x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
+  let y = lat2 - lat1;
+  let d = Math.sqrt(x * x + y * y) * 6371; // Distance in kilometers
+
+  // Calculate time difference in hours
+  let t = (time2 - time1) / 3600; // Time in hours
+
+  // Calculate speed in kilometers per hour
+  let speed = d / t;
+
+  return speed;
+}
+
+// Example usage
+//let speed = calculateSpeed(50.0755, 14.4378, 52.5186, 13.4083, Date.now(), Date.now() + 1800000);
+//console.log(speed); // Output: approximately 81.4 (kilometers per hour)
 
