@@ -33,12 +33,9 @@ const locationHandler = {
      */
     adjustLocation: async (mongo, e) => {
     try {
-        console.log(e)
         let _id = e.object._id
         delete e.object._id
-        console.log(e.object)
         let f = await mongo.updateOne(e.location, {_id:_id}, e.object);
-        console.log(f)
         return f
     } catch (error) {
         console.log(error)

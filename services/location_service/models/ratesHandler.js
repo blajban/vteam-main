@@ -32,7 +32,7 @@ const ratesHandler = {
     adjustRate: async (mongo, e) => {
         try {
             let _id = e._id
-            return await mongo.updateOne("rates",{_id: _id}, JSON.parse(e.object));
+            return await mongo.updateOne("rates",{_id: _id}, e.object);
         } catch (error) {
             return error;
         }
