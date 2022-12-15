@@ -10,19 +10,19 @@ const ratesHandler = {
      */
     getRates: async (mongo, e) => {
         try {
-        const ratesCollection = await mongo.find("rates");
-        return ratesCollection;
+            const ratesCollection = await mongo.find("rates");
+            return ratesCollection;
         } catch (error) {
-        console.log(error);
+            return error;
         }
     },
     //Done
     getRate: async (mongo, e) => {
         try {
-        const ratesCollection = await mongo.findOne("rates", e.rate, {"id": "a"});
-        return ratesCollection;
+            const ratesCollection = await mongo.findOne("rates", e.rate, {"id": "a"});
+            return ratesCollection;
         } catch (error) {
-        console.log(error);
+            return error;
         }
     },
     /**
@@ -31,13 +31,10 @@ const ratesHandler = {
      */
     adjustRate: async (mongo, e) => {
         try {
-            // Copy of object because cant update a object with _id
-            let objectWithoutId = JSON.parse(JSON.stringify(e));
-            // Remove _id from object to be updated
-            delete objectWithoutId._id
-            return await mongo.updateOne("rates",{_id:e._id}, objectWithoutId);
+            let _id = e._id
+            return await mongo.updateOne("rates",{_id: _id}, e.object);
         } catch (error) {
-            console.log(error);
+            return error;
         }
         },
     /**
@@ -48,7 +45,7 @@ const ratesHandler = {
         try {
             return await mongo.insertOne("rates", e);
         } catch (error) {
-            console.log(error);
+            return error;
         }
     },
     /**
@@ -57,9 +54,9 @@ const ratesHandler = {
      */
     deleteRate: async (mongo, e) => {
         try {
-            return await mongo.deleteOne("rates", e);
+            return await mongo.deleteOne("rates", {_id: e._id});
         } catch (error) {
-            console.log(error);
+            return error;
         }
     },
 }

@@ -10,6 +10,7 @@ function SidemenuAdmin(props) {
         <button onClick={() => { props.setLoadedAdminPage(2)}}>Locations</button>
         <button onClick={() => { props.setLoadedAdminPage(3)}}>Scooters</button>
         <button onClick={() => { props.setLoadedAdminPage(4)}}>Users</button>
+        <button onClick={() => { props.setLoadedAdminPage(5)}}>Rates</button>
     </div>
     );
 }
