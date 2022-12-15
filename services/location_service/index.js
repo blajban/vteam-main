@@ -78,6 +78,7 @@ const locationService = async () => {
      * @returns {function}  - runs insertLocation
      */
     broker.response(eventTypes.rpcEvents.addParkingSpot, async (e) => {
+      console.log(e)
       return await locationHandler.insertLocation(mongoWrapper, e.data);
     });
 
@@ -119,7 +120,6 @@ const locationService = async () => {
      * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.updateRate, async (e) => {
-      console.log(e)
       return await ratesHandler.adjustRate(mongoWrapper, e.data);
     });
 

@@ -27,7 +27,7 @@ const locationModel = {
     },
     createLocation: async function createLocation(city, newLocation) {
         const response = await fetch(`http://localhost:3500/city/${city}/parking`, {
-            body: JSON.stringify(newLocation),
+            body: JSON.stringify({location: city, object:newLocation}),
             headers: {
                 'content-type': 'application/json'
             },
@@ -36,9 +36,9 @@ const locationModel = {
         const data = await response.json();
         return data
     },
-    updateLocation: async function updateLocation(city, updatedLocation) {
+    updateLocation: async function updateLocation(city, object) {
         const response = await fetch(`http://localhost:3500/city/${city}/parking`, {
-            body: JSON.stringify(updatedLocation),
+            body: JSON.stringify(object),
             headers: {
                 'content-type': 'application/json'
             },
@@ -48,16 +48,14 @@ const locationModel = {
         return data
     },
     deleteLocation: async function updateLocation(city, deleteLocation) {
-        console.log("tjohej")
         const response = await fetch(`http://localhost:3500/city/${city}/parking`, {
-            body: JSON.stringify(deleteLocation),
+            body: JSON.stringify({location: city, object:{_id: deleteLocation}}),
             headers: {
                 'content-type': 'application/json'
             },
             method: 'DELETE'
         });
         const data = await response.json();
-        console.log(data)
         return data
     }
 }

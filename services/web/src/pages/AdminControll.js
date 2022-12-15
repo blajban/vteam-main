@@ -17,6 +17,8 @@ export function AdminControll() {
         <div>Scooters</div>:
         (loadedAdminPage === 4) ?
         <div>Users</div>:
+        (loadedAdminPage === 5) ?
+        <div>Rates</div>:
         <div>Profile</div>
         }
         </div>

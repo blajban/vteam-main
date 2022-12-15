@@ -54,10 +54,14 @@ const locationHandler = {
      * @returns {Object} - The result of the insert operation.
      */
     insertLocation: async (mongo, e) => {
+        console.log(e)
     try {
-        return await mongo.insertOne(e.location, JSON.parse(e.object));
+        let f = await mongo.insertOne(e.location, e.object);
+        console.log(f)
+        return f;
 
     } catch (error) {
+        console.log(error)
         return error;
     }
     },
@@ -70,12 +74,14 @@ const locationHandler = {
      * @returns {Object} - The result of the delete operation.
      */
     deleteLocation: async (mongo, e) => {
-        let object = JSON.parse(e.object)
-        console.log(object)
+        console.log("hej")
     try {
-        return await mongo.deleteOne(e.location, object);
-
+        let result = await mongo.deleteOne(e.location, e.object);
+        console.log("hej")
+        console.log(result)
+        return result
     } catch (error) {
+        console.log(error)
         return error;
     }
     }
