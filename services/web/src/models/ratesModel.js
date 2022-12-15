@@ -8,8 +8,9 @@ const locationModel = {
         return data
     },
     createRate: async function createRate(newRate) {
+        console.log(newRate)
         const response = await fetch(`http://localhost:3500/rates`, {
-            body: JSON.stringify(newRate),
+            body: JSON.stringify({newRate: newRate}),
             headers: {
                 'content-type': 'application/json'
             },
@@ -29,9 +30,9 @@ const locationModel = {
         const data = await response.json();
         return data
     },
-    deleteRate: async function deleteRate(delteRate) {
+    deleteRate: async function deleteRate(_id) {
         const response = await fetch(`http://localhost:3500/rates`, {
-            body: JSON.stringify(delteRate),
+            body: JSON.stringify({_id:_id}),
             headers: {
                 'content-type': 'application/json'
             },

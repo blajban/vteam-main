@@ -425,14 +425,9 @@ exports.getRates = async (req, res) => {
  * @param {object} res
  */
 exports.addRate = async (req, res) => {
-    const newRate = {
-        id: req.body.id,
-        name: req.body.name,
-        tariff: parseInt(req.body.tariff)
-    };
 
     const broker = await mesBroker;
-    const addRateEvent = broker.constructEvent(eventTypes.rpcEvents.addRate, newRate);
+    const addRateEvent = broker.constructEvent(eventTypes.rpcEvents.addRate, req.body.newRate);
 
     broker.request(addRateEvent, (e) => {
         res.json(success("Rate added", e));

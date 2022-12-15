@@ -4,11 +4,28 @@ import React, { useState, useEffect, useRef } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
+async function addRate(object){
+  let newRate = {
+
+    id: object.inputid.current.value,
+    name: object.inputName.current.value,
+    tariff: object.inputTariff.current.value,
+  }
+  await ratesHandler.createRate(newRate)
+}
+
+async function deleteRate(_id){
+  await ratesHandler.deleteRate(_id)
+}
+
 
 
 function LocationTable(props) {
     const [rates, setRates] = useState([]);
     const [tableBox, setTableBox] = useState([]);
+    const inputid = useRef(null);
+    const inputName = useRef(null);
+    const inputTariff = useRef(null);
 
 
   useEffect(() => {
@@ -36,6 +53,7 @@ function LocationTable(props) {
             </select>
           </Popup>
         </td>
+        <td><button value={e._id} onClick={(e) => {deleteRate(e.target.value)}}>Delete</button></td>
         <td></td>
       </tr>
     )
@@ -60,16 +78,10 @@ function LocationTable(props) {
       {tableBox}
       <tr>
         <td> iD </td>
-        <td> <input type="text" placeholder="id"></input></td>
-        <td> <input type="text" placeholder="name"></input></td>
-        <td> <input type="text" placeholder="tariff" ></input></td>
-        <td>
-          <select placeholder="Charging" >
-            <option>false</option>
-            <option>true</option>
-          </select>
-        </td>
-        <td><button>Add</button></td>
+        <td> <input type="text" placeholder="id" ref={inputid}></input></td>
+        <td> <input type="text" placeholder="name" ref={inputName}></input></td>
+        <td> <input type="text" placeholder="tariff" ref={inputTariff} ></input></td>
+        <td><button onClick={() => {addRate({inputid, inputName, inputTariff})}}>Add</button></td>
       </tr>
       </tbody>
     </table>
