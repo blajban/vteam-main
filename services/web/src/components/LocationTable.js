@@ -81,9 +81,9 @@ function LocationTable(props) {
         <td>
           <Popup trigger={<button> Edit</button>} position="right center">
             <input type="text" value={e._id} ref={inputId} readOnly></input>
-            <input type="text" placeholder="Latitude" ref={inputLatEdit}></input>
-            <input type="text" placeholder="Longitude" ref={inputLngEdit}></input>
-            <input type="text" placeholder="Rate" ref={inputRateEdit}></input>
+            <input type="text" defaultValue={e.properties.lat} ref={inputLatEdit} ></input>
+            <input type="text" defaultValue={e.properties.lng} ref={inputLngEdit} ></input>
+            <input type="text" defaultValue={e.rate} ref={inputRateEdit}></input>
             <select placeholder="Charging" ref={inputChargingEdit}>
               <option>false</option>
               <option>true</option>
