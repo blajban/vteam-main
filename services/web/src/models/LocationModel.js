@@ -11,7 +11,11 @@ const locationModel = {
     },
 
     fetchStockholmLocations: async function fetchStockholmLocations() {
+        const start = new Date();
+        console.log(start)
         const response = await fetch('http://localhost:3500/city/stockholm/parking')
+        const timeTaken = (new Date()) - start
+        console.log(timeTaken, " miliseconds");
         const data = await response.json();
         return data
     },
@@ -36,9 +40,10 @@ const locationModel = {
         const data = await response.json();
         return data
     },
-    updateLocation: async function updateLocation(city, object) {
+    updateLocation: async function updateLocation(city, updateLocation) {
+        console.log(updateLocation)
         const response = await fetch(`http://localhost:3500/city/${city}/parking`, {
-            body: JSON.stringify(object),
+            body: JSON.stringify({location: city, object:updateLocation}),
             headers: {
                 'content-type': 'application/json'
             },

@@ -159,7 +159,7 @@ exports.addParkingspot = async (req, res) => {
         location: req.body.location,
         object: req.body.object
     };
-
+    console.log(newParkingSpot)
     const broker = await mesBroker;
     const addParkingspotEvent = broker.constructEvent(eventTypes.rpcEvents.addParkingSpot, newParkingSpot);
 
@@ -178,7 +178,7 @@ exports.updateParkingspot = async (req, res) => {
         location: req.body.location,
         object: req.body.object
     };
-
+    console.log(parkingspotToUpdate)
     const broker = await mesBroker;
     const updateParkingspotEvent = broker.constructEvent(eventTypes.rpcEvents.updateParkingSpot, parkingspotToUpdate);
 

@@ -33,14 +33,15 @@ const locationHandler = {
      */
     adjustLocation: async (mongo, e) => {
     try {
-        // Copy of object because cant update a object with _id
-        let objectWithoutId = JSON.parse(JSON.stringify(e.object));
-        objectWithoutId = JSON.parse(objectWithoutId)
-        let _id = objectWithoutId._id
-        // Remove _id from object to be updated
-        delete objectWithoutId._id
-        return await mongo.updateOne(e.location, {_id:_id}, objectWithoutId);
+        console.log(e)
+        let _id = e.object._id
+        delete e.object._id
+        console.log(e.object)
+        let f = await mongo.updateOne(e.location, {_id:_id}, e.object);
+        console.log(f)
+        return f
     } catch (error) {
+        console.log(error)
         return error;
     }
     },

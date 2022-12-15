@@ -1,6 +1,8 @@
 import "../assets/css/style.css"
 import locationHandler from '../models/LocationModel'
 import React, { useState, useEffect, useRef } from 'react';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 
 async function removeLocation(city, id){
@@ -8,10 +10,6 @@ async function removeLocation(city, id){
 }
 
 async function addLocation(city, object){
-  console.log(object.inputLat.current.value)
-  console.log(object.inputLng.current.value)
-  console.log(object.inputRate.current.value)
-  console.log(object.inputCharging.current.value)
   let newLocation = {
     properties: {
       lat: object.inputLat.current.value,
@@ -23,7 +21,17 @@ async function addLocation(city, object){
   await locationHandler.createLocation(city, newLocation)
 }
 
-async function updateLocation(){
+async function updateLocation(city, _id ,object){
+  let updatedLocation = {
+    _id: _id,
+    properties: {
+      lat: object.inputLatEdit.current.value,
+      lng: object.inputLngEdit.current.value,
+    },
+    rate: object.inputRateEdit.current.value,
+    charging: object.inputChargingEdit.current.value
+  }
+  await locationHandler.updateLocation(city, updatedLocation)
 }
 
 function LocationTable(props) {
@@ -34,6 +42,11 @@ function LocationTable(props) {
     const inputLng = useRef(null);
     const inputRate = useRef(null);
     const inputCharging = useRef(null);
+    const inputId = useRef(null);
+    const inputLatEdit = useRef(null);
+    const inputLngEdit = useRef(null);
+    const inputRateEdit = useRef(null);
+    const inputChargingEdit = useRef(null);
 
 
   useEffect(() => {
@@ -65,7 +78,19 @@ function LocationTable(props) {
         <td>{e.properties.lng}</td>
         <td>{e.rate}</td>
         <td>{e.charging.toString()}</td>
-        <td><button value={e._id} onClick={(e) => {updateLocation()}}>Edit</button></td>
+        <td>
+          <Popup trigger={<button> Edit</button>} position="right center">
+            <input type="text" value={e._id} ref={inputId} readOnly></input>
+            <input type="text" placeholder="Latitude" ref={inputLatEdit}></input>
+            <input type="text" placeholder="Longitude" ref={inputLngEdit}></input>
+            <input type="text" placeholder="Rate" ref={inputRateEdit}></input>
+            <select placeholder="Charging" ref={inputChargingEdit}>
+              <option>false</option>
+              <option>true</option>
+            </select>
+            <button onClick={() => {updateLocation(city,e._id , {inputLatEdit, inputLngEdit, inputRateEdit, inputChargingEdit})}}>Update</button>
+          </Popup>
+        </td>
         <td><button value={e._id} onClick={(e) => {removeLocation(city, e.target.value)}}>Delete</button></td>
       </tr>
     )
@@ -76,12 +101,13 @@ function LocationTable(props) {
 
     return (
     <div className="table-container">
-      <div class="tab">
-        <button class="tablinks" onClick={() => setCity("stockholm")}>Stockholm</button>
-        <button class="tablinks" onClick={() => setCity("malmo")}>Malmö</button>
-        <button class="tablinks" onClick={() => setCity("goteborg")}>Göteborg</button>
+      <div className="tab">
+        <button className="tablinks" onClick={() => setCity("stockholm")}>Stockholm</button>
+        <button className="tablinks" onClick={() => setCity("malmo")}>Malmö</button>
+        <button className="tablinks" onClick={() => setCity("goteborg")}>Göteborg</button>
       </div>
     <table className="styled-table">
+    <tbody>
       <tr>
         <th>Id</th>
         <th>Latitude</th>
@@ -92,7 +118,6 @@ function LocationTable(props) {
         <th>Delete</th>
         <th></th>
       </tr>
-      <tbody>
       {tableBox}
       <tr>
         <td> iD </td>
