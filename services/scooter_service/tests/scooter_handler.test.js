@@ -1,4 +1,4 @@
-const { ScooterHandler } = require('./scooter_handler');
+const { ScooterHandler } = require('../scooter_handler');
 
 describe('ScooterHandler', () => {
   let scooterHandler;
