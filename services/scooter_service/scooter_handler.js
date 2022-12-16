@@ -1,138 +1,157 @@
-
+/**
+ * @class ScooterHandler
+ * Class for handling active scooters
+ */
 class ScooterHandler {
-    constructor(scooters) {
-      this.scooters = [];
-      for (const scooter of scooters) {
-        scooter._id = scooter._id.toString();
-        this.scooters.push(scooter);
+  /**
+   * @constructor
+   * @param {object[]} scooters - Array of scooters
+   */
+  constructor(scooters) {
+    this.scooters = [];
+    for (const scooter of scooters) {
+      scooter._id = scooter._id.toString();
+      this.scooters.push(scooter);
+    }
+  }
+
+  /**
+   * Adds a new active scooter
+   * @param {object} newScooter - The new scooter
+   */
+  addActiveScooter(newScooter) {
+    this.scooters.push(newScooter);
+  }
+
+  /**
+   * Returns all active scooters
+   * @return {object[]} The active scooters
+   */
+  activeScooters() {
+    return this.scooters;
+  }
+
+  /**
+   * Updates an active scooter
+   * @param {object} scooterToUpdate - The updated scooter
+   * @throws {Error} If the scooter with the ID is not found
+   */
+  updateActiveScooter(scooterToUpdate) {
+    for (let scooter of this.scooters) {
+      if (scooter._id === scooterToUpdate._id) {
+        scooter = scooterToUpdate;
       }
     }
 
-    /**
-     * Add scooter to active scooters.
-     * @param {object} newScooter 
-     */
-    addActiveScooter(newScooter) {
-      this.scooters.push(newScooter);
-    }
+    throw new Error(`Scooter with ID ${scooterToUpdate._id} not found`);
+  }
 
-    /**
-     * Returns array of active scooters.
-     * @returns {Array}
-     */
-    activeScooters() {
-      return this.scooters;
-    }
-
-    /**
-     * Update active scooter
-     * @param {object} scooterToUpdate 
-     */
-    updateActiveScooter(scooterToUpdate) {
-      for (let scooter of this.scooters) {
-        if (scooter._id === scooterToUpdate._id) {
-          scooter = scooterToUpdate;
-        }
+  /**
+   * Removes an active scooter from the list
+   * @param {object} scooterToDelete - The scooter to delete
+   * @throws {Error} If the scooter with the ID is not found
+   */
+  removeActiveScooter(scooterToDelete) {
+    for (let i = 0; i < this.scooters.length; i++) {
+      if (this.scooters[i]._id === scooterToDelete._id) {
+        this.scooters.splice(i, 1);
       }
     }
 
-    /**
-     * Remove active scooter
-     * @param {object} scooterToDelete 
-     */
-    removeActiveScooter(scooterToDelete) {
-      for (let i = 0; i < this.scooters.length; i++) {
-        if (this.scooters[i]._id === scooterToDelete._id) {
-          this.scooters.splice(i, 1);
-        }
+    throw new Error(`Scooter with ID ${scooterToDelete._id} not found`);
+  }
+
+  /**
+   * Unlocks a scooter and updates status to "claimed"
+   * @param {string} scooterId - The ID of the scooter unlock
+   * @param {string} userId - The ID of the user who is unlocking the scooter
+   * @return {object} The updated scooter
+   * @throws {Error} If the scooter with the ID is not found
+   */
+  unlockScooter(scooterId, userId) {
+    for (const scooter of this.scooters) {
+      if (scooter._id === scooterId) {
+        scooter.status = "claimed";
+        scooter.userId = userId;
+        return scooter;
       }
     }
 
-    /**
-     * Unlock scooter: change info and return scooter data.
-     * @param {number} scooterId 
-     * @param {number} userId 
-     * @returns {object}
-     */
+    throw new Error(`Scooter with ID ${scooterId} not found`);
+  }
 
-    unlockScooter(scooterId, userId) {
-      for (const scooter of this.scooters) {
-        if (scooter._id === scooterId) {
-          scooter.status = "claimed";
-          scooter.userId = userId;
-          return scooter;
-        }
+  /**
+   * Updates the status and user ID of an unlocked scooter
+   * @param {object} unlockedScooter - The scooter with updated status and user ID
+   * @return {object} The updated scooter
+   * @throws {Error} If the scooter with the ID is not found
+   */
+  scooterUnlocked(unlockedScooter) {
+    for (const scooter of this.scooters) {
+      if (scooter._id === unlockedScooter._id) {
+        scooter.status = unlockedScooter.status;
+        scooter.userId = unlockedScooter.userId;
+        console.log(`Scooter ${scooter._id} unlocked`)
+        return scooter;
       }
     }
 
-    /**
-     * Scooter unlocked: change info and return scooter data.
-     * @param {object} unlockedScooter 
-     * @returns {object}
-     */
+    throw new Error(`Scooter with ID ${unlockedScooter._id} not found`);
+  }
 
-    scooterUnlocked(unlockedScooter) {
-      for (const scooter of this.scooters) {
-        if (scooter._id === unlockedScooter._id) {
-          scooter.status = unlockedScooter.status;
-          scooter.userId = unlockedScooter.userId;
-          console.log(`Scooter ${scooter._id} unlocked`)
-          return scooter;
-        }
+  /**
+   * Locks a scooter and updates its status to "available"
+   * @param {string} scooterId - The ID of the scooter to be locked
+   * @return {object} The updated scooter
+   * @throws {Error} If the scooter with the ID is not found
+   */
+  lockScooter(scooterId) {
+    for (const scooter of this.scooters) {
+      if (scooter._id === scooterId) {
+        scooter.status = "available";
+        scooter.userId = 0;
+        return scooter;
       }
     }
 
-    /**
-     * Lock scooter. Change info and return scooter data.
-     * @param {number} scooterId 
-     * @returns {object}
-     */
+    throw new Error(`Scooter with ID ${scooterId} not found`);
+  }
 
-    lockScooter(scooterId) {
-      for (const scooter of this.scooters) {
-        if (scooter._id === scooterId) {
-          scooter.status = "available";
-          scooter.userId = 0;
-          return scooter;
-        }
+  /**
+   * Updates the status and user ID of a locked scooter
+   * @param {object} lockedScooter - The scooter with updated status and user ID
+   * @return {Object} The updated scooter
+   * @throws {Error} If the scooter with the ID is not found
+   */
+  scooterLocked(lockedScooter) {
+    for (const scooter of this.scooters) {
+      if (scooter._id === lockedScooter._id) {
+        scooter.status = lockedScooter.status;
+        scooter.userId = lockedScooter.userId;
+        console.log(`Scooter ${scooter._id} locked`)
+        return scooter;
       }
     }
 
-  
-    /**
-     * Scooter locked. Change info and return locked scooter.
-     * @param {object} lockedScooter 
-     * @returns 
-     */
+    throw new Error(`Scooter with ID ${lockedScooter._id} not found`);
+  }
 
-    scooterLocked(lockedScooter) {
-      for (const scooter of this.scooters) {
-        if (scooter._id === lockedScooter._id) {
-          scooter.status = lockedScooter.status;
-          scooter.userId = lockedScooter.userId;
-          console.log(`Scooter ${scooter._id} locked`)
-          return scooter;
-        }
+  /**
+   * Updates the position of a scooter
+   * @param {object} reportingScooter - The scooter with updated position
+   * @throws {Error} If the scooter with the ID is not found
+   */
+  updateScooterPosition(reportingScooter) {
+    for (const scooter of this.scooters) {
+      if (scooter._id === reportingScooter._id) {
+        scooter.properties.lat = reportingScooter.properties.lat;
+        scooter.properties.lng = reportingScooter.properties.lng;
+        console.log(`Scooter ${scooter._id} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`)
       }
     }
-
-    /**
-     * Update scooter position info
-     * @param {number} scooterId 
-     * @param {object} position 
-     * @returns {boolean}
-     */
-    updateScooterPosition(reportingScooter) {
-      for (const scooter of this.scooters) {
-        if (scooter._id === reportingScooter._id) {
-          scooter.properties.lat = reportingScooter.properties.lat;
-          scooter.properties.lng = reportingScooter.properties.lng;
-          console.log(`Scooter ${scooter._id} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`)
-          return true;
-        }
-      }
-      return false;
-    }
+    
+    throw new Error(`Scooter with ID ${reportingScooter._id} not found`);
+  }
 }
 
 
