@@ -2,8 +2,9 @@
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes } = require('../../shared/resources');
 
-const { ScooterHandler } = require('./scooter_handler');
-const { FleetHandler } = require('./fleet_handler');
+const { ScooterHandler } = require('./src/scooter_handler');
+const { FleetHandler } = require('./src/fleet_handler');
+const { MongoWrapper } = require('../../shared/mongowrapper');
 
 // TODO: add update simulation event
 // TODO: does the scooters in simulation get updated when the scooters in scooterservice updates/removes?
@@ -13,10 +14,9 @@ const { FleetHandler } = require('./fleet_handler');
  * Main function to set up event flow. Listens for events and sends events with the correct data.
  */
 const scooterService = async () => {
-
+  const mongoWrapper = await new MongoWrapper("scooters");
   const broker = await new MessageBroker(host, 'scooter_service');
-  const fleetHandler = await new FleetHandler();
-
+  const fleetHandler = await new FleetHandler(mongoWrapper);
   const scooterHandler = await new ScooterHandler(await fleetHandler.getScooters());
 
   setInterval(async () => {

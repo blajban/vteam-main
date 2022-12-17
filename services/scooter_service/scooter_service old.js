@@ -4,7 +4,7 @@ const { host, eventTypes } = require('../../shared/resources');
 
 const scooters = require('../../shared/dummy_data/scooter_service/scooters');
 
-const { ScooterHandler } = require('./scooter_handler');
+const { ScooterHandler } = require('./src/scooter_handler');
 
 // TODO: add scooter added event and update simulation
 

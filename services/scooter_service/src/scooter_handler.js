@@ -34,12 +34,14 @@ class ScooterHandler {
   /**
    * Updates an active scooter
    * @param {object} scooterToUpdate - The updated scooter
+   * @return {object} The updated scooter
    * @throws {Error} If the scooter with the ID is not found
    */
   updateActiveScooter(scooterToUpdate) {
-    for (let scooter of this.scooters) {
-      if (scooter._id === scooterToUpdate._id) {
-        scooter = scooterToUpdate;
+    for (let i = 0; i < this.scooters.length; i++) {
+      if (this.scooters[i]._id === scooterToUpdate._id) {
+        this.scooters[i] = scooterToUpdate;
+        return true;
       }
     }
 
@@ -55,6 +57,7 @@ class ScooterHandler {
     for (let i = 0; i < this.scooters.length; i++) {
       if (this.scooters[i]._id === scooterToDelete._id) {
         this.scooters.splice(i, 1);
+        return true;
       }
     }
 
@@ -147,6 +150,7 @@ class ScooterHandler {
         scooter.properties.lat = reportingScooter.properties.lat;
         scooter.properties.lng = reportingScooter.properties.lng;
         console.log(`Scooter ${scooter._id} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`)
+        return true;
       }
     }
     

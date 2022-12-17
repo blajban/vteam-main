@@ -1,4 +1,4 @@
-const { ScooterHandler } = require('../scooter_handler');
+const { ScooterHandler } = require('../src/scooter_handler');
 
 describe('ScooterHandler', () => {
   let scooterHandler;
@@ -44,6 +44,7 @@ describe('ScooterHandler', () => {
       const updatedScooter = { _id: '1', status: 'claimed', userId: '123', properties: { lat: 37.775, lng: -122.4183 } };
       scooterHandler.updateActiveScooter(updatedScooter);
       expect(scooterHandler.scooters[0].userId).toEqual(updatedScooter.userId);
+      expect(scooterHandler.scooters[0].status).toEqual(updatedScooter.status);
     });
 
     it('should throw an error if the scooter with the given ID is not found', () => {
