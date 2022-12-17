@@ -14,11 +14,11 @@ describe('ScooterHandler', () => {
   });
 
   describe('constructor', () => {
-    it('should initialize the scooters property with an array of scooters', () => {
+    it('initialize with an array of scooters', () => {
       expect(scooterHandler.scooters).toEqual(scooters);
     });
 
-    it('should convert the _id property of each scooter to a string', () => {
+    it('convert the _id of each scooter to a string', () => {
       expect(scooterHandler.scooters[0]._id).toBe('1');
       expect(scooterHandler.scooters[1]._id).toBe('2');
       expect(scooterHandler.scooters[2]._id).toBe('3');
@@ -26,7 +26,7 @@ describe('ScooterHandler', () => {
   });
 
   describe('addActiveScooter', () => {
-    it('should add a new scooter to the list of active scooters', () => {
+    it('add a new scooter to the active scooters', () => {
       const newScooter = { _id: '4', status: 'available', userId: 0, properties: { lat: 37.775, lng: -122.4183 } };
       scooterHandler.addActiveScooter(newScooter);
       expect(scooterHandler.scooters).toContain(newScooter);
@@ -34,96 +34,108 @@ describe('ScooterHandler', () => {
   });
 
   describe('activeScooters', () => {
-    it('should return the list of active scooters', () => {
+    it('return all active scooters', () => {
       expect(scooterHandler.activeScooters()).toEqual(scooters);
     });
   });
 
   describe('updateActiveScooter', () => {
-    it('should update the data of an active scooter', () => {
+    it('update an active scooter', () => {
       const updatedScooter = { _id: '1', status: 'claimed', userId: '123', properties: { lat: 37.775, lng: -122.4183 } };
       scooterHandler.updateActiveScooter(updatedScooter);
       expect(scooterHandler.scooters[0].userId).toEqual(updatedScooter.userId);
       expect(scooterHandler.scooters[0].status).toEqual(updatedScooter.status);
     });
 
-    it('should throw an error if the scooter with the given ID is not found', () => {
+    it('throw an error if the scooter with the ID is not found', () => {
       const updatedScooter = { _id: '4', status: 'claimed', userId: '123', properties: { lat: 37.775, lng: -122.4183 } };
-      expect(() => { scooterHandler.updateActiveScooter(updatedScooter); }).toThrow();
+      expect(() => { 
+        scooterHandler.updateActiveScooter(updatedScooter); 
+      }).toThrow();
     });
   });
  
   describe('removeActiveScooter', () => {
-    it('should remove an active scooter from the list', () => {
+    it('remove an active scooter', () => {
       const scooterToDelete = scooters[1];
       scooterHandler.removeActiveScooter(scooterToDelete);
       expect(scooterHandler.scooters).not.toContain(scooterToDelete);
     });
 
-    it('should throw an error if the scooter with the given ID is not found', () => {
+    it('throw an error if the scooter with the ID is not found', () => {
       const scooterToDelete = { _id: '4', status: 'claimed', userId: '123', properties: { lat: 37.775, lng: -122.4183 } };
-      expect(() => { scooterHandler.removeActiveScooter(scooterToDelete); }).toThrow();
+      expect(() => { 
+        scooterHandler.removeActiveScooter(scooterToDelete); 
+      }).toThrow();
     });
   });
   
   describe('unlockScooter', () => {
-    it('should unlock a scooter and update its status to "claimed"', () => {
+    it('unlock a scooter and update its status', () => {
       const unlockedScooter = scooterHandler.unlockScooter('1', '123');
       expect(unlockedScooter.status).toBe('claimed');
       expect(unlockedScooter.userId).toBe('123');
     });
 
-    it('should throw an error if the scooter with the given ID is not found', () => {
-      expect(() => { scooterHandler.unlockScooter('4', '123'); }).toThrow();
+    it('throw an error if the scooter with the ID is not found', () => {
+      expect(() => { 
+        scooterHandler.unlockScooter('4', '123'); 
+      }).toThrow();
     });
   });
   
   describe('scooterUnlocked', () => {
-    it('should update the status and user ID of an unlocked scooter', () => {
+    it('update the status and user ID of an unlocked scooter', () => {
       const unlockedScooter = { _id: '1', status: 'claimed', userId: '123', properties: { lat: 37.775, lng: -122.4183 } };
       const updatedScooter = scooterHandler.scooterUnlocked(unlockedScooter);
       expect(updatedScooter).toEqual(unlockedScooter);
     });
 
-    it('should throw an error if the scooter with the given ID is not found', () => {
+    it('throw an error if the scooter with the ID is not found', () => {
       const unlockedScooter = { _id: '4', status: 'claimed', userId: '123', properties: { lat: 37.775, lng: -122.4183 } };
-      expect(() => { scooterHandler.scooterUnlocked(unlockedScooter); }).toThrow();
+      expect(() => { 
+        scooterHandler.scooterUnlocked(unlockedScooter); 
+      }).toThrow();
     });
   });
   
   describe('lockScooter', () => {
-    it('should lock a scooter and update its status to "available"', () => {
+    it('lock a scooter and update its status', () => {
       const lockedScooter = scooterHandler.lockScooter('1');
       expect(lockedScooter.status).toBe('available');
       expect(lockedScooter.userId).toBe(0);
     });
 
-    it('should throw an error if the scooter with the given ID is not found', () => {
-      expect(() => { scooterHandler.lockScooter('4'); }).toThrow();
+    it('throw an error if the scooter with the ID is not found', () => {
+      expect(() => { 
+        scooterHandler.lockScooter('4'); 
+      }).toThrow();
     });
   });
   
   describe('scooterLocked', () => {
-    it('should update the status and user ID of a locked scooter', () => {
+    it('update the status and user ID of a locked scooter', () => {
       const lockedScooter = { _id: '1', status: 'available', userId: 0, properties: { lat: 37.775, lng: -122.4183 } };
       const updatedScooter = scooterHandler.scooterLocked(lockedScooter);
       expect(updatedScooter).toEqual(lockedScooter);
     });
 
-    it('should throw an error if the scooter with the given ID is not found', () => {
+    it('throw an error if the scooter with the ID is not found', () => {
       const lockedScooter = { _id: '4', status: 'available', userId: 0, properties: { lat: 37.775, lng: -122.4183 } };
-      expect(() => { scooterHandler.scooterLocked(lockedScooter); }).toThrow();
+      expect(() => { 
+        scooterHandler.scooterLocked(lockedScooter); 
+      }).toThrow();
     });
   });
   
   describe('updateScooterPosition', () => {
-    it('should update the position of a scooter', () => {
+    it('update the position of a scooter', () => {
       const updatedScooter = { _id: '1', status: 'available', userId: 0, properties: { lat: 37.7751, lng: -122.4184 } };
       scooterHandler.updateScooterPosition(updatedScooter);
       expect(scooterHandler.scooters[0]).toEqual(updatedScooter);
     });
 
-    it('should throw an error if the scooter with the given ID is not found', () => {
+    it('throw an error if the scooter with the ID is not found', () => {
       const updatedScooter = { _id: '4', status: 'available', userId: 0, properties: { lat: 37.7751, lng: -122.4184 } };
       expect(() => { scooterHandler.updateScooterPosition(updatedScooter); }).toThrow();
     });

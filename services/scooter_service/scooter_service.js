@@ -163,3 +163,5 @@ const scooterService = async () => {
 
 
 scooterService();
+
+module.exports = { scooterService };

@@ -24,8 +24,9 @@ class FleetHandler {
     if (options.hasOwnProperty('_id')) {
       filter._id = options._id;
 
-      const scooter = this.db.findOne(this.collectionName, filter);
+      const scooter = await this.db.findOne(this.collectionName, filter);
       if (scooter === null) {
+        
         return [];
       }
 
@@ -136,7 +137,7 @@ class FleetHandler {
 
   /**
    * Removes a scooter from the db.
-   * @param {Object} id - The ID of the scooter to remove.
+   * @param {object} id - The ID of the scooter to remove.
    * @returns {Promise<object>} The removed scooter object.
    */
   async removeScooter(id) {

@@ -1,51 +1,15 @@
 const { FleetHandler } = require('../src/fleet_handler');
 
+/**
+ * Mock for MongoWrapper class.
+ */
 class MockMongoWrapper {
-  constructor() {
-    this.db = [
-      {
-        _id: '123',
-        status: 'available',
-        userId: 0,
-        properties: {
-          location: 'San Francisco',
-          lat: 37.775,
-          lng: -122.4183,
-          speed: 0,
-          battery: 100
-        },
-        log: []
-      },
-      {
-        _id: '456',
-        status: 'available',
-        userId: 0,
-        properties: {
-          location: 'San Francisco',
-          lat: 37.775,
-          lng: -122.4183,
-          speed: 0,
-          battery: 100
-        },
-        log: []
-      },
-      {
-        _id: '789',
-        status: 'available',
-        userId: 0,
-        properties: {
-          location: 'Stockholm',
-          lat: 37.775,
-          lng: -122.4183,
-          speed: 0,
-          battery: 100
-        },
-        log: []
-      }
-    ]
+  constructor(scooters) {
+    this.scooters = scooters;
   }
   async insertOne(collectionName, document) {
-    // Return a mock value for the insertOne method
+    document._id = 5555;
+    this.scooters.push(document);
     return { insertedCount: 1 };
   }
 
@@ -64,7 +28,7 @@ class MockMongoWrapper {
       return result;
     }
 
-
+    
     return this.scooters;
   }
 
@@ -75,94 +39,75 @@ class MockMongoWrapper {
       }
     }
 
-    return [];
+    return null;
     
   }
 
-  async updateOne(collectionName, filter, update) {
-    // Return a mock value for the updateOne method
-    return { modifiedCount: 1 };
+  async updateOne(collectionName, obj, update) {
+    for (let i = 0; i < this.scooters.length; i++) {
+      if (this.scooters[i]._id === obj._id) {
+
+        if (update.hasOwnProperty('status')) {
+          this.scooters[i].status = update.status;
+        }
+
+        if (update.hasOwnProperty('properties')) {
+          if (update.properties.hasOwnProperty('location')) {
+            this.scooters[i].properties.location = update.properties.location;
+          }
+          if (update.properties.hasOwnProperty('lat')) {
+            this.scooters[i].properties.lat = update.properties.lat;
+          }
+          if (update.properties.hasOwnProperty('lng')) {
+            this.scooters[i].properties.lng = update.properties.lng;
+          }
+        }
+    
+        if (update.hasOwnProperty('properties.location')) {
+          this.scooters[i].properties.location = update['properties.location'];
+        }
+    
+        if (update.hasOwnProperty('properties.lat')) {
+          this.scooters[i].properties.lat = update['properties.lat'];
+        }
+    
+        if (update.hasOwnProperty('properties.lng')) {
+          this.scooters[i].properties.lng = update['properties.lng']
+        }
+
+        return { modifiedCount: 1 };
+
+      }
+    }
+    return { modifiedCount: 0 };
   }
 
-  async deleteOne(collectionName, filter) {
-    // Return a mock value for the deleteOne method
-    return { deletedCount: 1 };
+  async deleteOne(collectionName, id) {
+    for (let i = 0; i < this.scooters.length; i++) {
+      if (this.scooters[i]._id === id._id) {
+        this.scooters.splice(i, 1);
+        return { deletedCount: 1 };
+      }
+    }
+    return { deletedCount: 0 };
   }
 }
 
+/**
+ * TESTS
+ */
 describe('FleetHandler', () => {
     let fleetHandler;
     let db;
   
     beforeEach(async () => {
-      db = new MockMongoWrapper();
-      fleetHandler = new FleetHandler(db);
-    });
-  
-    describe('getScooters', () => {
-      it('should return an empty array if no scooters are found', async () => {
-        const scooters = await fleetHandler.getScooters({ _id: '1234' });
-        const dbResult = db.findOne("scooters", { _id: '1234' });
-        expect(scooters).toEqual(dbResult);
-      });
-  
-      it('should return a single scooter if an ID is provided', async () => {
-        const newScooter = {
-          _id: '123',
-          status: 'available',
-          userId: 0,
-          properties: {
-            location: 'San Francisco',
-            lat: 37.775,
-            lng: -122.4183,
-            speed: 0,
-            battery: 100
-          },
-          log: []
-        };
-        const scooters = await fleetHandler.getScooters({ _id: '123' });
-        expect(scooters).toEqual([newScooter]);
-    });
-
-    it('should return all scooters with a matching location', async () => {
-      const newScooter1 = {
-        _id: '123',
-        status: 'available',
-        userId: 0,
-        properties: {
-          location: 'San Francisco',
-          lat: 37.775,
-          lng: -122.4183,
-          speed: 0,
-          battery: 100
-        },
-        log: []
-      };
-      const newScooter2 = {
-        _id: '456',
-        status: 'available',
-        userId: 0,
-        properties: {
-          location: 'San Francisco',
-          lat: 37.775,
-          lng: -122.4183,
-          speed: 0,
-          battery: 100
-        },
-        log: []
-      };
-      const scooters = await fleetHandler.getScooters({ location: 'San Francisco' });
-      expect(scooters).toEqual([newScooter1, newScooter2]);
-    });
-
-    it('should return all scooters if no options are provided', async () => {
-      const scooters = [
+      db = new MockMongoWrapper([
         {
           _id: '123',
           status: 'available',
           userId: 0,
           properties: {
-            location: 'San Francisco',
+            location: 'goteborg',
             lat: 37.775,
             lng: -122.4183,
             speed: 0,
@@ -175,7 +120,7 @@ describe('FleetHandler', () => {
           status: 'available',
           userId: 0,
           properties: {
-            location: 'San Francisco',
+            location: 'goteborg',
             lat: 37.775,
             lng: -122.4183,
             speed: 0,
@@ -188,7 +133,7 @@ describe('FleetHandler', () => {
           status: 'available',
           userId: 0,
           properties: {
-            location: 'Stockholm',
+            location: 'stockholm',
             lat: 37.775,
             lng: -122.4183,
             speed: 0,
@@ -196,107 +141,123 @@ describe('FleetHandler', () => {
           },
           log: []
         }
-      ]
-      const returnedScooters = await fleetHandler.getScooters();
-      expect(returnedScooters).toEqual(scooters);
+      ]);
+
+      fleetHandler = new FleetHandler(db);
+    });
+  
+    describe('getScooters', () => {
+      it('return empty array if no scooters are found', async () => {
+        const scooters = await fleetHandler.getScooters({ _id: '1234' });
+        expect(scooters).toEqual([]);
+      });
+  
+      it('return a single scooter with an ID', async () => {
+        const scooters = await fleetHandler.getScooters({ _id: '123' });
+        const scooterFromDb = await db.findOne("scooters", { _id: '123' });
+        expect(scooters).toEqual(scooterFromDb);
+    });
+
+    it('return all scooters with a certain location', async () => {
+      const scooters = await fleetHandler.getScooters({ location: 'goteborg' });
+      const scootersFromDb = await db.find("scooters", { 'properties.location': 'goteborg' });
+      expect(scooters).toEqual(scootersFromDb);
+    });
+
+    it('return all scooters', async () => {
+      const scooters = await fleetHandler.getScooters();
+      const scootersFromDb = await db.find("scooters", {})
+      expect(scooters).toEqual(scootersFromDb);
     });
   });
 
-  describe('#addScooter', () => {
-    it('should add a new scooter to the database', async () => {
+  describe('addScooter', () => {
+    it('add a new scooter to the db', async () => {
       const newScooterInfo = {
-        location: 'San Francisco',
+        location: 'eksjö',
         lat: 37.775,
         lng: -122.4183
       };
       const newScooter = await fleetHandler.addScooter(newScooterInfo);
-      const scooters = await db.find('scooters', { _id: newScooter._id });
-      expect(scooters).toEqual([newScooter]);
+      const scooters = await db.findOne('scooters', { _id: newScooter._id });
+      expect(scooters).toEqual(newScooter);
     });
   });
 
-  describe('#updateScooters', () => {
-    it('should update multiple scooters in the database', async () => {
-      const newScooter1 = {
-        _id: '123',
-        status: 'available',
-        userId: 0,
-        properties: {
-          location: 'San Francisco',
-          lat: 37.775,
-          lng: -122.4183,
-          speed: 0,
-          battery: 100
+  describe('updateScooters', () => {
+    it('update multiple scooters in the db', async () => {
+      const updatedScooters = [
+        {
+          _id: '123',
+          status: 'claimed',
+          userId: 0,
+          properties: {
+            location: 'goteborg',
+            lat: -37.775,
+            lng: 122.4183,
+            speed: 0,
+            battery: 100
+          },
+          log: []
         },
-        log: []
-      };
-      const newScooter2 = {
-        _id: '456',
-        status: 'available',
-        userId: 0,
-        properties: {
-          location: 'San Francisco',
-          lat: 37.775,
-          lng: -122.4183,
-          speed: 0,
-          battery: 100
+        {
+          _id: '456',
+          status: 'claimed',
+          userId: 0,
+          properties: {
+            location: 'goteborg',
+            lat: -37.775,
+            lng: 122.4183,
+            speed: 0,
+            battery: 100
+          },
+          log: []
         },
-        log: []
-      };
-      await db.insertOne('scooters', newScooter1);
-      await db.insertOne('scooters', newScooter2);
-      newScooter1.status = 'claimed';
-      newScooter2.status = 'claimed';
-      await fleetHandler.updateScooters([newScooter1, newScooter2]);
+        {
+          _id: '789',
+          status: 'claimed',
+          userId: 0,
+          properties: {
+            location: 'stockholm',
+            lat: -37.775,
+            lng: 122.4183,
+            speed: 0,
+            battery: 100
+          },
+          log: []
+        }
+      ];
+
+      await fleetHandler.updateScooters(updatedScooters);
       const scooters = await db.find('scooters', {});
-      expect(scooters).toEqual([newScooter1, newScooter2]);
+      expect(scooters).toEqual(updatedScooters);
     });
   });
 
-  describe('#updateScooter', () => {
-    it('should update a single scooter in the database', async () => {
-      const newScooter = {
-        _id: '123',
-        status: 'available',
-        userId: 0,
-        properties: {
-          location: 'San Francisco',
-          lat: 37.775,
-          lng: -122.4183,
-          speed: 0,
-          battery: 100
-        },
-        log: []
-      };
-      await db.insertOne('scooters', newScooter);
-      newScooter.status = 'claimed';
-      await fleetHandler.updateScooter(newScooter);
-      const scooters = await db.find('scooters', {});
-      expect(scooters).toEqual([newScooter]);
+  describe('updateScooter', () => {
+    it('update a single scooter in the db', async () => {
+      const scooterToUpdate = {
+          _id: '789',
+          status: 'available',
+          location: 'eksjö',
+          lat: -37.775,
+          lng: 2.4183,
+        };
+
+      await fleetHandler.updateScooter(scooterToUpdate);
+      const scooter = await db.findOne('scooters', { _id: scooterToUpdate._id });
+      expect(scooter.status).toEqual(scooterToUpdate.status);
+      expect(scooter.properties.location).toEqual(scooterToUpdate.location);
+      expect(scooter.properties.lat).toEqual(scooterToUpdate.lat);
+      expect(scooter.properties.lng).toEqual(scooterToUpdate.lng);
     });
   });
 
-  describe('#removeScooter', () => {
-    it('should remove a scooter from the database', async () => {
-      const newScooter = {
-        _id: '123',
-        status: 'available',
-        userId: 0,
-        properties: {
-          location: 'San Francisco',
-          lat: 37.775,
-          lng: -122.4183,
-          speed: 0,
-          battery: 100
-        },
-        log: []
-      };
-      await db.insertOne('scooters', newScooter);
-      const scooters = await db.find('scooters', {});
-      expect(scooters).toEqual([newScooter]);
+  describe('removeScooter', () => {
+    it('remove a scooter from the db', async () => {
       await fleetHandler.removeScooter({ _id: '123' });
-      const scootersAfterRemoval = await db.find('scooters', {});
-      expect(scootersAfterRemoval).toEqual([]);
+      const scooterAfterRemoval = await db.findOne('scooters', { _id: '123' });
+      expect(scooterAfterRemoval).toEqual(null);
     });
   });
 });
