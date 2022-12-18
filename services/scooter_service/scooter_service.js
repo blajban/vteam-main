@@ -20,7 +20,11 @@ const scooterService = async () => {
   const scooterHandler = await new ScooterHandler(await fleetHandler.getScooters());
 
   setInterval(async () => {
-    await fleetHandler.updateScooters(scooterHandler.activeScooters());
+    try {
+      await fleetHandler.updateScooters(scooterHandler.activeScooters());
+    } catch (err) {
+      console.log(err);
+    }
   }, 15000);
 
 
@@ -28,135 +32,219 @@ const scooterService = async () => {
    * Simulate all scooters
    */
    broker.onEvent(eventTypes.adminEvents.simulateScooters, (e) => {
-    for (const scooter of scooterHandler.activeScooters()) {
-      const newEvent = broker.constructEvent(eventTypes.rentScooterEvents.rentScooter, scooter);
-      broker.publish(newEvent);
+    try {
+      for (const scooter of scooterHandler.activeScooters()) {
+        scooter.simulate = true;
+        const newEvent = broker.constructEvent(eventTypes.rentScooterEvents.rentScooter, scooter);
+        broker.publish(newEvent);
+      }
+    } catch (err) {
+      console.log(err);
     }
+    
   });
 
   /** TODO
    * Stop simulation
    */
-   broker.onEvent(eventTypes.adminEvents.stopSimulation, (e) => {
-    for (const scooter of scooterHandler.activeScooters()) {
-      const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.parkScooter, scooter);
-      broker.publish(newEvent);
+  broker.onEvent(eventTypes.adminEvents.stopSimulation, (e) => {
+    try {
+      for (const scooter of scooterHandler.activeScooters()) {
+        const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.parkScooter, scooter);
+        broker.publish(newEvent);
+      }
+    } catch (err) {
+      console.log(err);
     }
+    
   });
 
   /**
    * Unlock scooter
    */
-   broker.onEvent(eventTypes.rentScooterEvents.rentScooter, (e) => {
-    console.log(e.data)
-    const newEvent = broker.constructEvent(eventTypes.rentScooterEvents.unlockScooter, scooterHandler.unlockScooter(e.data._id, e.data.userId));
-    broker.publish(newEvent);
+  broker.onEvent(eventTypes.rentScooterEvents.rentScooter, (e) => {
+    try {
+      const newEvent = broker.constructEvent(eventTypes.rentScooterEvents.unlockScooter, scooterHandler.unlockScooter(e.data._id, e.data.userId));
+      broker.publish(newEvent);
+    } catch (err) {
+      console.log(err);
+    }
+    
   });
 
   /**
    * Scooter unlocked
    */
-   broker.onEvent(eventTypes.rentScooterEvents.scooterUnlocked, (e) => {
-    const newEvent = broker.constructEvent(eventTypes.rentScooterEvents.rideStarted, scooterHandler.scooterUnlocked(e.data));
-    broker.publish(newEvent);
+  broker.onEvent(eventTypes.rentScooterEvents.scooterUnlocked, (e) => {
+    try {
+      const newEvent = broker.constructEvent(eventTypes.rentScooterEvents.rideStarted, scooterHandler.scooterUnlocked(e.data));
+      broker.publish(newEvent);
+    } catch (err) {
+      console.log(err);
+    }
+    
   });
 
   /**
    * Idle reporting
    */
-   broker.onEvent(eventTypes.scooterEvents.scooterIdleReporting, (e) => {
-    scooterHandler.updateScooterPosition(e.data);
+  broker.onEvent(eventTypes.scooterEvents.scooterIdleReporting, (e) => {
+    try {
+      scooterHandler.updateScooterPosition(e.data);
+    } catch (err) {
+      console.log(err);
+    }
+    
   })
 
   /**
    * Reporting while moving
    */
-   broker.onEvent(eventTypes.scooterEvents.scooterMoving, (e) => {
-    scooterHandler.updateScooterPosition(e.data);
+  broker.onEvent(eventTypes.scooterEvents.scooterMoving, (e) => {
+    try {
+      scooterHandler.updateScooterPosition(e.data);
+    } catch (err) {
+      console.log(err);
+    }
+    
   })
 
   // TODO
   broker.onEvent(eventTypes.scooterEvents.batteryLow, (e) => {
-    console.log("Scooter reported low battery!");
+    try {
+      console.log("Scooter reported low battery!");
+    } catch (err) {
+      console.log(err);
+    }
+    
   })
 
   /** TODO
    * Park scooter
    */
-   broker.onEvent(eventTypes.returnScooterEvents.parkScooter, (e) => {
-    const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.lockScooter, scooterHandler.lockScooter(e.data._id));
-    broker.publish(newEvent);
+  broker.onEvent(eventTypes.returnScooterEvents.parkScooter, (e) => {
+    try {
+      const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.lockScooter, scooterHandler.lockScooter(e.data._id));
+      broker.publish(newEvent);
+    } catch (err) {
+      console.log(err);
+    }
+    
   });
 
   /** TODO
    * Scooter locked
    */
-   broker.onEvent(eventTypes.returnScooterEvents.scooterLocked, (e) => {
-    const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.rideFinished, scooterHandler.scooterLocked(e.data));
-    broker.publish(newEvent);
+  broker.onEvent(eventTypes.returnScooterEvents.scooterLocked, (e) => {
+    try {
+      const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.rideFinished, scooterHandler.scooterLocked(e.data));
+      broker.publish(newEvent);
+    } catch (err) {
+      console.log(err);
+    }
+    
   });
 
   // TODO
   broker.onEvent(eventTypes.adminEvents.moveScooter, (e) => {
-    console.log("Admin decided to move a scooter!");
+    try {
+      console.log("Admin decided to move a scooter!");
+    } catch (err) {
+      console.log(err);
+    }
+    
   });
 
   /**
    * Get scooters, options in event.
    */
   broker.response(eventTypes.rpcEvents.getScooters, async (e) => {
-    return await fleetHandler.getScooters(e.data);
+    try {
+      return await fleetHandler.getScooters(e.data);
+    } catch (err) {
+      console.log(err);
+    }
+    
   });
 
   /**
    * Add scooter to db
    */
   broker.response(eventTypes.rpcEvents.addScooter, async (e) => {
-    const newScooter = await fleetHandler.addScooter(e.data);
-    const scooterAddedEvent = broker.constructEvent(eventTypes.scooterEvents.scooterAdded, newScooter);
-    broker.publish(scooterAddedEvent);
-    return newScooter;
+    try {
+      const newScooter = await fleetHandler.addScooter(e.data);
+      const scooterAddedEvent = broker.constructEvent(eventTypes.scooterEvents.scooterAdded, newScooter);
+      broker.publish(scooterAddedEvent);
+      return newScooter;
+    } catch (err) {
+      console.log(err);
+    }
+    
   });
 
   /**
    * Update active scooters
    */
   broker.onEvent(eventTypes.scooterEvents.scooterAdded, (e) => {
-    scooterHandler.addActiveScooter(e.data);
+    try {
+      scooterHandler.addActiveScooter(e.data);
+    } catch (err) {
+      console.log(err);
+    }
+    
   });
 
   /**
    * Update scooter
    */
   broker.response(eventTypes.rpcEvents.updateScooter, async (e) => {
-    const updatedScooter = await fleetHandler.updateScooter(e.data);
-    const scooterUpdatedEvent = broker.constructEvent(eventTypes.scooterEvents.updatedScooter, updatedScooter);
-    broker.publish(scooterUpdatedEvent);
-    return updatedScooter;
+    try {
+      const updatedScooter = await fleetHandler.updateScooter(e.data);
+      const scooterUpdatedEvent = broker.constructEvent(eventTypes.scooterEvents.updatedScooter, updatedScooter);
+      broker.publish(scooterUpdatedEvent);
+      return updatedScooter;
+    } catch (err) {
+      console.log(err);
+    }
+    
   });
 
   /**
    * Update active scooters
    */
   broker.onEvent(eventTypes.scooterEvents.updatedScooter, (e) => {
-    scooterHandler.updateActiveScooter(e.data);
+    try {
+      scooterHandler.updateActiveScooter(e.data);
+    } catch (err) {
+      console.log(err);
+    }
+    
   });
 
   /**
    * Remove scooter
    */
   broker.response(eventTypes.rpcEvents.removeScooter, async (e) => {
-    const removedScooter = await fleetHandler.removeScooter(e.data);
-    const removeScooterEvent = broker.constructEvent(eventTypes.scooterEvents.scooterRemoved, removedScooter);
-    broker.publish(removeScooterEvent);
-    return removedScooter;
+    try {
+      const removedScooter = await fleetHandler.removeScooter(e.data);
+      const removeScooterEvent = broker.constructEvent(eventTypes.scooterEvents.scooterRemoved, removedScooter);
+      broker.publish(removeScooterEvent);
+      return removedScooter;
+    } catch (err) {
+      console.log(err);
+    }
   })
 
   /**
    * Remove active scooter
    */
   broker.onEvent(eventTypes.scooterEvents.scooterRemoved, (e) => {
-    scooterHandler.removeActiveScooter(e.data);
+    try {
+      scooterHandler.removeActiveScooter(e.data);
+    } catch (err) {
+      console.log(err);
+    }
+    
   })
 
 }
