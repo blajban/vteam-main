@@ -21,7 +21,7 @@ class UserHandler {
      */
     async getUser(userId) {
         try {
-            const user = await this.db.findOne(this.collectionName, {_id: userId});
+            const user = await this.db.findOneUser(this.collectionName, userId);
             return user;
         } catch (error) {
             console.log(error);
@@ -34,7 +34,7 @@ class UserHandler {
      */
     async getUsers() {
         try {
-            const users = await this.db.find(this.collectionName);
+            const users = await this.db.findUser(this.collectionName);
             return users;
         } catch (error) {
             console.log(error);
@@ -48,7 +48,7 @@ class UserHandler {
      */
     async addUser(newUser) {
         try {
-            const user = await this.db.insertOne(this.collectionName, newUser);
+            const user = await this.db.insertOneUser(this.collectionName, newUser);
             return user;
         } catch (error) {
             console.log(error);
@@ -66,7 +66,7 @@ class UserHandler {
             let objectWithoutId = JSON.parse(JSON.stringify(userToUpdate));
             // Remove _id from object to be updated
             delete objectWithoutId._id;
-            const user = await this.db.updateOne(this.collectionName, {_id: userToUpdate._id},
+            const user = await this.db.updateOneUser(this.collectionName, userToUpdate._id,
                 objectWithoutId);
             return user;
         } catch (error) {
@@ -79,37 +79,46 @@ class UserHandler {
      * @param {number} userToRemove - The user to delete.
      * @returns {Object} - The result of the delete operation.
      */
-    async removeUser(userToRemove) {
+    async removeUser(userId) {
         try {
-            const user = await this.db.deleteOne2(this.collectionName, userToRemove);
+            const user = await this.db.deleteOneUser(this.collectionName, userId);
             return user;
         } catch (error) {
             console.log(error);
         }
     }
 
+    // testfunktion, ska flyttas från denna filen
     async newTestUser() {
         // testar att hämta alla användare
         const allUsers = await this.getUsers();
-        console.log("Alla användare");
+        console.log("Alla användare innan jag lagt till någon");
         console.log(allUsers);
 
         const newUser = {
             "_id": 1,
-            "name": "Selma Helin",
+            "name": "Pontus Andersson",
             "mobile": "0705556747",
-            "mail": "selma.helin@hallaryd.se",
-            "city": "Hällaryd",
-            "address": "Hällarydsvägen 14",
+            "mail": "adam.karlsson@karlskrona.se",
+            "city": "Karlskrona",
+            "address": "Karlskronagatan 15",
             "zip": "37470",
             "admin": false,
             "balance": 0
         }
+    
         // testar ett lägga till en användare
         const addUser = await this.addUser(newUser);
         console.log("");
         console.log("Lägger till användare");
         console.log(addUser);
+
+        // testar att hitta alla användare
+        const allUsers2 = await this.getUsers();
+        console.log("");
+        console.log("Alla användare nu");
+        console.log(allUsers2);
+        console.log("");
 
         // testar att hitta en användare
         const findOneUser = await this.getUser(1);
@@ -120,6 +129,7 @@ class UserHandler {
             console.log("Användaren 1 finns inte");
         }
 
+        console.log("");
         // testar att hitta en användare som inte finns
         const findOneUser2 = await this.getUser(2);
         if (findOneUser2) {
@@ -128,6 +138,7 @@ class UserHandler {
             console.log("Användaren 2 finns inte");
         }
 
+        console.log(" ");
         // testar att uppdatera en användare
         findOneUser.balance = 20.90;
         findOneUser.name = "Arne Nilsson";
@@ -135,16 +146,16 @@ class UserHandler {
         console.log(updateUser2);
         const findOneUser3 = await this.getUser(1);
         console.log(findOneUser3);
-        console.log("Användare 1 uppdaterad");
+        console.log("Användare 1 nu uppdaterad");
         console.log("");
 
         // testar att ta bort en användare
         console.log("Tar bort användare 1");
-        const remove2 = await this.removeUser(findOneUser3);
+        const remove2 = await this.removeUser(1);
         console.log(remove2);
         const findOneUser4 = await this.getUser(1);
         console.log(findOneUser4);
-        console.log("Användare 1 borttagen");
+        console.log("Användare 1 nu borttagen");
     }
 }
 

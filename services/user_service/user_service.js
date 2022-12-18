@@ -23,11 +23,9 @@ const userService = async () => {
      * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.getUsers, async (e) => {
-        if (e.data.userId) {
-            console.log(await userHandler.getUser(e.data.userId));
-            return await userHandler.getUser(e.data.userId);
+        if (e.data._id) {
+            return await userHandler.getUser(e.data._id);
         }
-        console.log(await userHandler.getUsers());
         return await userHandler.getUsers();
     });
 
@@ -39,7 +37,6 @@ const userService = async () => {
      * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.addUser, async (e) => {
-        console.log(await userHandler.addUser(e.data));
         return await userHandler.addUser(e.data);
     });
 
@@ -51,7 +48,6 @@ const userService = async () => {
      * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.updateUser, async (e) => {
-        console.log(await userHandler.updateUser(e.data));
         return await userHandler.updateUser(e.data);
     })
 
@@ -64,8 +60,7 @@ const userService = async () => {
      * @returns {function}
      */
     broker.response(eventTypes.rpcEvents.removeUser, async (e) => {
-        console.log(await userHandler.removeUser(e.data));
-        return await userHandler.removeUser(e.data);
+        return await userHandler.removeUser(e.data._id);
     })
 
     /**

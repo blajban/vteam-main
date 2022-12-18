@@ -86,6 +86,17 @@ class MongoWrapper {
   }
 
   /**
+   * Inserts a user into a collection.
+   * @param {string} collectionName - The name of the collection.
+   * @param {object} document - The document to insert.
+   * @returns {object} - The result of the insert operation.
+   */
+  async insertOneUser(collectionName, document) {
+    const collection = await this.getCollection(collectionName);
+    return await collection.insertOne(document);
+  }
+
+  /**
    * Inserts many documents into a collection.
    * @param {string} collectionName - The name of the collection.
    * @param {Array} arrayOfDocuments - array with objects
@@ -109,14 +120,37 @@ class MongoWrapper {
   }
 
   /**
-   * updates one document into a collection.
+   * updates one user document into a collection.
+   * @param {string} collectionName - The name of the collection.
+   * @param {number} userId - id of user to be updated.
+   * @param {Object} update - User object to be updated.
+   * @returns {Object} - The result of the insert operation.
+   */
+  async updateOneUser(collectionName, userId, update) {
+    const collection = await this.getCollection(collectionName);
+    return await collection.updateOne( {"_id" : userId}, {$set: update});
+  }
+
+  /**
+   * deletes one document from the collection.
    * @param {string} collectionName - The name of the collection.
    * @param {Object} deleteObject - Object to be deleted
-   * @returns {Object} - The result of the insert operation.
+   * @returns {Object} - The result of the delete operation.
    */
   async deleteOne(collectionName, deleteObject) {
     const collection = await this.getCollection(collectionName);
     return collection.deleteOne( { "_id" : ObjectID(deleteObject._id) });
+  }
+
+  /**
+   * deletes one user document from the collection.
+   * @param {string} collectionName - The name of the collection.
+   * @param {number} userId - id of the user to be deleted.
+   * @returns {Object} - The result of the delete operation.
+   */
+  async deleteOneUser(collectionName, userId) {
+    const collection = await this.getCollection(collectionName);
+    return await collection.deleteOne( { "_id" : userId });
   }
 
   /**
@@ -135,11 +169,21 @@ class MongoWrapper {
   }
 
   /**
+   * Gets all users documents from a collection.
+   * @param {string} collectionName - The name of the collection.
+   * @returns {Object[]} - The documents.
+   */
+  async findUser(collectionName) {
+    const collection = await this.getCollection(collectionName);
+    return await collection.find().toArray();
+  }
+
+  /**
    * gets one document from a collection.
    * @param {string} collectionName - The name of the collection.
    * @param {Object} query - What to query for
    * @param {Object} projection - Filters out fields if field=1 then print if 0 no print
-   * @returns {Object} - The result of the insert operation.
+   * @returns {Object} - The result of the findOne operation.
    */
   async findOne(collectionName, query, projection = {}) {
     if (query.hasOwnProperty('_id')) {
@@ -147,6 +191,18 @@ class MongoWrapper {
     }
     const collection = await this.getCollection(collectionName);
     return collection.findOne(query, projection);
+  }
+
+  /**
+   * gets one user document from a collection.
+   * @param {string} collectionName - The name of the collection.
+   * @param {number} userId - id of the user to be find.
+   * @returns {Object} - The result of the findOne operation.
+   */
+  async findOneUser(collectionName, userId) {
+    const collection = await this.getCollection(collectionName);
+    const filter = { _id: userId};
+    return await collection.findOne(filter);
   }
 }
 
