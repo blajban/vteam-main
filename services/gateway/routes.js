@@ -3,10 +3,14 @@ const controllers = require('./controllers.js');
 module.exports = (app) => {
   app.route('/eventflows/rent_scooter/:scooterId/:userId')
     .get(controllers.rentScooter);
+  app.route('/eventflows/park_scooter/:scooterId')
+    .get(controllers.parkScooter);
   app.route('/eventflows/simulate_scooters')
     .get(controllers.simulateScooters); // Todo
   app.route('/eventflows/stop_simulation')
     .get(controllers.stopSimulation); // Todo
+  app.route('/addRandomScooters/:number')
+    .get(controllers.addRandomScooters);
   app.route('/city/:city/scooter')
     .get(controllers.getScooters)
     .post(controllers.addScooter);
@@ -42,6 +46,6 @@ module.exports = (app) => {
     .get(controllers.getRates)
     .post(controllers.addRate)
     .put(controllers.updateRate)
-    .delete(controllers.removeRate)
+    .delete(controllers.removeRate);
 };
 

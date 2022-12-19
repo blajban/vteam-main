@@ -63,6 +63,7 @@ const eventTypes = {
         parkingSpotAdded: "parkingSpotAdded",
         parkingSpotUpdated: "parkingSpotUpdated",
         parkingSpotRemoved: "parkingSpotRemoved",
+        addRandomScooters: "addRandomScooters"
     }
 };
 

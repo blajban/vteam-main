@@ -28,6 +28,18 @@ exports.rentScooter = async (req, res) => {
     res.json(success("Renting scooter", data));
 }
 
+exports.parkScooter = async (req, res) => {
+    const data = {
+        _id: req.params.scooterId
+    };
+
+    const broker = await mesBroker;
+    const parkScooterEvent = broker.constructEvent(eventTypes.returnScooterEvents.parkScooter, data);
+    await broker.publish(parkScooterEvent);
+    res.json(success("Parking scooter", data));
+
+}
+
 exports.simulateScooters = async (req, res) => {
     const broker = await mesBroker;
     const startSimulationEvent = broker.constructEvent(eventTypes.adminEvents.simulateScooters, {});
@@ -40,6 +52,17 @@ exports.stopSimulation = async (req, res) => {
     const stopSimulationEvent = broker.constructEvent(eventTypes.adminEvents.stopSimulation, {});
     await broker.publish(stopSimulationEvent);
     res.json(success("Stopping simulation", {}));
+}
+
+exports.addRandomScooters = async (req, res) => {
+    const data = {
+        number: req.params.number
+    }
+
+    const broker = await mesBroker;
+    const addRandomScootersEvent = broker.constructEvent(eventTypes.adminEvents.addRandomScooters, data);
+    await broker.publish(addRandomScootersEvent);
+    res.json(success("Added scooters to system", data));
 }
 
 /**
