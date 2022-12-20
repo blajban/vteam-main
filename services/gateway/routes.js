@@ -9,7 +9,7 @@ module.exports = (app) => {
     .get(controllers.simulateScooters); // Todo
   app.route('/eventflows/stop_simulation')
     .get(controllers.stopSimulation); // Todo
-  app.route('/addRandomScooters/:number')
+  app.route('/eventflows/addRandomScooters/:city/:number')
     .get(controllers.addRandomScooters);
   app.route('/city/:city/scooter')
     .get(controllers.getScooters)

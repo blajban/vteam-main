@@ -56,7 +56,8 @@ exports.stopSimulation = async (req, res) => {
 
 exports.addRandomScooters = async (req, res) => {
     const data = {
-        number: req.params.number
+        number: req.params.number,
+        location: req.params.city
     }
 
     const broker = await mesBroker;
