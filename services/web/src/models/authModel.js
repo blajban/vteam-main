@@ -1,16 +1,14 @@
 const authModel = {
-
-    login: async function login() {
-        const response = await fetch('http://localhost:3500/login');
-        console.log(response);
+    getToken: async function getToken(code) {
+        const response = await fetch(`http://localhost:3500/getToken/${code}`);
         const data = await response.json();
-        return data;
+        return data.content;
     },
 
-    logout: async function logout() {
-        const response = await fetch('http://localhost:3500/logout');
+    getGitHubUser: async function getGitHubUser(token) {
+        const response = await fetch(`http://localhost:3500/getGitHubUser/${token}`);
         const data = await response.json();
-        return data;
+        return data.content;
     }
 }
 

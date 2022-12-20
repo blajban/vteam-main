@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useTransition } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { Mapside } from './pages/MapSide'
@@ -11,40 +11,68 @@ import usersModel from './models/usersModel';
 function App() {
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
+  const [code, setCode] = useState("");
 
-  async function testFunc() {
-    if (token) {
-      console.log("Token från GitHub", token);
-      console.log("Användarid från GitHub", userId);
-      // senare ska kontroll av token ske här
-      const userInfo = await usersModel.getUser(userId);
-      console.log("Användarens uppgifter:")
-      console.log(userInfo);
-    }
+  function login() {
+    window.location.href = 'http://localhost:3500/login';
   }
 
-  async function login() {
-    const loginResult = await authModel.login();
-  
-    console.log("Svaret från login");
-    console.log(loginResult);
-  
-    if (loginResult.data.token) {
-      setToken(loginResult.data.token);
-    }
-  
-    if (loginResult.data._id) {
-      setUserId(loginResult.data._id);
-    }
+  function logout() {
+    window.location.reload();
+  }
+
+  async function testFunc() {
+    const userInfo = await usersModel.getUser(userId);
+    console.log("Userid:", userInfo._id);
+    console.log("Name:", userInfo.name);
+    console.log("Mail:", userInfo.mail);
+    console.log("Mobile:", userInfo.mobile);
+    console.log("Zip:", userInfo.zip);
+    console.log("Address:", userInfo.address);
+    console.log("City:", userInfo.city);
+    console.log("Admin:", userInfo.admin);
+    console.log("Balance:", userInfo.balance);
   }
 
   useEffect(() => {
     (async () => {
-      await testFunc();
+      if (!code) {
+        const urlQuery = window.location.search;
+        const urlParams = new URLSearchParams(urlQuery);
+        if (urlParams.has('code')) {
+          setCode(urlParams.get('code'));
+        }
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (code) {
+        setToken(await authModel.getToken(code));
+      }
+    })();
+  }, [code]);
+
+  // inom parentes token?
+  useEffect(() => {
+    (async () => {
+      if (token && !userId) {
+        setUserId(await authModel.getGitHubUser(token));
+      }
     })();
   }, [token]);
 
+  useEffect(() => {
+    (async () => {
+      if (userId) {
+        await testFunc();
+      }
+    })();
+  }, [userId]);
+
   return (
+    /** <Route path="/Userprofile" element={<UserProfile token={token} />}></Route>*/
     <div className="App">
       <Navbar></Navbar>
       <Routes>
@@ -55,10 +83,13 @@ function App() {
       </Routes>
       {token ?
         <>
-          <p>Du är inloggad!</p>
+          <p>You are logged in</p>
+          <button onClick={logout}>Logout</button>
         </>
         :
-        <button onClick={() => login()}>Logga in</button>
+        <>
+          <button onClick={login}>Login</button>
+        </>
       }
     </div>
   );
