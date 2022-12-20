@@ -4,6 +4,7 @@ WORKDIR /shared
 COPY ./shared/mq.js .
 COPY ./shared/resources.js .
 COPY ./shared/package.json .
+COPY ./shared/mongowrapper.js .
 COPY ./shared/dummy_data/payment_service/invoices.json ./dummy_data/payment_service/invoices.json
 RUN npm install
 
@@ -13,6 +14,7 @@ RUN npm install -g nodemon
 
 COPY ./services/payment_service/package.json .
 COPY ./services/payment_service/index.js .
+COPY ./services/payment_service/filler.js .
 
 RUN npm install
 
