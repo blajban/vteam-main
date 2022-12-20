@@ -6,32 +6,40 @@
  *  Handles
  *  Parkingspots/Chargingspots
  */
-const locationHandler = {
+class LocationHandler {
 
+    constructor(){
+        return this.#init();
+    }
+
+    async #init(){
+        return this
+    }
 
     /**
-     * Returns the location with the specified name.
+     * Returns the locations.
      * @param {object} e - The event object.
      * @param {string} e.location - The name of the location.
-     * @returns {object} The location object.
+     * @returns {object} The locations object.
      */
-    getLocations: (mongo, e) => {
+    getLocations(mongo, e){
         try {
             return mongo.find(e.location);
         } catch (error) {
             return error;
         }
-    },
+    }
 
     /**
-     * adjust a location from the database.
+     * adjust a location in the database.
      *
      * @async
      * @param {Object} e - The event object containing the location to adjust.
      * @param {string} e.location - Name of collection.
      * @returns {Object} - The result of the adjust operation.
      */
-    adjustLocation: async (mongo, e) => {
+    async adjustLocation(mongo, e){
+        if(!e.object._id) throw new Error("No _id provided");
     try {
         let _id = e.object._id
         delete e.object._id
@@ -41,17 +49,17 @@ const locationHandler = {
         console.log(error)
         return error;
     }
-    },
+    }
 
     /**
-     * inserts a location from the database.
+     * inserts a location to the database.
      *
      * @async
      * @param {Object} e - The event object containing the location to insert.
      * @param {string} e.location - Name of collection.
      * @returns {Object} - The result of the insert operation.
      */
-    insertLocation: async (mongo, e) => {
+    async insertLocation(mongo, e){
     try {
         let f = await mongo.insertOne(e.location, e.object);
         return f;
@@ -59,7 +67,7 @@ const locationHandler = {
     } catch (error) {
         return error;
     }
-    },
+    }
     /**
      * Deletes a location from the database.
      *
@@ -68,7 +76,7 @@ const locationHandler = {
      * @param {string} e.location - Name of collection.
      * @returns {Object} - The result of the delete operation.
      */
-    deleteLocation: async (mongo, e) => {
+    async deleteLocation(mongo, e){
     try {
         let result = await mongo.deleteOne(e.location, e.object);
         return result
@@ -77,4 +85,4 @@ const locationHandler = {
     }
     }
 }
-module.exports = locationHandler;
+module.exports = LocationHandler;

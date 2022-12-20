@@ -1,4 +1,5 @@
-const locationHandler = require('./locationHandler');
+const LocationHandler = require('./locationHandler');
+const locationHandler = new LocationHandler
 
 const mongo = {
   find: jest.fn(() => {
@@ -15,9 +16,15 @@ const mongo = {
   })
 };
 
-describe('ratesHandler', () => {
-  const e = {location:"stockholm", name: 'a' };
-  const ed = {location:"stockholm", object:{ _id: 'a', name: 'a'}} ;
+describe('locationHandler', () => {
+  let locationHandler;
+  let e;
+  let ed;
+  beforeEach(async () => {
+    e = {location:"stockholm", object:{ name:'a'}};
+    ed = {location:"stockholm", object:{ _id: "a", name: 'a'}} ;
+    locationHandler = await new LocationHandler();
+  });
 
   afterEach(() => {
     jest.restoreAllMocks();
@@ -30,16 +37,19 @@ describe('ratesHandler', () => {
 
   it('tests adjustLocation', async () => {
     expect(await locationHandler.adjustLocation(mongo, ed)).toEqual("function called");
-    expect(mongo.updateOne).toHaveBeenCalledWith("stockholm", {"_id": "a"}, {"name": "a"});
+    expect(mongo.updateOne).toHaveBeenCalledWith("stockholm" , {_id: "a"}, {name: "a"});
+  });
+  it('tests adjustLocation without _id', async () => {
+    await expect(locationHandler.adjustLocation(mongo, {name: "karl"})).rejects.toEqual(Error("Cannot read properties of undefined (reading '_id')"));
   });
 
   it('tests insertLocation', async () => {
-    expect(await locationHandler.insertLocation(mongo, ed)).toEqual("function called");
-    expect(mongo.insertOne).toHaveBeenCalledWith("stockholm", { _id: 'a', name: 'a'});
+    expect(await locationHandler.insertLocation(mongo, e)).toEqual("function called");
+    expect(mongo.insertOne).toHaveBeenCalledWith("stockholm", {name: 'a'});
   });
 
   it('tests deleteLocation', async () => {
     expect(await locationHandler.deleteLocation(mongo, ed)).toEqual("function called");
-    expect(mongo.deleteOne).toHaveBeenCalledWith("stockholm", { _id: 'a', name: 'a'});
+    expect(mongo.deleteOne).toHaveBeenCalledWith("stockholm", { _id: "a", name: 'a'});
   });
 });
