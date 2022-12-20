@@ -364,23 +364,39 @@ exports.removeUser = async (req, res) => {
  * @param {object} res
  */
 exports.login = async (req, res) => {
-    const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=http://localhost:9001/callback`;
+    const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=http://localhost:9001`;
     res.redirect(url)
 }
 
 /**
- * Callback where the user is send after logging in.
+ * Get token for user.
  * @param {object} req
  * @param {object} res
  */
-exports.callback = async (req, res) => {
+exports.getToken = async (req, res) => {
     const broker = await mesBroker;
-    const loginEvent = broker.constructEvent(eventTypes.accountEvents.login, {
-        code: req.query.code
+    const getTokenEvent = broker.constructEvent(eventTypes.accountEvents.getToken, {
+        code: req.params.code
     });
 
-    broker.request(loginEvent, (e) => {
-        res.json(success("Login success", e));
+    broker.request(getTokenEvent, (e) => {
+        res.json(success("Get token success", e));
+    });
+}
+
+/**
+ * Get information about the user from the GitHub API.
+ * @param {object} req
+ * @param {object} res
+ */
+exports.getGitHubUser = async (req, res) => {
+    const broker = await mesBroker;
+    const getGitHubUserEvent = broker.constructEvent(eventTypes.accountEvents.getGitHubUser, {
+        token: req.params.token
+    });
+
+    broker.request(getGitHubUserEvent, (e) => {
+        res.json(success("Get github user success", e));
     });
 }
 

@@ -31,11 +31,11 @@ module.exports = (app) => {
     .put(controllers.updateUser)
     .delete(controllers.removeUser);
   app.route('/login')
-    .get(controllers.login); // TODO
-  app.route('/logout')
-    .get(controllers.logout); // TODO
-  app.route('/callback')
-    .get(controllers.callback);
+    .get(controllers.login);
+  app.route('/getToken/:code')
+    .get(controllers.getToken);
+  app.route('/getGitHubUser/:token')
+    .get(controllers.getGitHubUser);
   app.route('/invoice')
     .post(controllers.addInvoice);
   app.route('/invoice/user/:userId')
