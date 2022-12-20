@@ -64,27 +64,26 @@ const userService = async () => {
     })
 
     /**
-     * Registers a response to login event.
+     * Exchanges the temp code for a token from GitHub.
      * 
      * @param {string} eventType - The type of event to handle.
      * @param {function} handler - The function to handle the event.
      * @returns {function}
      */
-    broker.response(eventTypes.accountEvents.login, async (e) => {
-        return await authHandler.login(e.data.code);
+    broker.response(eventTypes.accountEvents.getToken, async (e) => {
+        return await authHandler.getToken(e.data.code);
     })
 
     /**
-     * Registers a response to logout event.
-     * Get all users or one user if userId is specified.
+     * With a token, information about the user is retrieved from
+     * GitHub's API.
      * 
      * @param {string} eventType - The type of event to handle.
      * @param {function} handler - The function to handle the event.
      * @returns {function}
      */
-    broker.response(eventTypes.accountEvents.logout, async (e) => {
-        // TODO
-        return await authHandler.logout(e.data.code);
+    broker.response(eventTypes.accountEvents.getGitHubUser, async (e) => {
+        return await authHandler.getGitHubUser(e.data.token);
     })
 }
 
