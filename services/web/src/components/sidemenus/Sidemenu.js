@@ -1,5 +1,5 @@
-import locationModel from "../models/LocationModel"
-import scooterModel from "../models/scooterModel"
+import locationModel from "../../models/LocationModel"
+import scooterModel from "../../models/scooterModel"
 
 
 function Sidemenu(props) {

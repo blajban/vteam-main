@@ -1,8 +1,8 @@
-import SidemenuAdmin from "../components/SidemenuAdmin"
+import SidemenuAdmin from "../components/sidemenus/SidemenuAdmin"
 import "../assets/css/style.css"
 import React, { useState, useEffect } from 'react';
-import LocationTable from "../components/LocationTable";
-import RateTable from "../components/RateTable";
+import LocationTable from "../components/tables/LocationTable";
+import RateTable from "../components/tables/RateTable";
 
 export function AdminControll() {
     const [loadedAdminPage, setLoadedAdminPage] = useState(1);

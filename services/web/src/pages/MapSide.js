@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../assets/css/style.css"
-import Sidemenu from '../components/Sidemenu'
+import Sidemenu from '../components/sidemenus/Sidemenu'
 import Map from '../components/Map'
 
 

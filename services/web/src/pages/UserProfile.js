@@ -1,5 +1,5 @@
-import SidemenuUser from "../components/SidemenuUser"
-import HisotryTable from "../components/HistoryTable"
+import SidemenuUser from "../components/sidemenus/SidemenuUser"
+import HisotryTable from "../components/tables/HistoryTable"
 import Userprofile from "../components/Userprofile";
 import "../assets/css/style.css"
 import React, { useState, useEffect } from 'react';
