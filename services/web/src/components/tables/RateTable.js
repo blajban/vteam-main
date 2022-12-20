@@ -1,9 +1,15 @@
-import "../assets/css/style.css"
-import ratesHandler from '../models/ratesModel'
+import "../../assets/css/style.css"
+import ratesHandler from '../../models/ratesModel'
 import React, { useState, useEffect, useRef } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
+/**
+ * Adds a new rate.
+ *
+ * @async
+ * @param {object} object - An object containing the rate details.
+ */
 async function addRate(object){
   let newRate = {
 
@@ -14,16 +20,31 @@ async function addRate(object){
   await ratesHandler.createRate(newRate)
 }
 
+/**
+ * Deletes an existing rate.
+ *
+ * @async
+ * @param {string} _id - The ID of the rate to update.
+ */
 async function deleteRate(_id){
   await ratesHandler.deleteRate(_id)
 }
-async function updateRate(_id, object){
+
+
+/**
+ * Updates an existing rate.
+ *
+ * @async
+ * @param {string} _id - The ID of the rate to update.
+ * @param {object} object - An object containing the updated rate details.
+ */
+async function updateRate(_id, object) {
   let updatedRate = {
     id: object.inputIdEdit.current.value,
     name: object.inputNameEdit.current.value,
-    tariff: object.inputTariffEdit.current.value
+    tariff: object.inputTariffEdit.current.value,
   }
-  await ratesHandler.updateRate(_id, updatedRate)
+  await ratesHandler.updateRate(_id, updatedRate);
 }
 
 
@@ -37,7 +58,7 @@ function RateTable(props) {
     const inputNameEdit = useRef(null);
     const inputTariffEdit = useRef(null);
 
-
+  // Fetches the data
   useEffect(() => {
     async function fetchData(){
       console.log("fetch data ran")
@@ -47,6 +68,8 @@ function RateTable(props) {
 
   }, [])
 
+  //Runs when rates have changed
+  //Creates table row for each item in rates
   useEffect(() => {
   const Box = rates.map((e, i) => {
     return(

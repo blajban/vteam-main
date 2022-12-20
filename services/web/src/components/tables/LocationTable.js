@@ -1,14 +1,29 @@
-import "../assets/css/style.css"
-import locationHandler from '../models/LocationModel'
+import "../../assets/css/style.css"
+import locationHandler from '../../models/LocationModel'
 import React, { useState, useEffect, useRef } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
 
+/**
+* Removes an existing location.
+*
+* @async
+* @param {string} city - The city where the location is located.
+* @param {string} _id - The ID of the location to update.
+*/
 async function removeLocation(city, id){
   await locationHandler.deleteLocation(city, id)
 }
 
+
+/**
+ * Adds a new location.
+ *
+ * @async
+ * @param {string} city - The city where the location is located.
+ * @param {object} object - An object containing the location details.
+ */
 async function addLocation(city, object){
   let newLocation = {
     properties: {
@@ -21,6 +36,14 @@ async function addLocation(city, object){
   await locationHandler.createLocation(city, newLocation)
 }
 
+/**
+* Updates an existing location.
+*
+* @async
+* @param {string} city - The city where the location is located.
+* @param {string} _id - The ID of the location to update.
+* @param {object} object - An object containing the updated location details.
+*/
 async function updateLocation(city, _id ,object){
   let updatedLocation = {
     _id: _id,
@@ -48,7 +71,7 @@ function LocationTable(props) {
     const inputRateEdit = useRef(null);
     const inputChargingEdit = useRef(null);
 
-
+  //Fetches location according to tab
   useEffect(() => {
   async function fetchData(){
     console.log("fetch data ran")
@@ -68,7 +91,7 @@ function LocationTable(props) {
       }
     fetchData();
   }, [city])
-
+  //Maps items in parkings to <tr>
   useEffect(() => {
   const Box = parkings.map((e, i) => {
     return(
