@@ -24,8 +24,8 @@ const eventTypes = {
         establishParkingRate: "establishParkingRate"
     },
     accountEvents: {
-        login: "login",
-        logout: "logout",
+        getToken: "getToken",
+        getGitHubUser: "getGitHubUser",
     },
     paymentEvents: {
         invoiceCreated: "invoiceCreated",
