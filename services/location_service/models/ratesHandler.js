@@ -3,61 +3,76 @@
  *  rates
  */
 
-const ratesHandler = {
+class RatesHandler{
+
+    constructor(){
+        return this.#init();
+    }
+
+    async #init(){
+        return this
+    }
+
     /**
-     *  @param {object} e
      *  @returns {Number}  Array of object(Rates)
      */
-    getRates: async (mongo, e) => {
+    async getRates (mongo) {
         try {
             const ratesCollection = await mongo.find("rates");
             return ratesCollection;
         } catch (error) {
             return error;
         }
-    },
-    //Done
-    getRate: async (mongo, e) => {
+    }
+
+    /**
+     * inserts a rate to the database.
+     *
+     * @async
+     * @param {Object} e - The event object containing the location to insert.
+     * @param {Object} e._id - _if of the object to be updated.
+     * @param {Object} e.object - New data.
+     * @returns {Object} - The result of the insert operation.
+     */
+    async adjustRate (mongo, e){
+        if(!e._id) throw new Error("No _id provided");
         try {
-            const ratesCollection = await mongo.findOne("rates", e.rate, {"id": "a"});
-            return ratesCollection;
+            return await mongo.updateOne("rates",{_id: e._id}, e.object);
         } catch (error) {
             return error;
         }
-    },
-    /**
-     * Done
-     * @param {*} e
-     */
-    adjustRate: async (mongo, e) => {
-        try {
-            let _id = e._id
-            return await mongo.updateOne("rates",{_id: _id}, e.object);
-        } catch (error) {
-            return error;
         }
-        },
+
     /**
-     * Todo
-     * @param {*} e
+     * inserts a rate to the database.
+     *
+     * @async
+     * @param {Object} e - The event object containing the location to insert.
+     * @returns {Object} - The result of the insert operation.
      */
-    insertRate: async (mongo, e) => {
+    async insertRate(mongo, e){
         try {
             return await mongo.insertOne("rates", e);
         } catch (error) {
             return error;
         }
-    },
+    }
+
     /**
-     * Todo
-     * @param {*} e
+     * deletes a rate to the database.
+     *
+     * @async
+     * @param {Object} e - The event object containing the location to insert.
+     * @param {Object} e._id - _if of the object to be deleted.
+     * @returns {Object} - The result of the insert operation.
      */
-    deleteRate: async (mongo, e) => {
+    async deleteRate(mongo, e) {
+        if(!e._id) throw new Error("No _id provided");
         try {
             return await mongo.deleteOne("rates", {_id: e._id});
         } catch (error) {
             return error;
         }
-    },
+    }
 }
-module.exports = ratesHandler;
+module.exports = RatesHandler;

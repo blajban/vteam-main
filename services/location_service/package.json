@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose --coverage",
+    "test": "jest --verbose",
     "start.dev": "nodemon -x 'node index.js || touch index.js'"
   },
   "author": "",

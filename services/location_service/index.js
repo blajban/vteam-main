@@ -1,7 +1,7 @@
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes } = require('../../shared/resources');
-const ratesHandler = require("./models/ratesHandler")
-const locationHandler = require("./models/locationHandler");
+const RatesHandler = require("./models/ratesHandler")
+const LocationHandler = require("./models/locationHandler");
 const { MongoWrapper } = require('../../shared/mongowrapper');
 
 
@@ -20,6 +20,8 @@ const locationService = async () => {
 
     const broker = await new MessageBroker(host, 'location_service');
     const mongoWrapper = await new MongoWrapper("locations");
+    const locationHandler = await new LocationHandler();
+    const ratesHandler = await new RatesHandler();
 
 
     /**
@@ -45,7 +47,6 @@ const locationService = async () => {
      /**
      * Registers a response to getParkingSpots event.
      *
-     * Fetches locations from database
      *
      * @param {string} eventType - Listen on getParkingSpots rpc-call.
      * @param {function} handler - The function to handle the event.
@@ -58,21 +59,18 @@ const locationService = async () => {
      /**
      * Registers a response to updateParkingSpot event.
      *
-     * Updates data in database
      *
      * @param {string} eventType - Listen on updateParkingSpot rpc-call.
      * @param {function} handler - .
      * @returns {function}  - Runs adjustLocation
      */
     broker.response(eventTypes.rpcEvents.updateParkingSpot, async (e) => {
-
       return await locationHandler.adjustLocation(mongoWrapper, e.data);
     });
 
      /**
      * Registers a response to addParkingSpot event.
      *
-     * Adds a new location to database
      *
      * @param {string} eventType - Listen on addParkingSpot rpc-call.
      * @param {function} handler - The function to handle the event.
@@ -86,7 +84,6 @@ const locationService = async () => {
     /**
      * Registers a response to removeParkingSpot event.
      *
-     * Removes data from database
      *
      * @param {string} eventType - Listen on removeParkingSpot rpc-call.
      * @param {function} handler - The function to handle the event.
@@ -101,7 +98,6 @@ const locationService = async () => {
      /**
      * Registers a response to getRates event.
      *
-     * Runs getRates as a callback
      *
      * @param {string} eventType - The type of event to handle.
      * @param {function} handler - The function to handle the event.
@@ -114,7 +110,6 @@ const locationService = async () => {
     /**
      * Registers a response to updateRate event.
      *
-     * Runs adjustRate as a callback
      *
      * @param {string} eventType - The type of event to handle.
      * @param {function} handler - The function to handle the event.
@@ -127,7 +122,6 @@ const locationService = async () => {
     /**
      * Registers a response to addRate event.
      *
-     * runs insertRate as a callback
      *
      * @param {string} eventType - The type of event to handle.
      * @param {function} handler - The function to handle the event.
@@ -140,7 +134,6 @@ const locationService = async () => {
     /**
      * Registers a response to removeRate event.
      *
-     * runs deleteRate as a callback
      *
      * @param {string} eventType - The type of event to handle.
      * @param {function} handler - The function to handle the event.
