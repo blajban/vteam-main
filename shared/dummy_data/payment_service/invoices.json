@@ -1,7 +1,7 @@
 [
     {
-        "invoiceId": 0,
-        "userId": 1,
+        "_id": "0",
+        "userId": "1",
         "status": "pending",
         "start": {
             "lat": 57.54296029650948,
@@ -16,8 +16,8 @@
         "price": 58
     },
     {
-        "invoiceId": 1,
-        "userId": 2,
+        "_id": "1",
+        "userId": "2",
         "status": "pending",
         "start": {
             "lat": 57.54296029650948,
@@ -32,8 +32,8 @@
         "price": 38
     },
     {
-        "invoiceId": 2,
-        "userId": 2,
+        "_id": "2",
+        "userId": "2",
         "status": "success",
         "start": {
             "lat": 13.64296029650948,

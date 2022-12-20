@@ -440,10 +440,10 @@ exports.getInvoices = async (req, res) => {
     const filter = {};
 
     if (req.params.hasOwnProperty('userId')) {
-        filter.userId = parseInt(req.params.userId);
+        filter.userId = req.params.userId;
     }
     if (req.params.hasOwnProperty('invoiceId')) {
-        filter.invoiceId = parseInt(req.params.invoiceId);
+        filter.invoiceId = req.params.invoiceId;
     }
 
     const broker = await mesBroker;
