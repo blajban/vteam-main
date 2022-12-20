@@ -16,35 +16,13 @@ const paymentService = async () => {
     // for dev test
     dbFiller();
 
-    // for testing
-    // msgBroker.onEvent(eventTypes.adminEvents.testEvent, (e) => {
-    //     console.log("testing eventTypes.rpcEvents.addInvoice...")
-    //     const invoice = {
-    //         "invoiceId": "150",
-    //         "userId": "60",
-    //         "status": "pending",
-    //         "start": {
-    //             "lat": 57.54296029650948,
-    //             "lng": 15.018597642963284,
-    //             "time": "14-17-08-2022"  
-    //         },
-    //         "end": {
-    //             "lat": 57.67896029650948,
-    //             "lng": 12.048597642963284,
-    //             "time": "28-31-08-2022"
-    //         },
-    //         "price": 58,
-    //     }
-    //     const event = msgBroker.constructEvent(eventTypes.rpcEvents.addInvoice, { invoice: invoice });
-    //     msgBroker.request(event, (res) => { console.log(res) });
-    // });
-
-
-    // Done
+    /**
+     * Add a new invoice, parsed through e.data.invoice
+     * @param {string} eventTypes - the type of event to handle 
+     * @param {function} - the function handeling the event
+     */
     msgBroker.response(eventTypes.rpcEvents.addInvoice, async (e) => {
         await mongoWrapper.insertOne("invoices", e.data.invoice);
-        // const data = await mongoWrapper.find("invoices")
-        // console.log("all invoices: ", data);
         return({
             "code": "200",
             "description": "Invoice added",
@@ -52,42 +30,11 @@ const paymentService = async () => {
         })
     });
 
-    // NOT done
-    msgBroker.onEvent(eventTypes.accountEvents.addMoney, (e) => {
-        console.log("adding money");
-        msgBroker.publish(
-            msgBroker.constructEvent(
-                eventTypes.accountEvents.moneyAdded, 
-                {
-                    amount: 500,
-                    userId: 53
-                }
-            )
-        );
-    });
-
-    // NOT done 
-    msgBroker.onEvent(eventTypes.accountEvents.moneyAdded, (e) => {
-        console.log("added", e.data.amount, "kr to userId:", e.data.userId);
-        console.log("requesting invoices:");
-        msgBroker.request(msgBroker.constructEvent
-            (
-                eventTypes.rpcEvents.getInvoices, 
-                {
-                    userId: 14
-                }
-            ), 
-            (res) => {
-                console.log(res)
-            }
-        );
-    });
-    
-    // msgBroker.request(msgBroker.constructEvent(eventTypes.rpcEvents.getInvoices, { userId: 2 }), (res) => {
-    //     console.log(res)
-    // });
-
-    // Done
+    /**
+     * Updates status of a invoice once it has been payed for
+     * @param {string} eventTypes - the type of event to handle 
+     * @param {function} - the function handeling the event
+     */
     msgBroker.onEvent(eventTypes.paymentEvents.invoicePaid, async (e) => {
         // // for dev test
         if (e.origin === "web_server") {
@@ -102,11 +49,100 @@ const paymentService = async () => {
         console.log("updated invoice!", res)
     });
 
-    // Done
+    /**
+     * Starts a new invoice and populating it with data from object 'e'
+     * @param {string} eventTypes - the type of event to handle 
+     * @param {function} - the function handeling the event
+     * @returns {object} - invoices for the user
+     */
     msgBroker.response(eventTypes.rpcEvents.getInvoices, async (e) => {
         console.log("getting invoices for userId " + e.data.userId);
         const inv = await mongoWrapper.find("invoices", { userId: e.data.userId });
         return(inv)
+    });
+
+    /**
+     * Starts a new invoice and populating it with data from object 'e'
+     * @param {string} eventTypes - the type of event to handle 
+     * @param {function} - the function handeling the event
+     */
+    msgBroker.onEvent(eventTypes.rentScooterEvents.rideStarted, async (e) => {
+        // // for dev test
+        if (e.origin === "web_server") {
+            e.data.userId = "15";
+            e.data.start = {
+                lat: 57.54296029650948,
+                lon: 15.018597642963284,
+                time: "3022-11-01|11:17:25"
+            };
+        }
+
+        const newInvoice = {
+            userId: e.data.userId,
+            status: "riding",
+            start: e.data.start,
+            end: {
+                lat: undefined,
+                lng: undefined,
+                time: undefined
+            },
+            price: undefined,
+        }
+
+        const inv = await mongoWrapper.insertOne("invoices", newInvoice);
+        console.log(`Started new invoice ${inv.insertedId} for user ${newInvoice.userId}`);
+    });
+
+    /**
+     * Updates invoice with data about finished ride.
+     * @param {string} eventTypes - the type of event to handle 
+     * @param {function} - the function handeling the event
+     */
+    msgBroker.onEvent(eventTypes.returnScooterEvents.rideFinished, async (e) => {
+        // // for dev test
+        if (e.origin === "web_server") {
+            e.data.userId = "15";
+            e.data.end = {
+                lat: 157.54296029650948,
+                lon: 115.018597642963284,
+                time: "3022-11-01|11:32:03"
+            };
+        }
+
+        let invoice = await mongoWrapper.find("invoices", { userId: e.data.userId, status: "riding" })
+        
+        const res = await mongoWrapper.updateOne(
+            "invoices", 
+            { _id: invoice[0]._id },
+            { 
+                status: "pending",
+                "end.lat": e.data.end.lat,
+                "end.lng": e.data.end.lng,
+                "end.time": e.data.end.time
+            }
+        );
+        console.log(res)
+
+        // get the invoice from the db just to see if it updated
+        invoice = await mongoWrapper.find("invoices", { userId: e.data.userId })
+        console.log(invoice);
+
+    });
+    
+    /**
+     * Updates invoice with the price of the ride.
+     * @param {string} eventTypes - the type of event to handle 
+     * @param {function} - the function handeling the event
+     */
+    msgBroker.onEvent(eventTypes.returnScooterEvents.establishParkingRate, async (e) => {
+        // TODO: get userId from e, and set the price for the invoice
+
+
+
+        // startprice: 10kr
+        // 2,5kr / min
+        // rate
+        // const price = 10 + 2.5 * (invoice.end.time - invoice.start.time) + rate
     });
 }
 
