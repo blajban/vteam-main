@@ -25,10 +25,10 @@ const scooterService = async () => {
     } catch (err) {
       console.log(err);
     }
-  }, 15000);
+  }, 4000);
 
 
-  /** TODO
+  /**
    * Simulate all scooters
    */
    broker.onEvent(eventTypes.adminEvents.simulateScooters, (e) => {
@@ -44,12 +44,13 @@ const scooterService = async () => {
     
   });
 
-  /** TODO
+  /**
    * Stop simulation
    */
   broker.onEvent(eventTypes.adminEvents.stopSimulation, (e) => {
     try {
       for (const scooter of scooterHandler.activeScooters()) {
+        scooter.simulate = false;
         const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.parkScooter, scooter);
         broker.publish(newEvent);
       }
@@ -119,7 +120,7 @@ const scooterService = async () => {
     
   })
 
-  /** TODO
+  /**
    * Park scooter
    */
   broker.onEvent(eventTypes.returnScooterEvents.parkScooter, (e) => {
@@ -132,7 +133,7 @@ const scooterService = async () => {
     
   });
 
-  /** TODO
+  /**
    * Scooter locked
    */
   broker.onEvent(eventTypes.returnScooterEvents.scooterLocked, (e) => {
@@ -180,6 +181,51 @@ const scooterService = async () => {
       console.log(err);
     }
     
+  });
+
+  /**
+   * Add random scooters
+   */
+  broker.onEvent(eventTypes.adminEvents.addRandomScooters, async (e) => {
+    try {
+      const location = e.data.location;
+      const coordinates = {
+        'stockholm': {
+          lngMin: 17.687988281250004,
+          lngMax: 18.391113281250004,
+          latMin: 59.17029835064485,
+          latMax: 59.478568831926395
+        },
+        'goteborg': {
+          lngMin: 11.744384765625002,
+          lngMax: 12.1728515625,
+          latMin: 57.610107020683905,
+          latMax: 57.856443276115066
+        },
+        'malmo': {
+          lngMin: 12.897949218750002,
+          lngMax: 13.205566406250002,
+          latMin: 55.49130362820423,
+          latMax: 55.64659898563683
+        }
+      };
+
+      for (let i = 0; i < parseInt(e.data.number); i++) {
+        
+        const scooterInfo = {
+            location: location,
+            lat: Math.random() * (coordinates[location].latMax - coordinates[location].latMin) + coordinates[location].latMin,
+            lng: Math.random() * (coordinates[location].lngMax - coordinates[location].lngMin) + coordinates[location].lngMin,
+          }
+
+
+        const newScooter = await fleetHandler.addScooter(scooterInfo);
+        const scooterAddedEvent = broker.constructEvent(eventTypes.scooterEvents.scooterAdded, newScooter);
+        broker.publish(scooterAddedEvent);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   /**
