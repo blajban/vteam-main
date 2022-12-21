@@ -6,7 +6,8 @@
     "scripts": {
         "start": "node scooter_service",
         "start.dev": "nodemon -x 'node scooter_service.js || touch scooter_service.js'",
-        "test": "jest --verbose"
+        "test": "jest --verbose",
+        "eslint": "eslint . --ext .js --ignore-pattern node_modules/"
     },
     "author": "",
     "devDependencies": {
@@ -17,7 +18,7 @@
         "nodemon": "^2.0.15"
     },
     "dependencies": {
-        "eslint-plugin-jest": "^27.1.6",
+        "eslint-plugin-jest": "^27.1.7",
         "mongodb": "^4.12.1"
     }
 }

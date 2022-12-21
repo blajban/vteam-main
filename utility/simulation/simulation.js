@@ -28,12 +28,14 @@ class Scooter {
 
   lockScooter(status, userId) {
     console.log(`Locking ${this.info._id}`);
-    this.info.status = status;
-    this.info.userId = userId;
-    this.info.log.push({ 
+    this.info.log.push({
+      userId: this.info.userId,
       start: this.startTime,
       end: new Date() 
     });
+    this.info.status = status;
+    this.info.userId = userId;
+    
     this.startTime = null;
     clearInterval(this.driveInterval);
   }
@@ -59,7 +61,7 @@ class Scooter {
   }
   
   remove() {
-    console.log(`Removing ${this.info.id}`);
+    console.log(`Removing ${this.info._id}`);
     clearInterval(this.idleInterval);
   }
 
