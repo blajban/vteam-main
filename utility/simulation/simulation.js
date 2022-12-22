@@ -130,6 +130,8 @@ const newMain = async () => {
           }
         }, 3000);
         scooter.unlockScooter(drive, e.data.status, e.data.userId);
+        const scooterUnlockedEvent = broker.constructEvent(eventTypes.rentScooterEvents.scooterUnlocked, scooter.getScooterInfo());
+        broker.publish(scooterUnlockedEvent);
       }
     });
 
@@ -137,6 +139,8 @@ const newMain = async () => {
     broker.onEvent(eventTypes.returnScooterEvents.lockScooter, (e) => {
       if (scooter.getScooterInfo()._id === e.data._id) {
         scooter.lockScooter(e.data.status, e.data.userId);
+        const scooterLockedEvent = broker.constructEvent(eventTypes.returnScooterEvents.scooterLocked, scooter.getScooterInfo());
+        broker.publish(scooterLockedEvent);
       }
     });
   }
