@@ -4,6 +4,7 @@ import { LatLng, LeafletView } from 'react-native-leaflet-view';
 import * as Location from 'expo-location';
 import React, { useState,  useEffect } from 'react';
 import locationHandler from './models/locationHandler'
+import scooterHandler from './models/scooterHandler'
 
 const DEFAULT_COORDINATE = {
   lat: 59.334591,
@@ -12,6 +13,7 @@ const DEFAULT_COORDINATE = {
 
 export default function App() {
   const [parking, setParking] = useState(null);
+  const [scooters, setScooters] = useState(null);
   const [markers, setMarkers] = useState(null);
   const [rideActive, setRideActive] = useState(true);
   const [latLng, setlatLng] = useState({
@@ -39,17 +41,36 @@ useEffect(() => {
 
   useEffect(() => {
     (async () => {
-        let data = await locationHandler.fetchAllLocations()
-        let parkingSpots = data.map ((e) => {
+      let data = [{
+        position: latLng,
+        icon: '😎',
+        size: [32, 32],
+      }];
+      if(!rideActive){
+        data = await locationHandler.fetchAllLocations()
+        let marks = data.map ((e) => {
           return { position: {lat: e.properties. lat, lng: e.properties.lng }, icon: '🅿', size:[32, 32]}
         })
-        parkingSpots.push({
+        marks.push({
           position: latLng,
           icon: '😎',
           size: [32, 32],
         })
-        setParking(parkingSpots);
-        console.log(parkingSpots)
+        setMarkers(marks);
+        console.log(marks)
+      } else {
+        data = await scooterHandler.fetchStockholmScooters()
+        let marks = data.map ((e) => {
+          return { position: {lat: e.properties. lat, lng: e.properties.lng }, icon: '🛴', size:[32, 32]}
+        })
+        marks.push({
+          position: latLng,
+          icon: '😎',
+          size: [32, 32],
+        })
+        setMarkers(marks);
+        console.log(marks)
+      }
     })();
   }, [latLng]);
 
@@ -58,7 +79,7 @@ useEffect(() => {
       <StatusBar style="auto" />
       <LeafletView
           // The rest of your props, see the list below
-          mapMarkers={parking}
+          mapMarkers={markers}
           mapCenterPosition={latLng}
       />
       <View style={styles.footer}><View style={styles.footer_box}></View><Text style={styles.footer_text}>Skanna och åk!</Text></View>
