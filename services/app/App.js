@@ -14,14 +14,15 @@ const DEFAULT_COORDINATE = {
 export default function App() {
   const [parking, setParking] = useState(null);
   const [scooters, setScooters] = useState(null);
+  const [userCity, setUserCity] = useState("stockholm")
   const [markers, setMarkers] = useState(null);
   const [rideActive, setRideActive] = useState(true);
   const [latLng, setlatLng] = useState({
-    lat: 37.78825,
-    lng: -122.4324,
+    lat: 59.334591,
+    lng: 18.063240,
   });
 
-
+// Fetches user location and sets that as map center
 useEffect(() => {
     (async () => {
         const { status } = await Location.requestForegroundPermissionsAsync();
@@ -39,6 +40,34 @@ useEffect(() => {
     })();
   }, []);
 
+// Fetches users locations city
+  useEffect(() => {
+    (async () => {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+
+        if (status !== 'granted') {
+            setErrorMessage('Permission to access location was denied');
+            return;
+        }
+        let userLocation = await Location.reverseGeocodeAsync({latitude: currentLocation.coords.latitude, longitude: currentLocation.coords.longitude})
+        switch (userLocation[0].city) {
+          case "Stockholm":
+            setUserCity("stockholm")
+            break;
+          case "Göteborg":
+            setUserCity("goteborg")
+            break;
+          case "Malmö":
+            setUserCity("malmo")
+            break;
+
+          default:
+            break;
+        }
+    })();
+  }, []);
+
+// Fetches locations or scooters depending on if ride is active, also fetches for right location
   useEffect(() => {
     (async () => {
       let data = [{
@@ -47,7 +76,8 @@ useEffect(() => {
         size: [32, 32],
       }];
       if(!rideActive){
-        data = await locationHandler.fetchAllLocations()
+        data = await locationHandler.fetchLocations(userCity)
+        console.log(data)
         let marks = data.map ((e) => {
           return { position: {lat: e.properties. lat, lng: e.properties.lng }, icon: '🅿', size:[32, 32]}
         })
@@ -57,9 +87,8 @@ useEffect(() => {
           size: [32, 32],
         })
         setMarkers(marks);
-        console.log(marks)
       } else {
-        data = await scooterHandler.fetchStockholmScooters()
+        data = await scooterHandler.fetchScooters(userCity)
         let marks = data.map ((e) => {
           return { position: {lat: e.properties. lat, lng: e.properties.lng }, icon: '🛴', size:[32, 32]}
         })
@@ -69,7 +98,6 @@ useEffect(() => {
           size: [32, 32],
         })
         setMarkers(marks);
-        console.log(marks)
       }
     })();
   }, [latLng]);
