@@ -13,6 +13,7 @@ const DEFAULT_COORDINATE = {
 export default function App() {
   const [parking, setParking] = useState(null);
   const [markers, setMarkers] = useState(null);
+  const [rideActive, setRideActive] = useState(true);
   const [latLng, setlatLng] = useState({
     lat: 37.78825,
     lng: -122.4324,
@@ -43,6 +44,7 @@ useEffect(() => {
   }, []);
   return (
     <SafeAreaView  style={styles.container}>
+      <StatusBar style="auto" />
       <LeafletView
           // The rest of your props, see the list below
           mapMarkers={[
@@ -54,7 +56,7 @@ useEffect(() => {
           ]}
           mapCenterPosition={latLng}
       />
-      <StatusBar style="auto" />
+      <View style={styles.footer}><View style={styles.footer_box}></View><Text style={styles.footer_text}>Skanna och åk!</Text></View>
     </SafeAreaView >
   );
 }
@@ -66,4 +68,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  footer: {
+    height: 120,
+    width: '100%',
+    backgroundColor: '#2A9D8F',
+    borderTopColor: "#228377",
+    borderTopWidth: 10,
+    position: 'absolute',
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footer_box: {
+    height: 110,
+    width: 110,
+    backgroundColor: "#FF4527",
+    borderRadius: 15,
+    borderWidth: 10,
+    borderColor: "#D0361D"
+  },
+  footer_text: {
+    color: "white",
+    marginBottom: 80,
+    fontSize: 20,
+    fontWeight: "bold"
+  }
 });
