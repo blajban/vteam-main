@@ -39,21 +39,26 @@ useEffect(() => {
 
   useEffect(() => {
     (async () => {
-        setParking(await locationHandler.fetchAllLocations());
+        let data = await locationHandler.fetchAllLocations()
+        let parkingSpots = data.map ((e) => {
+          return { position: {lat: e.properties. lat, lng: e.properties.lng }, icon: '🅿', size:[32, 32]}
+        })
+        parkingSpots.push({
+          position: latLng,
+          icon: '😎',
+          size: [32, 32],
+        })
+        setParking(parkingSpots);
+        console.log(parkingSpots)
     })();
-  }, []);
+  }, [latLng]);
+
   return (
     <SafeAreaView  style={styles.container}>
       <StatusBar style="auto" />
       <LeafletView
           // The rest of your props, see the list below
-          mapMarkers={[
-            {
-              position: latLng,
-              icon: '😎',
-              size: [32, 32],
-            },
-          ]}
+          mapMarkers={parking}
           mapCenterPosition={latLng}
       />
       <View style={styles.footer}><View style={styles.footer_box}></View><Text style={styles.footer_text}>Skanna och åk!</Text></View>
