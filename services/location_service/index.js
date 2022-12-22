@@ -3,6 +3,7 @@ const { host, eventTypes } = require('../../shared/resources');
 const RatesHandler = require("./models/ratesHandler")
 const LocationHandler = require("./models/locationHandler");
 const { MongoWrapper } = require('../../shared/mongowrapper');
+const haversine = require('haversine-distance')
 
 
 
@@ -33,13 +34,20 @@ const locationService = async () => {
      * @returns {function} - Publishes establishParkingRate event with filtered Rate
      */
     broker.onEvent(eventTypes.returnScooterEvents.lockScooter, async (e) => {
-        let rate = await ratesHandler.getRates(mongoWrapper, "rates")
-        let data = rate.filter((rate) => {
-          if(rate.id == e.rate){
-            return rate
+        let locations = await locationHandler.getLocations(mongoWrapper, e.data.properties)
+        let rate = locations.map((k) => {
+          let distanceInMeter = haversine({lat:e.data.properties.lat, lng:e.data.properties.lng}, {lat:k.properties.lat, lng: k.properties.lng})
+          if(distanceInMeter < 30){
+            return k.rate
           }
         })
-        data._id = e._id
+        rate = rate.filter(item => item);
+        if(!rate[0]){
+          let rates = await ratesHandler.getRates(mongoWrapper);
+          rate = rates.filter((e) => e.id == "d")
+        }
+        let data = {rate: rate[0], userId: e.data.userId}
+        console.log(data)
         const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.establishParkingRate, data);
         broker.publish(newEvent);
     });

@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "eslint-plugin-jest": "^27.1.6",
+    "haversine-distance": "^1.2.1",
     "mongodb": "^4.12.1"
   },
   "devDependencies": {
