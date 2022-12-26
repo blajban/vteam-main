@@ -43,7 +43,7 @@ const scooterService = async () => {
   broker.onEvent(
     eventTypes.rentScooterEvents.scooterUnlocked,
     controller.scooterUnlocked.bind(controller),
-  );
+  );1500
   broker.onEvent(
     eventTypes.scooterEvents.scooterMoving,
     controller.scooterMoving.bind(controller),

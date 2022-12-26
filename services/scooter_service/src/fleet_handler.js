@@ -8,7 +8,7 @@ class FleetHandler {
    */
   constructor(mongoWrapper) {
     this.db = mongoWrapper;
-    this.collectionName = "scooters";
+    this.collectionName = 'scooters';
   }
 
   /**
@@ -26,7 +26,6 @@ class FleetHandler {
 
       const scooter = await this.db.findOne(this.collectionName, filter);
       if (scooter === null) {
-        
         return [];
       }
 
@@ -38,7 +37,6 @@ class FleetHandler {
     }
 
     return await this.db.find(this.collectionName, filter);
-
   }
 
   /**
@@ -51,22 +49,21 @@ class FleetHandler {
    */
   async addScooter(newScooterInfo) {
     const newScooter = {
-      status: "available",
+      status: 'available',
       userId: 0,
       properties: {
-          location: newScooterInfo.location,
-          lat: newScooterInfo.lat,
-          lng: newScooterInfo.lng,
-          speed: 0,
-          battery: 100
+        location: newScooterInfo.location,
+        lat: newScooterInfo.lat,
+        lng: newScooterInfo.lng,
+        speed: 0,
+        battery: 100,
       },
-      log: []
-    }
+      log: [],
+    };
 
     await this.db.insertOne(this.collectionName, newScooter);
 
     return newScooter;
-    
   }
 
   /**
@@ -79,7 +76,7 @@ class FleetHandler {
 
     for (const scooter of scooters) {
       const obj = {
-        _id: scooter._id
+        _id: scooter._id,
       };
 
       const scooterToUpdate = JSON.parse(JSON.stringify(scooter));
@@ -88,7 +85,7 @@ class FleetHandler {
 
       const modified = await this.db.updateOne(this.collectionName, obj, scooterToUpdate);
       if (modified.modifiedCount === 1) {
-        modifiedCount++;
+        modifiedCount += 1;
       }
     }
 
@@ -132,7 +129,6 @@ class FleetHandler {
     await this.db.updateOne(this.collectionName, id, filter);
 
     return await this.db.findOne(this.collectionName, filter);
-    
   }
 
   /**
@@ -147,6 +143,5 @@ class FleetHandler {
   }
 
 }
-
 
 module.exports = { FleetHandler };

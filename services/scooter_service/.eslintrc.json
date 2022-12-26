@@ -11,6 +11,8 @@
         "ecmaVersion": "latest"
     },
     "rules": {
+        "no-undef": "off",
+        "no-underscore-dangle": "off"
     },
     "plugins": ["jest"]
 }

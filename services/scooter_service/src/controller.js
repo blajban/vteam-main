@@ -34,7 +34,7 @@ class Controller {
         scooter.simulate = false;
         const newEvent = this.broker.constructEvent(
           eventTypes.returnScooterEvents.parkScooter,
-          scooter
+          scooter,
         );
         this.broker.publish(newEvent);
       }
@@ -181,19 +181,21 @@ class Controller {
         },
       };
 
-      for (let i = 0; i < parseInt(e.data.number); i++) {
+      for (let i = 0; i < parseInt(e.data.number); i += 1) {
         const scooterInfo = {
           location: e.data.location,
-          lat: Math.random() * (coordinates[e.data.location].latMax - coordinates[e.data.location].latMin)
-            + coordinates[e.data.location].latMin,
-          lng: Math.random() * (coordinates[e.data.location].lngMax - coordinates[e.data.location].lngMin)
-            + coordinates[e.data.location].lngMin,
+          lat: Math.random() *
+            (coordinates[e.data.location].latMax - coordinates[e.data.location].latMin) +
+            coordinates[e.data.location].latMin,
+          lng: Math.random() *
+            (coordinates[e.data.location].lngMax - coordinates[e.data.location].lngMin) +
+            coordinates[e.data.location].lngMin,
         };
 
         const newScooter = await this.fleetHandler.addScooter(scooterInfo);
         const scooterAddedEvent = this.broker.constructEvent(
           eventTypes.scooterEvents.scooterAdded,
-          newScooter
+          newScooter,
         );
         this.broker.publish(scooterAddedEvent);
       }
@@ -249,12 +251,13 @@ class Controller {
       const removedScooter = await this.fleetHandler.removeScooter(e.data);
       const removeScooterEvent = this.broker.constructEvent(
         eventTypes.scooterEvents.scooterRemoved,
-        removedScooter
+        removedScooter,
       );
       this.broker.publish(removeScooterEvent);
       return removedScooter;
     } catch (err) {
       console.log(err);
+      return { error: err };
     }
   }
 
