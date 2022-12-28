@@ -1,23 +1,22 @@
 
 
 const { MessageBroker } = require('../../shared/mq');
-const { host, eventTypes } = require('../../shared/resources');
+const { host, eventTypes, coordinates } = require('../../shared/resources');
 
 const whileDrivingIntervalTime = 3000;
 const whileIdleIntervalTime = 20000;
+
+
 
 class Scooter {
   constructor(scooterInfo) {
     this.info = scooterInfo;
     this.info.log = scooterInfo.log || [];
-    this.last = {
-      lat: this.info.properties.lat,
-      lng: this.info.properties.lng,
-      time: new Date()
-    };
 
     this.vx = 0;
     this.vy = 0;
+    this.tick = 0;
+    this.angle = 0;
   }
 
   getScooterInfo() {
@@ -41,6 +40,7 @@ class Scooter {
     });
     this.info.status = status;
     this.info.userId = userId;
+    this.info.properties.speed = 0;
     
     this.startTime = null;
     clearInterval(this.driveInterval);
@@ -49,44 +49,39 @@ class Scooter {
   simulateScooter() {
     console.log(`Simulating scooter ${this.info._id}!`);
 
-    // For use to calculate speed
-    this.last = {
-      lat: this.info.properties.lat,
-      lng: this.info.properties.lng
+    // Set movement angle
+    if (this.tick > 3) {
+      this.angle += Math.random() * 20 + 10;
+      this.angle %= 360;
+      this.tick = 0;
     };
 
-    //this.info.properties.lat = this.info.properties.lat + 0.005;
-    //this.info.properties.lng = this.info.properties.lng + 0.005;
-    this.info.speed = this.calculateSpeed();
-    this.info.properties.battery--;
+    // Move scooter and update position
+    let acceleration = Math.random() * 10; // in meters per second squared
 
-    this.updatePosition();
-  }
+    this.vx = acceleration * Math.cos(this.angle);  // In meters per second
+    this.vy = acceleration * Math.sin(this.angle);
 
-  updatePosition() {
-    let acceleration = 0.1; //Math.random(); // in meters per second squared
+    const distanceX = this.vx * whileDrivingIntervalTime / 1000;
+    const distanceY = this.vy * whileDrivingIntervalTime / 1000;
 
-    this.vx += (Math.random() - 0.5) * acceleration;  // In meters per second
-    this.vy += (Math.random() - 0.5) * acceleration;
-
-    const distanceX = this.vx * whileDrivingIntervalTime / 3000; // divide to go from milliseconds to seconds
-    const distanceY = this.vy * whileDrivingIntervalTime / 3000;
-
-    // Convert the distance traveled to degrees of latitude and longitude using the Haversine formula (with the assumption
-    // that 1 degree lat is about 111111 meters)
     const latDistance = distanceY / 111111;
     const lngDistance = distanceX / (111111 * Math.cos(this.info.properties.lat * Math.PI / 180));
 
-    // Update the scooter's position
     this.info.properties.lat += latDistance;
     this.info.properties.lng += lngDistance;
 
-    // Calculate the scooter's speed
+    // Calculate speed
     const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-    const speed = distance / (whileDrivingIntervalTime / 3000);
+    const speed = (distance / (whileDrivingIntervalTime / 1000));
 
-    console.log(this.info.properties.lat, this.info.properties.lng);
-    console.log(`Scooter speed: ${speed} meters per second`);
+    this.info.properties.speed = speed * 3.6;
+
+    // Battery and new tick
+    this.info.properties.battery--;
+    this.tick++;
+
+    console.log(`Scooter speed: ${this.info.properties.speed} km/h`);
 
   }
 
@@ -109,18 +104,23 @@ class Scooter {
   }
 
   outOfBounds() {
-    return false;
-  }
+    if (this.info.properties.lat < coordinates[this.info.properties.location].latMin ||
+      this.info.properties.lat > coordinates[this.info.properties.location].latMax) {
+      return true;
+    }
+    
+    if (this.info.properties.lng < coordinates[this.info.properties.location].lngMin ||
+      this.info.properties.lng > coordinates[this.info.properties.location].lngMax) {
+      return true;
+    }
 
-  calculateSpeed() {
-    return 80;
+    return false;
   }
 }
 
 
 
-const newMain = async () => {
-
+const main = async () => {
   /**
    * Emit events while driving for the scooter object.
    * @param {Scooter} scooter 
@@ -224,6 +224,5 @@ const newMain = async () => {
 
 }
 
-
-newMain();
+main();
 

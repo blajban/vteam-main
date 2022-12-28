@@ -149,6 +149,7 @@ class ScooterHandler {
       if (scooter._id === reportingScooter._id) {
         scooter.properties.lat = reportingScooter.properties.lat;
         scooter.properties.lng = reportingScooter.properties.lng;
+        scooter.properties.speed = reportingScooter.properties.speed;
         console.log(`Scooter ${scooter._id} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`);
         return true;
       }

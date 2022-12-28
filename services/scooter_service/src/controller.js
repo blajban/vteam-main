@@ -1,4 +1,4 @@
-const { eventTypes } = require('../../../shared/resources');
+const { eventTypes, coordinates } = require('../../../shared/resources');
 
 class Controller {
   constructor(broker, scooterHandler, fleetHandler) {
@@ -160,27 +160,6 @@ class Controller {
    */
   async addRandomScooters(e) {
     try {
-      const coordinates = {
-        stockholm: {
-          lngMin: 17.687988281250004,
-          lngMax: 18.391113281250004,
-          latMin: 59.17029835064485,
-          latMax: 59.478568831926395,
-        },
-        goteborg: {
-          lngMin: 11.744384765625002,
-          lngMax: 12.1728515625,
-          latMin: 57.610107020683905,
-          latMax: 57.856443276115066,
-        },
-        malmo: {
-          lngMin: 12.897949218750002,
-          lngMax: 13.205566406250002,
-          latMin: 55.49130362820423,
-          latMax: 55.64659898563683,
-        },
-      };
-
       for (let i = 0; i < parseInt(e.data.number); i += 1) {
         const scooterInfo = {
           location: e.data.location,
