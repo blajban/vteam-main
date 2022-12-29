@@ -1,17 +1,22 @@
 
 
 const { MessageBroker } = require('../../shared/mq');
-const { host, eventTypes } = require('../../shared/resources');
+const { host, eventTypes, coordinates } = require('../../shared/resources');
+
+const whileDrivingIntervalTime = 3000;
+const whileIdleIntervalTime = 20000;
+
+
 
 class Scooter {
   constructor(scooterInfo) {
     this.info = scooterInfo;
     this.info.log = scooterInfo.log || [];
-    this.last = {
-      lat: this.info.properties.lat,
-      lng: this.info.properties.lng,
-      time: new Date()
-    };
+
+    this.vx = 0;
+    this.vy = 0;
+    this.tick = 0;
+    this.angle = 0;
   }
 
   getScooterInfo() {
@@ -35,6 +40,7 @@ class Scooter {
     });
     this.info.status = status;
     this.info.userId = userId;
+    this.info.properties.speed = 0;
     
     this.startTime = null;
     clearInterval(this.driveInterval);
@@ -43,16 +49,40 @@ class Scooter {
   simulateScooter() {
     console.log(`Simulating scooter ${this.info._id}!`);
 
-    // For use to calculate speed
-    this.last = {
-      lat: this.info.properties.lat,
-      lng: this.info.properties.lng
+    // Set movement angle
+    if (this.tick > 3) {
+      this.angle += Math.random() * 20 + 10;
+      this.angle %= 360;
+      this.tick = 0;
     };
 
-    this.info.properties.lat = this.info.properties.lat + 0.005;
-    this.info.properties.lng = this.info.properties.lng + 0.005;
-    this.info.speed = this.calculateSpeed();
+    // Move scooter and update position
+    let acceleration = Math.random() * 10; // in meters per second squared
+
+    this.vx = acceleration * Math.cos(this.angle);  // In meters per second
+    this.vy = acceleration * Math.sin(this.angle);
+
+    const distanceX = this.vx * whileDrivingIntervalTime / 1000;
+    const distanceY = this.vy * whileDrivingIntervalTime / 1000;
+
+    const latDistance = distanceY / 111111;
+    const lngDistance = distanceX / (111111 * Math.cos(this.info.properties.lat * Math.PI / 180));
+
+    this.info.properties.lat += latDistance;
+    this.info.properties.lng += lngDistance;
+
+    // Calculate speed
+    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+    const speed = (distance / (whileDrivingIntervalTime / 1000));
+
+    this.info.properties.speed = speed * 3.6;
+
+    // Battery and new tick
     this.info.properties.battery--;
+    this.tick++;
+
+    console.log(`Scooter speed: ${this.info.properties.speed} km/h`);
+
   }
 
   activate(idleInterval) {
@@ -65,26 +95,32 @@ class Scooter {
     clearInterval(this.idleInterval);
   }
 
+  update(newScooterInfo) {
+    this.info = newScooterInfo;
+  }
+
   lowBattery() {
     return this.info.properties.battery < 20;
   }
 
   outOfBounds() {
+    if (this.info.properties.lat < coordinates[this.info.properties.location].latMin ||
+      this.info.properties.lat > coordinates[this.info.properties.location].latMax) {
+      return true;
+    }
+    
+    if (this.info.properties.lng < coordinates[this.info.properties.location].lngMin ||
+      this.info.properties.lng > coordinates[this.info.properties.location].lngMax) {
+      return true;
+    }
+
     return false;
   }
-
-  calculateSpeed() {
-    return 80;
-  }
-
-
-
 }
 
 
 
-const newMain = async () => {
-
+const main = async () => {
   /**
    * Emit events while driving for the scooter object.
    * @param {Scooter} scooter 
@@ -116,7 +152,7 @@ const newMain = async () => {
     const interval = setInterval(() => {
       const idleEvent = broker.constructEvent(eventTypes.scooterEvents.scooterIdleReporting, scooter.getScooterInfo());
       broker.publish(idleEvent);
-    }, 20000);
+    }, whileIdleIntervalTime);
     scooter.activate(interval);
 
     // Unlock scooter.
@@ -128,7 +164,7 @@ const newMain = async () => {
             console.log("simulating!");
             scooter.simulateScooter();
           }
-        }, 3000);
+        }, whileDrivingIntervalTime);
         scooter.unlockScooter(drive, e.data.status, e.data.userId);
         const scooterUnlockedEvent = broker.constructEvent(eventTypes.rentScooterEvents.scooterUnlocked, scooter.getScooterInfo());
         broker.publish(scooterUnlockedEvent);
@@ -167,6 +203,15 @@ const newMain = async () => {
     console.log(`Scooter added for a total of ${scooters.length} scooters.`);
   });
 
+  broker.onEvent(eventTypes.scooterEvents.scooterUpdated, (e) => {
+    for (let i = 0; i < scooters.length; i++) {
+      if (scooters[i].getScooterInfo()._id === e.data._id) {
+        scooters[i].update(e.data);
+      }
+    }
+    console.log(`Updated scooter`);
+  })
+
   broker.onEvent(eventTypes.scooterEvents.scooterRemoved, (e) => {
     for (let i = 0; i < scooters.length; i++) {
       if (scooters[i].getScooterInfo()._id === e.data._id) {
@@ -179,6 +224,5 @@ const newMain = async () => {
 
 }
 
-
-newMain();
+main();
 
