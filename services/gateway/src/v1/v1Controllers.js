@@ -1,5 +1,5 @@
-const { MessageBroker } = require('../../shared/mq')
-const { host, eventTypes } = require('../../shared/resources');
+const { MessageBroker } = require('../../../../shared/mq')
+const { host, eventTypes } = require('../../../../shared/resources');
 const mesBroker = new MessageBroker(host, "gateway");
 
 /**
