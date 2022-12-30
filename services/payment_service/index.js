@@ -22,7 +22,8 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.response(eventTypes.rpcEvents.addInvoice, async (e) => {
-        await mongoWrapper.insertOne("invoices", e.data.invoice);
+        const response = await mongoWrapper.insertOne("invoices", e.data);
+        console.log(response)
         return({
             "code": "200",
             "description": "Invoice added",
@@ -50,15 +51,37 @@ const paymentService = async () => {
     });
 
     /**
-     * Starts a new invoice and populating it with data from object 'e'
-     * @param {string} eventTypes - the type of event to handle 
-     * @param {function} - the function handeling the event
-     * @returns {object} - invoices for the user
+     * Handles requests for invoices and returns the requested invoices.
+     * @param {object} e - the event object containing the request data
+     * @returns {object} - the requested invoices
      */
     msgBroker.response(eventTypes.rpcEvents.getInvoices, async (e) => {
-        console.log("getting invoices for userId " + e.data.userId);
-        const inv = await mongoWrapper.find("invoices", { userId: e.data.userId });
-        return(inv)
+        try {
+            if (e.data.hasOwnProperty("invoiceId")) {
+                console.log(`getting invoice with id ${e.data.invoiceId}`);
+                const inv = await mongoWrapper.find("invoices", { _id: e.data.invoiceId });
+                return(inv)
+            }
+            else if (e.data.hasOwnProperty("userId")) {
+                console.log(`getting invoices for userId ${e.data.userId}`);
+                const inv = await mongoWrapper.find("invoices", { userId: e.data.userId });
+                return(inv)
+            }
+            else {
+                console.error("neither invoiceId or userId is defined");
+            }
+        } catch (e) {
+            if (e instanceof TypeError) {
+                console.error(e, " This could be caused by making a getInvoice request with an empty _id, this is e: ", e)
+            }
+            else {
+                console.error(e, " This error was caught in getInvoices, this is e: ", e)
+            }
+        }
+        return
+        
+        
+        
     });
 
     /**
