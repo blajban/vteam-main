@@ -12,5 +12,10 @@
         "ecmaVersion": "latest"
     },
     "rules": {
-    }
+        "class-methods-use-this": "off",
+        "no-underscore-dangle": "off",
+        "no-return-await": "off",
+        "arrow-body-style": "off"
+    },
+    "plugins": ["jest"]
 }
