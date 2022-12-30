@@ -413,15 +413,7 @@ exports.logout = async (req, res) => {
 }
 
 exports.addInvoice = async (req, res) => {
-    const newInvoice = {
-        userId: req.body.userId,
-        startLat: req.body.startLat,
-        startLng: req.body.startLng,
-        startTime: req.body.startTime,
-        endLat: req.body.endLat,
-        endLng: req.body.endLng,
-        endTime: req.body.endTime
-    };
+    const newInvoice = req.body.invoice
 
     const broker = await mesBroker;
     const addInvoiceEvent = broker.constructEvent(eventTypes.rpcEvents.addInvoice, newInvoice);

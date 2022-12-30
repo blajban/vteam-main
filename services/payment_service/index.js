@@ -22,7 +22,8 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.response(eventTypes.rpcEvents.addInvoice, async (e) => {
-        await mongoWrapper.insertOne("invoices", e.data.invoice);
+        const response = await mongoWrapper.insertOne("invoices", e.data);
+        console.log(response)
         return({
             "code": "200",
             "description": "Invoice added",
@@ -55,19 +56,31 @@ const paymentService = async () => {
      * @returns {object} - the requested invoices
      */
     msgBroker.response(eventTypes.rpcEvents.getInvoices, async (e) => {
-
-        if (e.data.hasOwnProperty("invoiceId")) {
-            console.log(`getting invoice with id ${e.data.invoiceId}`);
-            const inv = await mongoWrapper.find("invoices", { _id: e.data.invoiceId });
-            return(inv)
+        try {
+            if (e.data.hasOwnProperty("invoiceId")) {
+                console.log(`getting invoice with id ${e.data.invoiceId}`);
+                const inv = await mongoWrapper.find("invoices", { _id: e.data.invoiceId });
+                return(inv)
+            }
+            else if (e.data.hasOwnProperty("userId")) {
+                console.log(`getting invoices for userId ${e.data.userId}`);
+                const inv = await mongoWrapper.find("invoices", { userId: e.data.userId });
+                return(inv)
+            }
+            else {
+                console.error("neither invoiceId or userId is defined");
+            }
+        } catch (e) {
+            if (e instanceof TypeError) {
+                console.error(e, " This could be caused by making a getInvoice request with an empty _id, this is e: ", e)
+            }
+            else {
+                console.error(e, " This error was caught in getInvoices, this is e: ", e)
+            }
         }
-        else if (e.data.hasOwnProperty("userId")) {
-            console.log(`getting invoices for userId ${e.data.userId}`);
-            const inv = await mongoWrapper.find("invoices", { userId: e.data.userId });
-            return(inv)
-        }
-        console.error("neither invoiceId or userId is defined");
-        return Error
+        return
+        
+        
         
     });
 
