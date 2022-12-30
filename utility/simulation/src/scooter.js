@@ -1,6 +1,21 @@
 const { coordinates } = require('../../../shared/resources');
 
+/**
+ * Scooter class
+ */
 class Scooter {
+  /**
+   * Creates a new Scooter.
+   * @param {object} scooterInfo
+   * @param {string} scooterInfo._id
+   * @param {object} scooterInfo.properties
+   * @param {number} scooterInfo.properties.lat
+   * @param {number} scooterInfo.properties.lng
+   * @param {number} scooterInfo.properties.speed
+   * @param {number} scooterInfo.properties.battery
+   * @param {string} scooterInfo.properties.location
+   * @param {object[]} [scooterInfo.log] - Optional
+   */
   constructor(scooterInfo) {
     this.info = scooterInfo;
     this.info.log = scooterInfo.log || [];
@@ -11,10 +26,21 @@ class Scooter {
     this.angle = 0;
   }
 
+  /**
+   * Gets scooter information.
+   * @return {object}
+   */
   getScooterInfo() {
       return this.info;
   }
 
+  /**
+   * Unlock scooter.
+   * @param {number} driveInterval - interval for driving the scooter.
+   * @param {number} driveIntervalTime - time in milliseconds for the drive interval.
+   * @param {string} status - new status of the scooter.
+   * @param {string} userId - user who unlocked the scooter.
+   */
   unlockScooter(driveInterval, driveIntervalTime, status, userId) {
     console.log(`Unlocking ${this.info._id}`);
     this.info.status = status;
@@ -24,6 +50,11 @@ class Scooter {
     this.driveIntervalTime = driveIntervalTime;
   }
 
+  /**
+   * Lock scooter.
+   * @param {string} status - new status of the scooter.
+   * @param {string} userId
+   */
   lockScooter(status, userId) {
     console.log(`Locking ${this.info._id}`);
     this.info.log.push({
@@ -39,6 +70,9 @@ class Scooter {
     clearInterval(this.driveInterval);
   }
 
+  /**
+   * Simulates scooter movement.
+   */
   simulateScooter() {
     console.log(`Simulating scooter ${this.info._id}!`);
 
@@ -78,24 +112,43 @@ class Scooter {
 
   }
 
+  /**
+   * Activates scooter.
+   * @param {number} idleInterval - interval for when the scooter is idle.
+   */
   activate(idleInterval) {
     console.log(`Activating ${this.info._id}`);
     this.idleInterval = idleInterval;
   }
 
+  /**
+   * Removes the scooter by clearing idle interval.
+   */
   remove() {
     console.log(`Removing ${this.info._id}`);
     clearInterval(this.idleInterval);
   }
 
+  /**
+   * Updates scooter with new information.
+   * @param {object} newScooterInfo - The new information for the Scooter.
+   */
   update(newScooterInfo) {
     this.info = newScooterInfo;
   }
 
+  /**
+   * Determines if the scooter has a low battery.
+   * @return {boolean}
+   */
   lowBattery() {
     return this.info.properties.battery < 20;
   }
 
+  /**
+   * Determines if the scooter is out of bounds.
+   * @return {boolean}
+   */
   outOfBounds() {
     if (this.info.properties.lat < coordinates[this.info.properties.location].latMin ||
     this.info.properties.lat > coordinates[this.info.properties.location].latMax) {
@@ -111,4 +164,4 @@ class Scooter {
   }
 }
 
-    module.exports = { Scooter };
+module.exports = { Scooter };

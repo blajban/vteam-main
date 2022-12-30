@@ -6,7 +6,9 @@ const { ScooterEvents } = require('./src/scooter_events')
 const { Scooter } = require('./src/scooter');
 
 
-
+/**
+ * Initializes the simulation.
+ */
 const main = async () => {
   const serviceName = 'simulation';
   const scooters = [];
@@ -52,5 +54,6 @@ const main = async () => {
 
 }
 
+// Run simulation
 main();
 

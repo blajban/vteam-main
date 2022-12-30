@@ -3,11 +3,21 @@ const { eventTypes } = require('../../../shared/resources');
 const whileDrivingIntervalTime = 3000;
 const whileIdleIntervalTime = 20000;
 
+/**
+ * Handle scooter events
+ */
 class ScooterEvents {
+  /**
+   * @param {object} messageBroker
+   */
   constructor(messageBroker) {
     this.broker = messageBroker;
   }
 
+   /**
+   * Initializes events for the supplied scooter.
+   * @param {Scooter} scooter
+   */
   init(scooter) {
     // Idle reporting.
     const interval = setInterval(() => {
@@ -43,8 +53,8 @@ class ScooterEvents {
   }
 
   /**
-   * Emit events while driving for the scooter object.
-   * @param {Scooter} scooter 
+   * Emit events while the scooter is moving.
+   * @param {Scooter} scooter
    */
   reportWhileMoving(scooter) {
     const scooterInfo = scooter.getScooterInfo();
