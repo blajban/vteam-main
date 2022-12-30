@@ -15,6 +15,22 @@ const scooterModel = {
         const response = await fetch('http://localhost:3500/city/malmo/Scooter')
         const data = await response.json();
         return data
+    },
+
+    addScooter: async (city, scooterData) => {
+        console.log(city)
+        console.log(scooterData)
+        const response = await fetch(`http://localhost:3500/city/${city.current.value}/scooter`, {
+            body: JSON.stringify({
+                lng: scooterData.lng.current.value,
+                lat: scooterData.lat.current.value
+            }),
+            headers: {
+                "content-type": "application/json"
+            },
+            method: "POST"
+        });
+        console.log(response)
     }
 }
 
