@@ -12,6 +12,8 @@ RUN npm install -g nodemon
 
 COPY ./utility/simulation/package.json .
 COPY ./utility/simulation/simulation.js .
+COPY ./utility/simulation/src/scooter.js ./src/.
+COPY ./utility/simulation/src/scooter_events.js ./src/.
 
 RUN npm install
 
