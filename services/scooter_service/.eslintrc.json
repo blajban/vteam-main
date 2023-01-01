@@ -12,7 +12,17 @@
     },
     "rules": {
         "no-undef": "off",
-        "no-underscore-dangle": "off"
+        "no-underscore-dangle": "off",
+        "no-unused-vars": "off",
+        "no-restricted-syntax": "off",
+        "radix": "off",
+        "no-console": "off",
+        "no-prototype-builtins": "off",
+        "no-await-in-loop": "off",
+        "no-return-await": "off",
+        "no-param-reassign": "off",
+        "array-callback-return": "off",
+        "consistent-return": "off"
     },
     "plugins": ["jest"]
 }

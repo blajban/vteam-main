@@ -100,24 +100,10 @@ const scooterService = async () => {
   );
 
   // TODO
-  broker.onEvent(eventTypes.adminEvents.moveScooter, (e) => {
-    try {
-      console.log('Admin decided to move a scooter!"');
-      console.log(e);
-    } catch (err) {
-      console.log(err);
-    }
-  });
-
-  // TODO
-  broker.onEvent(eventTypes.scooterEvents.batteryLow, (e) => {
-    try {
-      console.log('Scooter reported low battery!');
-      console.log(e);
-    } catch (err) {
-      console.log(err);
-    }
-  });
+  broker.onEvent(
+    eventTypes.scooterEvents.batteryLow,
+    controller.lowBattery.bind(controller),
+  );
 };
 
 scooterService();

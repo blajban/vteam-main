@@ -13,6 +13,8 @@ class ScooterHandler {
       scooter._id = scooter._id.toString();
       this.scooters.push(scooter);
     }
+
+    this.scootersWithLowBattery = [];
   }
 
   /**
@@ -46,6 +48,22 @@ class ScooterHandler {
     }
 
     throw new Error(`Scooter with ID ${scooterToUpdate._id} not found`);
+  }
+
+  lowBattery(lowBatteryScooter) {
+    let lowBattery = false;
+
+    for (const scooterId of this.scootersWithLowBattery) {
+      if (scooterId === lowBatteryScooter._id) {
+        lowBattery = true;
+      }
+    }
+
+    if (!lowBattery) {
+      this.scootersWithLowBattery.push(lowBatteryScooter._id)
+    }
+
+    console.log(this.scootersWithLowBattery);
   }
 
   /**
@@ -111,8 +129,18 @@ class ScooterHandler {
   lockScooter(scooterId) {
     for (const scooter of this.scooters) {
       if (scooter._id === scooterId) {
+
         scooter.status = 'available';
         scooter.userId = 0;
+
+        for (let i = 0; i < this.scootersWithLowBattery.length; i++) {
+          if (scooter._id === this.scootersWithLowBattery[i]) {
+            scooter.status = 'low_battery';
+            delete this.scootersWithLowBattery[i];
+            break;
+          }
+        }
+
         return scooter;
       }
     }
