@@ -1,3 +1,5 @@
+import exported from "react-native/Libraries/Components/SafeAreaView/SafeAreaView";
+
 /**
  *  Scooter
  *  Handles
@@ -59,4 +61,5 @@ const scooterHandler = {
         }
     },
 };
-export default scooterHandler;
+
+module.exports = scooterHandler;

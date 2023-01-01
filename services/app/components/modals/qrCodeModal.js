@@ -120,4 +120,4 @@ const styles = StyleSheet.create({
     },
   });
 
-module.exports = QrModalPopup;
+  export default QrModalPopup;

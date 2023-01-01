@@ -20,4 +20,4 @@ const locationHandler = {
     }
 };
 
-export default locationHandler;
+module.exports = locationHandler;
