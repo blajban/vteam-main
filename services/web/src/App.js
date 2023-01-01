@@ -14,7 +14,7 @@ function App() {
   const [code, setCode] = useState("");
 
   function login() {
-    window.location.href = 'http://localhost:3500/login';
+    window.location.href = 'http://localhost:3500/v1/login';
   }
 
   function logout() {
@@ -22,16 +22,17 @@ function App() {
   }
 
   async function testFunc() {
-    const userInfo = await usersModel.getUser(userId);
-    console.log("Userid:", userInfo._id);
-    console.log("Name:", userInfo.name);
-    console.log("Mail:", userInfo.mail);
-    console.log("Mobile:", userInfo.mobile);
-    console.log("Zip:", userInfo.zip);
-    console.log("Address:", userInfo.address);
-    console.log("City:", userInfo.city);
-    console.log("Admin:", userInfo.admin);
-    console.log("Balance:", userInfo.balance);
+    console.log("Din token", token);
+    //const userInfo = await usersModel.getUser(userId, token);
+    //console.log("Userid:", userInfo._id);
+    //console.log("Name:", userInfo.name);
+    //console.log("Mail:", userInfo.mail);
+    //console.log("Mobile:", userInfo.mobile);
+    //console.log("Zip:", userInfo.zip);
+    //console.log("Address:", userInfo.address);
+    //console.log("City:", userInfo.city);
+    //console.log("Admin:", userInfo.admin);
+    //console.log("Balance:", userInfo.balance);
   }
 
   useEffect(() => {
