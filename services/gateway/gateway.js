@@ -13,29 +13,29 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/api-key', async (req, res) => {
-  res.status(200).send( {
-    code: 200,
-    description: "API key generated",
-    key: await generateKey()
-  });
-});
+//app.get('/api-key', async (req, res) => {
+  //res.status(200).send( {
+    //code: 200,
+    //description: "API key generated",
+    //key: await generateKey()
+  //});
+//});
 
 
 // Check API key
-app.use(async (req, res, next) => {
-  const apiKey = req.get('api-key');
-  if (await isValid(apiKey)) {
-    next()
-  } else {
-    res.status(401).send( { error: {
-      description: 'API key did not match',
-      code: 401,
-      message: 'Unauthorised'
-      }
-    });
-  }
-});
+//app.use(async (req, res, next) => {
+  //const apiKey = req.get('api-key');
+  //if (await isValid(apiKey)) {
+    //next()
+  //} else {
+    //res.status(401).send( { error: {
+      //description: 'API key did not match',
+      //code: 401,
+      //message: 'Unauthorised'
+      //}
+    //});
+  //}
+//});
 
 // Routes with different versions
 const v1Router = require('./src/v1/v1Routes');
