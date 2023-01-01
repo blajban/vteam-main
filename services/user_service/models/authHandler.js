@@ -1,17 +1,15 @@
 const axios = require('axios').default;
 const { UserHandler } = require('./userHandler');
+const { MongoWrapper } = require('../../../shared/mongowrapper');
 
 /**
  * AuthHandler handles login.
  */
 class AuthHandler {
   /**
-   * Creates a new AuthHandler instance and initializes the db conncetion.
-   * @param {object} mongoWrapper - A MongoWrapper object
+   * Creates a new AuthHandler instance
    */
-  constructor(mongoWrapper) {
-    this.db = mongoWrapper;
-    this.collectionName = 'users';
+  constructor() {
   }
 
   /**
@@ -65,7 +63,8 @@ class AuthHandler {
    * @returns {number} The user's ID.
    */
   async checkUser(userToCheck) {
-    const userHandler = await new UserHandler();
+    const mongoWrapper = await new MongoWrapper('users');
+    const userHandler = await new UserHandler(mongoWrapper);
     const user = await userHandler.getUser(userToCheck.id);
     if (user) {
       return user._id;
@@ -77,6 +76,7 @@ class AuthHandler {
       city: '',
       address: '',
       zip: '',
+      admin: false,
       balance: 0,
     };
 
@@ -90,14 +90,9 @@ class AuthHandler {
     } else {
       newUser.mail = '';
     }
-    if (userToCheck.admin === 93664935) {
-      newUser.admin = true;
-    } else {
-      newUser.admin = false;
-    }
 
     await userHandler.addUser(newUser);
-    const findNewUser = await userHandler.getUser(userToCheck._id);
+    const findNewUser = await userHandler.getUser(userToCheck.id);
     return findNewUser._id;
   }
 }
