@@ -14,7 +14,7 @@ const userService = async () => {
   const mongoWrapper = await new MongoWrapper('users');
   const broker = await new MessageBroker(host, 'user_service');
   const userHandler = await new UserHandler(mongoWrapper);
-  const authHandler = await new AuthHandler(mongoWrapper);
+  const authHandler = await new AuthHandler();
 
   /**
    * Registers a response to getUsers event.
