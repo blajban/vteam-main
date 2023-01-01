@@ -141,7 +141,6 @@ class FleetHandler {
     await this.db.deleteOne(this.collectionName, id);
     return deletedScooter;
   }
-
 }
 
 module.exports = { FleetHandler };

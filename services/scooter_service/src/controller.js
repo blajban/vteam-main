@@ -163,12 +163,12 @@ class Controller {
       for (let i = 0; i < parseInt(e.data.number); i += 1) {
         const scooterInfo = {
           location: e.data.location,
-          lat: Math.random() *
-            (coordinates[e.data.location].latMax - coordinates[e.data.location].latMin) +
-            coordinates[e.data.location].latMin,
-          lng: Math.random() *
-            (coordinates[e.data.location].lngMax - coordinates[e.data.location].lngMin) +
-            coordinates[e.data.location].lngMin,
+          lat: Math.random()
+            * (coordinates[e.data.location].latMax - coordinates[e.data.location].latMin)
+            + coordinates[e.data.location].latMin,
+          lng: Math.random()
+            * (coordinates[e.data.location].lngMax - coordinates[e.data.location].lngMin)
+            + coordinates[e.data.location].lngMin,
         };
 
         const newScooter = await this.fleetHandler.addScooter(scooterInfo);
@@ -217,6 +217,17 @@ class Controller {
   updateActiveScooter(e) {
     try {
       this.scooterHandler.updateActiveScooter(e.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  /**
+   * Update scooter status when low battery
+   */
+  lowBattery(e) {
+    try {
+      this.scooterHandler.lowBattery(e.data);
     } catch (err) {
       console.log(err);
     }

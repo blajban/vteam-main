@@ -18,12 +18,11 @@ class MockMongoWrapper {
     const result = [];
 
     if (filter.hasOwnProperty('properties.location')) {
-
       result.push(this.scooters.map((scooter) => {
         if (scooter.properties.location === filter['properties.location']) {
           return scooter;
         }
-      }))
+      }));
 
       return result;
     }
@@ -32,21 +31,13 @@ class MockMongoWrapper {
   }
 
   async findOne(collectionName, filter) {
-    const foundScooter = this.scooters.map((scooter) => {
+    for (const scooter of this.scooters) {
       if (filter._id === scooter._id) {
         return scooter;
       }
-    });
-    //for (const scooter of this.scooters) {
-    //  if (filter._id === scooter._id) {
-    //    return scooter;
-    //  }
-    //}
-    if (foundScooter[0] === undefined) {
-      return null;
     }
-    return foundScooter;
-    //return null;
+
+    return null;
   }
 
   async updateOne(collectionName, obj, update) {
@@ -103,7 +94,7 @@ class MockMongoWrapper {
 describe('FleetHandler', () => {
   let fleetHandler;
   let db;
-  
+
   beforeEach(async () => {
     db = new MockMongoWrapper([
       {
@@ -158,7 +149,7 @@ describe('FleetHandler', () => {
 
     it('return a single scooter with an ID', async () => {
       const scooters = await fleetHandler.getScooters({ _id: '123' });
-      const scooterFromDb = await db.findOne("scooters", { _id: '123' });
+      const scooterFromDb = await db.findOne('scooters', { _id: '123' });
       expect(scooters).toEqual(scooterFromDb);
     });
 
@@ -183,8 +174,8 @@ describe('FleetHandler', () => {
         lng: -122.4183,
       };
       const newScooter = await fleetHandler.addScooter(newScooterInfo);
-      const scooters = await db.findOne('scooters', { _id: newScooter._id });
-      expect(scooters).toEqual(newScooter);
+      const scooter = await db.findOne('scooters', { _id: newScooter._id });
+      expect(scooter).toEqual(newScooter);
     });
   });
 
