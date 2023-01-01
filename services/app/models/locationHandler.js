@@ -1,12 +1,13 @@
 
-/**
- *  locationHandler
- *  Handles
- *  Parkingspots/Chargingspots
- */
 const locationHandler = {
 
-
+    /**
+     * fetches locations.
+     *
+     * @async
+     * @param {string} city - specified city to fetch locations from
+     * @returns {(Object[]|null)} returns array of objects , or null if an error occurred.
+     */
     fetchLocations: async function fetchLocations(city) {
         if(!city) return "No city specified";
         try{

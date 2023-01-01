@@ -112,17 +112,17 @@ export default function App() {
             >
             </EndRideModal>: <></> }
           {rideActive ?
-            <TouchableHighlight style={{position: 'absolute', right: 0}}  onPress={() => {setisEndRideModalVisible(true)}}>
+            <TouchableHighlight style={styles.touchable_style}  onPress={() => {setisEndRideModalVisible(true)}}>
             <Image source={parkScooterIcon} style={styles.footer_box_image}></Image>
           </TouchableHighlight>:
-          <TouchableHighlight style={{position: 'absolute', right: 0}}  onPress={() => setisModalVisible(true)}>
+          <TouchableHighlight style={styles.touchable_style}  onPress={() => setisModalVisible(true)}>
             <Image source={qrIcon} style={styles.footer_box_image}></Image>
           </TouchableHighlight>
           }
         </View>
         <Text style={styles.footer_text}> {rideActive ? "Avsluta resa" : "Skanna och åk!"}</Text>
-        <TouchableHighlight style={{position: 'absolute', right: 0}}  onPress={() => {userInfoActive == 0 ? setUserInfoActive(1): setUserInfoActive(0)}}>
-          <Image source={userIcon} style={{height: 35, width: 35, position: 'absolute', right: 0, bottom: 1}}></Image>
+        <TouchableHighlight style={styles.touchable_style}  onPress={() => {userInfoActive == 0 ? setUserInfoActive(1): setUserInfoActive(0)}}>
+          <Image source={userIcon} style={styles.user_icon_style}></Image>
         </TouchableHighlight>
 
         {userInfoActive === 1 ? <UserInfo></UserInfo> : <></>}
@@ -148,6 +148,17 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  touchable_style: {
+    position: 'absolute',
+    right: 0
+  },
+  user_icon_style: {
+    height: 35,
+    width: 35,
+    position: 'absolute',
+    right: 0,
+    bottom: 1
   },
   footer_box: {
     height: 110,
