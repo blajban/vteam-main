@@ -256,8 +256,9 @@ exports.getChargingStations = async (req, res) => {
 exports.getUsers = async (req, res) => {
     const filter = {};
 
+
     if (req.params.hasOwnProperty('userId')) {
-        filter._id = parseInt(req.params.userId)
+        filter._id = req.params.userId;
     }
 
     const broker = await mesBroker;
@@ -274,7 +275,7 @@ exports.getUsers = async (req, res) => {
  */
 exports.addUser = async (req, res) => {
     const newUser = {
-        _id: parseInt(req.body._id),
+        _id: req.body._id,
         name: req.body.name,
         mobile: req.body.mobile,
         mail: req.body.mail,
@@ -305,7 +306,7 @@ exports.addUser = async (req, res) => {
  */
 exports.updateUser = async (req, res) => {
     const userToUpdate = {
-        _id: parseInt(req.params.userId)
+        _id: req.params.userId
     };
 
     if (req.body.hasOwnProperty('name')) {
@@ -353,7 +354,7 @@ exports.updateUser = async (req, res) => {
 exports.removeUser = async (req, res) => {
     const broker = await mesBroker;
     const removeUserEvent = broker.constructEvent(eventTypes.rpcEvents.removeUser, {
-        _id: parseInt(req.params.userId)
+        _id: req.params.userId
     });
     broker.request(removeUserEvent, (e) => {
         res.json(success("Removed user", e));

@@ -1,0 +1,36 @@
+name: postman-pull-request
+
+on:
+  push:
+    branches: [ "gateway" ]
+
+jobs:
+  docker:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Start containers
+      run: docker-compose -f "docker-compose.yml" up -d --build
+
+    - name: Install node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16.x
+    
+    - name: Install dependencies
+      run: npm install  
+      
+    - name: Install newman
+      run: npm install -g newman
+
+    - name: Run API tests
+      run: newman run "api-tests.json"
+
+
+    - name: Stop containers
+      if: always()
+      run: docker-compose -f "docker-compose.yml" down
