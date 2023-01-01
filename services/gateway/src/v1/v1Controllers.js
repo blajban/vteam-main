@@ -1,3 +1,4 @@
+const { Octokit } = require('octokit');
 const { MessageBroker } = require('../../../../shared/mq')
 const { host, eventTypes } = require('../../../../shared/resources');
 const mesBroker = new MessageBroker(host, "gateway");
@@ -16,6 +17,35 @@ const success = (description, content) => {
         content: content
     };
 }
+
+//function notValidToken() {
+    //return {
+        //code: 401,
+        //message: "Token is not valid"
+    //};
+//}
+
+//async function checkToken(token) {
+    //const clientId = process.env.GITHUB_CLIENT_ID;
+    //try {
+        //const octokit = new Octokit({
+            //auth: 'MY-TOKEN'
+        //});
+        //const response = await octokit.request('POST /applications/{client_id}/token', {
+            //client_id: clientId,
+            //access_token: token
+        //});
+        //const result = await response.data;
+        //kolla status sedan result.status
+        //console.log(result);
+    //} catch(error) {
+        //console.log(error);
+    //}
+    //if (token) {
+        //return true;
+    //}
+    //return false;
+//}
 
 exports.rentScooter = async (req, res) => {
     const data = {
@@ -254,6 +284,12 @@ exports.getChargingStations = async (req, res) => {
  * @param {object} res
  */
 exports.getUsers = async (req, res) => {
+    const token = req.headers['x-access-token'];
+    console.log(token);
+    //const tokenStatus = await checkToken(token);
+    //if (!tokenStatus) {
+        //res.json(notValidToken());
+    //}
     const filter = {};
 
     if (req.params.hasOwnProperty('userId')) {
@@ -400,17 +436,6 @@ exports.getGitHubUser = async (req, res) => {
     broker.request(getGitHubUserEvent, (e) => {
         res.json(success("Get github user success", e));
     });
-}
-
-/**
- * Log out user.
- * @param {object} req
- * @param {object} res
- */
-exports.logout = async (req, res) => {
-    // TODO
-    console.log(req);
-    res.json("TODO");
 }
 
 exports.addInvoice = async (req, res) => {
