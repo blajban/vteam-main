@@ -1,4 +1,4 @@
-const { eventTypes } = require('../../../shared/resources');
+const { eventTypes, coordinates } = require('../../../shared/resources');
 
 class Controller {
   constructor(broker, scooterHandler, fleetHandler) {
@@ -34,7 +34,7 @@ class Controller {
         scooter.simulate = false;
         const newEvent = this.broker.constructEvent(
           eventTypes.returnScooterEvents.parkScooter,
-          scooter
+          scooter,
         );
         this.broker.publish(newEvent);
       }
@@ -160,40 +160,21 @@ class Controller {
    */
   async addRandomScooters(e) {
     try {
-      const coordinates = {
-        stockholm: {
-          lngMin: 17.687988281250004,
-          lngMax: 18.391113281250004,
-          latMin: 59.17029835064485,
-          latMax: 59.478568831926395,
-        },
-        goteborg: {
-          lngMin: 11.744384765625002,
-          lngMax: 12.1728515625,
-          latMin: 57.610107020683905,
-          latMax: 57.856443276115066,
-        },
-        malmo: {
-          lngMin: 12.897949218750002,
-          lngMax: 13.205566406250002,
-          latMin: 55.49130362820423,
-          latMax: 55.64659898563683,
-        },
-      };
-
-      for (let i = 0; i < parseInt(e.data.number); i++) {
+      for (let i = 0; i < parseInt(e.data.number); i += 1) {
         const scooterInfo = {
           location: e.data.location,
-          lat: Math.random() * (coordinates[e.data.location].latMax - coordinates[e.data.location].latMin)
+          lat: Math.random()
+            * (coordinates[e.data.location].latMax - coordinates[e.data.location].latMin)
             + coordinates[e.data.location].latMin,
-          lng: Math.random() * (coordinates[e.data.location].lngMax - coordinates[e.data.location].lngMin)
+          lng: Math.random()
+            * (coordinates[e.data.location].lngMax - coordinates[e.data.location].lngMin)
             + coordinates[e.data.location].lngMin,
         };
 
         const newScooter = await this.fleetHandler.addScooter(scooterInfo);
         const scooterAddedEvent = this.broker.constructEvent(
           eventTypes.scooterEvents.scooterAdded,
-          newScooter
+          newScooter,
         );
         this.broker.publish(scooterAddedEvent);
       }
@@ -242,6 +223,17 @@ class Controller {
   }
 
   /**
+   * Update scooter status when low battery
+   */
+  lowBattery(e) {
+    try {
+      this.scooterHandler.lowBattery(e.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  /**
    * Remove scooter
    */
   async removeScooter(e) {
@@ -249,12 +241,13 @@ class Controller {
       const removedScooter = await this.fleetHandler.removeScooter(e.data);
       const removeScooterEvent = this.broker.constructEvent(
         eventTypes.scooterEvents.scooterRemoved,
-        removedScooter
+        removedScooter,
       );
       this.broker.publish(removeScooterEvent);
       return removedScooter;
     } catch (err) {
       console.log(err);
+      return { error: err };
     }
   }
 

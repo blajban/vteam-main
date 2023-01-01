@@ -13,6 +13,8 @@ class ScooterHandler {
       scooter._id = scooter._id.toString();
       this.scooters.push(scooter);
     }
+
+    this.scootersWithLowBattery = [];
   }
 
   /**
@@ -38,7 +40,7 @@ class ScooterHandler {
    * @throws {Error} If the scooter with the ID is not found
    */
   updateActiveScooter(scooterToUpdate) {
-    for (let i = 0; i < this.scooters.length; i++) {
+    for (let i = 0; i < this.scooters.length; i += 1) {
       if (this.scooters[i]._id === scooterToUpdate._id) {
         this.scooters[i] = scooterToUpdate;
         return true;
@@ -48,13 +50,29 @@ class ScooterHandler {
     throw new Error(`Scooter with ID ${scooterToUpdate._id} not found`);
   }
 
+  lowBattery(lowBatteryScooter) {
+    let lowBattery = false;
+
+    for (const scooterId of this.scootersWithLowBattery) {
+      if (scooterId === lowBatteryScooter._id) {
+        lowBattery = true;
+      }
+    }
+
+    if (!lowBattery) {
+      this.scootersWithLowBattery.push(lowBatteryScooter._id)
+    }
+
+    console.log(this.scootersWithLowBattery);
+  }
+
   /**
    * Removes an active scooter from the list
    * @param {object} scooterToDelete - The scooter to delete
    * @throws {Error} If the scooter with the ID is not found
    */
   removeActiveScooter(scooterToDelete) {
-    for (let i = 0; i < this.scooters.length; i++) {
+    for (let i = 0; i < this.scooters.length; i += 1) {
       if (this.scooters[i]._id === scooterToDelete._id) {
         this.scooters.splice(i, 1);
         return true;
@@ -74,7 +92,7 @@ class ScooterHandler {
   unlockScooter(scooterId, userId) {
     for (const scooter of this.scooters) {
       if (scooter._id === scooterId) {
-        scooter.status = "claimed";
+        scooter.status = 'claimed';
         scooter.userId = userId;
         return scooter;
       }
@@ -94,7 +112,7 @@ class ScooterHandler {
       if (scooter._id === unlockedScooter._id) {
         scooter.status = unlockedScooter.status;
         scooter.userId = unlockedScooter.userId;
-        console.log(`Scooter ${scooter._id} unlocked`)
+        console.log(`Scooter ${scooter._id} unlocked`);
         return scooter;
       }
     }
@@ -111,8 +129,18 @@ class ScooterHandler {
   lockScooter(scooterId) {
     for (const scooter of this.scooters) {
       if (scooter._id === scooterId) {
-        scooter.status = "available";
+
+        scooter.status = 'available';
         scooter.userId = 0;
+
+        for (let i = 0; i < this.scootersWithLowBattery.length; i++) {
+          if (scooter._id === this.scootersWithLowBattery[i]) {
+            scooter.status = 'low_battery';
+            delete this.scootersWithLowBattery[i];
+            break;
+          }
+        }
+
         return scooter;
       }
     }
@@ -131,7 +159,7 @@ class ScooterHandler {
       if (scooter._id === lockedScooter._id) {
         scooter.status = lockedScooter.status;
         scooter.userId = lockedScooter.userId;
-        console.log(`Scooter ${scooter._id} locked`)
+        console.log(`Scooter ${scooter._id} locked`);
         return scooter;
       }
     }
@@ -149,14 +177,14 @@ class ScooterHandler {
       if (scooter._id === reportingScooter._id) {
         scooter.properties.lat = reportingScooter.properties.lat;
         scooter.properties.lng = reportingScooter.properties.lng;
-        console.log(`Scooter ${scooter._id} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`)
+        scooter.properties.speed = reportingScooter.properties.speed;
+        console.log(`Scooter ${scooter._id} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`);
         return true;
       }
     }
-    
+
     throw new Error(`Scooter with ID ${reportingScooter._id} not found`);
   }
 }
-
 
 module.exports = { ScooterHandler };

@@ -1,16 +1,13 @@
-/*
-Colors:
-#206A61 dark blue
-#228377 middle blue
-#2A9D8F light blue
+:root {
+    --dark-blue: #206A61;
+    --middle-blue: #228377;
+    --light-blue: #2A9D8F;
+    --lightest-blue: #84E1D6;
+    --dark-red: #B42F19;
+    --middle-red: #D0361D;
+    --light-red: #FF4527;
+}
 
-#84E1D6 lightest blue
-
-#206A61 dark red
-#228377 middle red
-#2A9D8F light red
-
-*/
 * {
     margin: 0;
     padding: 0;
@@ -30,24 +27,25 @@ Colors:
 
 .navbar {
     height: 100px;
-    background-color: #228377;
+    background-color: var(--middle-blue);
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
     text-align: center
 }
 
 .sidemenu{
-    height: 90vh;
+    height: calc(calc(90vh - 0) + 500px);
+    padding-bottom: 400px;
     width: 100%;
     max-width: 250px;
-    background-color: #228377;
+    background-color: var(--middle-blue);
     text-align: center;
 }
 
 .user-profile-container {
     width: 800px;
     height: 800px;
-    background-color: #84E1D6;
+    background-color: var(--lightest-blue);
     margin-top: 20px;
     border-radius: 10px;
 }
@@ -105,7 +103,7 @@ td button {
 }
 
 button {
-    background-color: #206A61;
+    background-color: var(--dark-blue);
     border: none;
     border-radius: 4px;
     color: white;
@@ -118,11 +116,11 @@ button {
     width: 200px
 }
 button:hover {
-    background-color: #2A9D8F;
+    background-color: var(--light-blue);
 }
 
 .button-container{
-    background-color: #206A61;
+    background-color: var(--dark-blue);
 }
 .button-container button{
     width: 200px;
@@ -132,4 +130,49 @@ button:hover {
 a {
     text-decoration: none;
     color: white;
+}
+
+.small-btn {
+    padding: 5px 10px;
+}
+
+.make-invoice-container {
+    width: 500px;
+    border: 1px solid var(--dark-blue);
+    border-radius: 10px;
+    background-color: var(--lightest-blue);
+    display: grid;
+    grid-template-columns: repeat(3, 162.66666px);
+    grid-gap: 5px;
+    margin: 5px;
+    padding: 5px;
+}
+
+.make-invoice-container input {
+    padding: 0.1rem;
+}
+
+.make-invoice-container button {
+    grid-column: 2 / 3;
+    grid-row: 4 / 5;
+    width: 162.6666px;
+    margin: 0;
+}
+
+hr{
+    width: calc(100vw - 0);
+    height: 5px;
+    background-color: var(--middle-blue);
+}
+
+.hover-box {
+    display: inline;
+}
+
+.info-box {
+    display: none;
+}
+
+.hover-parent:hover .info-box {
+    display: inline;
 }

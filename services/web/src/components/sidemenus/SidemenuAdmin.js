@@ -11,6 +11,7 @@ function SidemenuAdmin(props) {
         <button onClick={() => { props.setLoadedAdminPage(3)}}>Scooters</button>
         <button onClick={() => { props.setLoadedAdminPage(4)}}>Users</button>
         <button onClick={() => { props.setLoadedAdminPage(5)}}>Rates</button>
+        <button onClick={() => { props.setLoadedAdminPage(6)}}>Invoices</button>
     </div>
     );
 }
