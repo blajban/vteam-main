@@ -45,6 +45,17 @@ const scooterModel = {
             method: "PUT"
         });
         console.log(response)
+    },
+
+    removeScooter: async (scooterId, city) => {
+        const response = await fetch(`http://localhost:3500/city/${city}/scooter/${scooterId}`, {
+            body: JSON.stringify({}),
+            headers: {
+                "content-type": "application/json"
+            },
+            method: "DELETE"
+        });
+        console.log(response)
     }
 }
 

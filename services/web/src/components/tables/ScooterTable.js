@@ -53,6 +53,7 @@ function ScooterTable() {
                             <th>speed</th>
                             <th>battery</th>
                             <th></th>
+                            <th></th>
                             {/* <th>log?</th> */}
                         </tr>
                     </thead>
@@ -77,6 +78,7 @@ function ScooterTable() {
                                         <button onClick={() => {scooterModel.updateScooter(scooter._id, scooter.properties.location, inputStatusEdit, inputLocationEdit, inputLatEdit, inputLngEdit)}}>Update</button>
                                     </Popup>
                                 </td>
+                                <td><button onClick={() => {scooterModel.removeScooter(scooter._id, scooter.properties.location)}}>Delete</button></td>
                             </tr>
                         ))}
                     </tbody>
