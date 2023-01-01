@@ -18,8 +18,6 @@ const scooterModel = {
     },
 
     addScooter: async (city, scooterData) => {
-        console.log(city)
-        console.log(scooterData)
         const response = await fetch(`http://localhost:3500/city/${city.current.value}/scooter`, {
             body: JSON.stringify({
                 lng: scooterData.lng.current.value,
@@ -29,6 +27,22 @@ const scooterModel = {
                 "content-type": "application/json"
             },
             method: "POST"
+        });
+        console.log(response)
+    },
+
+    updateScooter: async (scooterId, city, status, location, lat, lng) => {
+        const response = await fetch(`http://localhost:3500/city/${city}/scooter/${scooterId}`, {
+            body: JSON.stringify({
+                status: status.current.value,
+                location: location.current.value,
+                lng: lng.current.value,
+                lat: lat.current.value
+            }),
+            headers: {
+                "content-type": "application/json"
+            },
+            method: "PUT"
         });
         console.log(response)
     }

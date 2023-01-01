@@ -1,10 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import scooterModel from '../../models/scooterModel'
+import Popup from 'reactjs-popup';
+
 
 
 function ScooterTable() {
 
     const [scooters, setScooters] = useState(null);
+
+    const inputIdEdit = useRef(null);
+    const inputStatusEdit = useRef(null);
+    const inputLocationEdit = useRef(null);
+    const inputLatEdit = useRef(null);
+    const inputLngEdit = useRef(null);
 
     const inputLng = useRef(null);
     const inputLat = useRef(null);
@@ -14,13 +22,11 @@ function ScooterTable() {
         async function getScooters() {
             const response = await fetch(`http://localhost:3500/city/stockholm/scooter`)
             const data = await response.json();
-            console.log(data)
-            return data
+            setScooters(data);
         }
-        getScooters().then(data => setScooters(data));
-
+        getScooters();
       }, []);
-    
+
     function AddScooter() {
         return (
             <div className="make-scooter-container">
@@ -46,6 +52,7 @@ function ScooterTable() {
                             <th>longitude</th>
                             <th>speed</th>
                             <th>battery</th>
+                            <th></th>
                             {/* <th>log?</th> */}
                         </tr>
                     </thead>
@@ -60,6 +67,16 @@ function ScooterTable() {
                                 <td>{scooter.properties.lng}</td>
                                 <td>{scooter.properties.speed}</td>
                                 <td>{scooter.properties.battery}</td>
+                                <td>
+                                    <Popup trigger={<button>Edit</button>} position="right center">
+                                        <input type="text" value={scooter._id} ref={inputIdEdit} readOnly></input>
+                                        <input type="text" defaultValue={scooter.status} ref={inputStatusEdit}></input>
+                                        <input type="text" defaultValue={scooter.properties.location} ref={inputLocationEdit}></input>
+                                        <input type="text" defaultValue={scooter.properties.lat} ref={inputLatEdit} ></input>
+                                        <input type="text" defaultValue={scooter.properties.lng} ref={inputLngEdit} ></input>
+                                        <button onClick={() => {scooterModel.updateScooter(scooter._id, scooter.properties.location, inputStatusEdit, inputLocationEdit, inputLatEdit, inputLngEdit)}}>Update</button>
+                                    </Popup>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -67,8 +84,8 @@ function ScooterTable() {
             </div>
         )
     }
-    
-    
+
+
     if (!scooters) {
         return (
             <div>
