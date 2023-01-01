@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Userinfo Renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "borderColor": "#228377",
+      "borderRadius": 10,
+      "borderWidth": 5,
+      "flex": 1,
+      "marginBottom": 30,
+      "width": "80%",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "padding": 10,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 40,
+          "marginRight": "auto",
+          "textDecorationLine": "underline",
+        }
+      }
+    >
+      Förnamn
+    </Text>
+    <Text>
+      Efternamn
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#84E1D6",
+        "borderRadius": 10,
+        "flex": 1,
+        "height": 80,
+        "margin": 10,
+        "padding": 10,
+        "width": "90%",
+      }
+    }
+    testID="saldoContainer"
+  >
+    <Text>
+      Ditt saldo
+    </Text>
+    <Text
+      style={
+        Object {
+          "fontSize": 40,
+          "fontWeight": "bold",
+          "marginRight": "auto",
+        }
+      }
+    >
+      235 kr
+    </Text>
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "position": "absolute",
+          "right": 0,
+        }
+      }
+    >
+      <Image
+        source={1}
+        style={
+          Object {
+            "marginRight": 5,
+            "marginTop": 5,
+            "position": "absolute",
+            "right": 0,
+          }
+        }
+      />
+    </View>
+  </View>
+</View>
+`;
