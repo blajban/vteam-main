@@ -7,6 +7,7 @@ import Popup from 'reactjs-popup';
 function ScooterTable() {
 
     const [scooters, setScooters] = useState(null);
+    const [noScooters, setNoScooters] = useState(false);
 
     const inputIdEdit = useRef(null);
     const inputStatusEdit = useRef(null);
@@ -22,6 +23,11 @@ function ScooterTable() {
         const response = await fetch(`http://localhost:3500/city/${city}/scooter`)
         const data = await response.json();
         setScooters(data);
+        if (data.length === 0) {
+            setNoScooters(true);
+        } else {
+            setNoScooters(false);
+        }
     }
 
     function GetScooterBtns() {
@@ -106,6 +112,19 @@ function ScooterTable() {
         )
     }
 
+    if (noScooters) {
+        return (
+            <div>
+                <p>Add a scooter</p>
+                <AddScooter/>
+                <hr></hr>
+                <p>Get scooters by city</p>
+                <GetScooterBtns/>
+                <hr></hr>
+                <h3>No scooters in given city</h3>
+            </div>
+        )
+    }
 
     return (
         <div>
