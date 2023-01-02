@@ -18,14 +18,21 @@ function ScooterTable() {
     const inputLat = useRef(null);
     const inputCity = useRef(null);
 
-    useEffect(() => {
-        async function getScooters() {
-            const response = await fetch(`http://localhost:3500/city/stockholm/scooter`)
-            const data = await response.json();
-            setScooters(data);
-        }
-        getScooters();
-      }, []);
+    async function getScooters(city) {
+        const response = await fetch(`http://localhost:3500/city/${city}/scooter`)
+        const data = await response.json();
+        setScooters(data);
+    }
+
+    function GetScooterBtns() {
+        return (
+            <div style={{display: "flex"}}>
+                <button className="tablinks" onClick={() => getScooters("stockholm")}>Stockholm</button>
+                <button className="tablinks" onClick={() => getScooters("malmo")}>Malmö</button>
+                <button className="tablinks" onClick={() => getScooters("goteborg")}>Göteborg</button>
+            </div>
+        )
+    }
 
     function AddScooter() {
         return (
@@ -33,7 +40,7 @@ function ScooterTable() {
                 <input type="text" ref={inputLng} placeholder="longitude"></input>
                 <input type="text" ref={inputLat} placeholder="latitude"></input>
                 <input type="text" ref={inputCity} placeholder="city"></input>
-                <button onClick={() => {scooterModel.addScooter(inputCity, {lng: inputLng, lat: inputLat})}}>Add scooter</button>
+                <button className="small-btn" onClick={() => {scooterModel.addScooter(inputCity, {lng: inputLng, lat: inputLat})}}>Add scooter</button>
             </div>
         )
     }
@@ -87,11 +94,14 @@ function ScooterTable() {
         )
     }
 
-
     if (!scooters) {
         return (
             <div>
-                loading...
+                <p>Add a scooter</p>
+                <AddScooter/>
+                <hr></hr>
+                <p>Get scooters by city</p>
+                <GetScooterBtns/>
             </div>
         )
     }
@@ -99,7 +109,12 @@ function ScooterTable() {
 
     return (
         <div>
+            <p>Add a scooter</p>
             <AddScooter/>
+            <hr></hr>
+            <p>Get scooters by city</p>
+            <GetScooterBtns/>
+            <hr></hr>
             <Table/>
         </div>
     )
