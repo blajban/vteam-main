@@ -1,12 +1,19 @@
 const usersModel = {
-    getAllUsers: async function getAllUsers() {
-        const response = await fetch('http://localhost:3500/v1/users');
+    getAllUsers: async function getAllUsers(token) {
+        // 12345678 ska egentligen vara loginId
+        const response = await fetch('http://localhost:3500/v1/users/12345678',
+        {
+            headers: {
+                'x-access-token': token,
+            },
+        });
         const data = await response.json();
-        return data.content;
+        return data;
     },
 
     addUser: async function addUser(user) {
-        const response = await fetch('http://localhost:3500/v1/users', {
+        // 12345678 ska egentligen vara loginId
+        const response = await fetch('http://localhost:3500/v1/users/12345678', {
             body: JSON.stringify(user),
             headers: {
                 'content-type': 'application/json'
@@ -18,7 +25,8 @@ const usersModel = {
     },
 
     getUser: async function getUser(userId, token) {
-        const response = await fetch(`http://localhost:3500/v1/users/${userId}`,
+        // den första userId ska egentligen vara loginId
+        const response = await fetch(`http://localhost:3500/v1/users/${userId}/${userId}`,
         {
             headers: {
                 'x-access-token': token,
@@ -29,7 +37,8 @@ const usersModel = {
     },
 
     updateUser: async function updateUser(user) {
-        const response = await fetch(`http://localhost:3500/v1/users/${user.userId}`, {
+        // den första user._id ska egentligen vara loginId
+        const response = await fetch(`http://localhost:3500/v1/users/${user._id}/${user._id}`, {
             body: JSON.stringify(user),
             headers: {
                 'content-type': 'application/json'
@@ -41,7 +50,8 @@ const usersModel = {
     },
 
     deleteUser: async function deleteUser(user) {
-        const response = await fetch(`http://localhost:3500/v1/users/${user.userId}`, {
+        // den första user._id ska egentligen vara loginId
+        const response = await fetch(`http://localhost:3500/v1/users/${user._id}/${user._id}`, {
             headers: {
                 'content-type': 'application/json'
             },
