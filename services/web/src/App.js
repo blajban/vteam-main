@@ -12,7 +12,6 @@ function App() {
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
   const [code, setCode] = useState("");
-  // const [admin, setAdmin] = useState("");
 
   function login() {
     window.location.href = 'http://localhost:3500/v1/login';
@@ -23,8 +22,9 @@ function App() {
   }
 
   async function testFunc() {
+    //const usersInfo = await usersModel.getAllUsers(token);
+    //console.log(usersInfo);
     const userInfo = await usersModel.getUser(userId, token);
-    // setAdmin(userInfo.admin);
     console.log("Userid:", userInfo._id);
     console.log("Name:", userInfo.name);
     console.log("Mail:", userInfo.mail);
@@ -73,7 +73,7 @@ function App() {
   }, [userId]);
 
   return (
-    /** <Route path="/Userprofile" element={<UserProfile token={token} userId={userId} admin={admin} />}></Route>*/
+    /** <Route path="/Userprofile" element={<UserProfile token={token} userId={userId} />}></Route>*/
     <div className="App">
       <Navbar></Navbar>
       <Routes>
