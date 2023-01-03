@@ -3,7 +3,7 @@ const { MongoWrapper } = require('../../../../shared/mongowrapper');
 const mongoWrapper = new MongoWrapper('gateway');
 const { scryptSync, randomBytes, timingSafeEqual } = require('crypto');
 
-const collectionName = 'keys';
+const collectionName = 'api-keys';
 
 
 const newKey = () => {

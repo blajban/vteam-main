@@ -24,7 +24,7 @@ app.get('/api-key', async (req, res) => {
 
 // Check API key
 app.use(async (req, res, next) => {
-  const apiKey = req.get('api-key');
+  const apiKey = req.get('x-api-key');
   if (await isValid(apiKey)) {
     next()
   } else {
@@ -35,6 +35,11 @@ app.use(async (req, res, next) => {
       }
     });
   }
+});
+
+app.get('/login', async (req, res) => {
+  const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=http://localhost:9001`;
+  res.redirect(url)
 });
 
 // Routes with different versions
