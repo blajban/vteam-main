@@ -51,21 +51,23 @@ router.route('/rates')
   .delete(controllers.removeRate);
 
 /*
-router.route('/eventflows/rent_scooter/:scooterId/:userId')
+router.route('/eventflows/rent_scooter/:scooterId/:userId:loginId')
   .get(controllers.rentScooter);
-router.route('/eventflows/park_scooter/:scooterId')
+router.route('/eventflows/park_scooter/:scooterId/:loginId')
   .get(controllers.parkScooter);
-router.route('/eventflows/simulate_scooters')
-  .get(controllers.simulateScooters); // Todo
-router.route('/eventflows/stop_simulation')
-  .get(controllers.stopSimulation); // Todo
-router.route('/eventflows/addRandomScooters/:city/:number')
+router.route('/eventflows/simulate_scooters/:loginId')
+  .get(controllers.simulateScooters);
+router.route('/eventflows/stop_simulation/:loginId')
+  .get(controllers.stopSimulation);
+router.route('/eventflows/addRandomScooters/:city/:number/:loginId')
   .get(controllers.addRandomScooters);
 router.route('/city/:city/scooter')
   .get(controllers.getScooters)
+router.route('/city/:city/scooter/:loginId)
   .post(controllers.addScooter);
 router.route('/city/:city/scooter/:scooterId')
   .get(controllers.getScooters)
+router.route('/city/:city/scooter/:scooterId/:loginId)
   .put(controllers.updateScooter)
   .delete(controllers.removeScooter);
 router.route('/city/:city/parking')
@@ -89,9 +91,9 @@ router.route('/getGitHubUser')
   .get(controllers.getGitHubUser);
 router.route('/invoice/:loginId')
   .post(controllers.addInvoice);
-router.route('/invoice/user/:userId/:loginId')
+router.route('/invoice/:loginId/user/:userId')
   .get(controllers.getInvoices);
-router.route('/invoice/:invoiceId/:loginId')
+router.route('/invoice/:loginId/:invoiceId')
   .get(controllers.getInvoices);
 router.route('/rates')
   .get(controllers.getRates)
