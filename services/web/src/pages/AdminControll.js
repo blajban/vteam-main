@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import LocationTable from "../components/tables/LocationTable";
 import RateTable from "../components/tables/RateTable";
 import InvoiceTable from "../components/tables/InvoiceTable";
+import ScooterTable from "../components/tables/ScooterTable";
 
 export function AdminControll() {
     const [loadedAdminPage, setLoadedAdminPage] = useState(1);
@@ -16,7 +17,7 @@ export function AdminControll() {
         (loadedAdminPage === 2) ?
         <LocationTable></LocationTable>:
         (loadedAdminPage === 3) ?
-        <div>Scooters</div>:
+        <ScooterTable/>:
         (loadedAdminPage === 4) ?
         <div>Users</div>:
         (loadedAdminPage === 5) ?

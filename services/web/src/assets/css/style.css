@@ -163,6 +163,7 @@ hr{
     width: calc(100vw - 0);
     height: 5px;
     background-color: var(--middle-blue);
+    margin: 20px 0;
 }
 
 .hover-box {
@@ -175,4 +176,8 @@ hr{
 
 .hover-parent:hover .info-box {
     display: inline;
+}
+
+.make-scooter-container {
+    display: flex;
 }
