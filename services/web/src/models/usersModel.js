@@ -1,13 +1,19 @@
 const usersModel = {
-
-    getAllUsers: async function getAllUsers() {
-        const response = await fetch('http://localhost:3500/users');
+    getAllUsers: async function getAllUsers(token) {
+        // 12345678 ska egentligen vara loginId
+        const response = await fetch('http://localhost:3500/v1/users/12345678',
+        {
+            headers: {
+                'x-access-token': token,
+            },
+        });
         const data = await response.json();
-        return data.content;
+        return data;
     },
 
     addUser: async function addUser(user) {
-        const response = await fetch('http://localhost:3500/users', {
+        // 12345678 ska egentligen vara loginId
+        const response = await fetch('http://localhost:3500/v1/users/12345678', {
             body: JSON.stringify(user),
             headers: {
                 'content-type': 'application/json'
@@ -18,14 +24,21 @@ const usersModel = {
         await response.json();
     },
 
-    getUser: async function getUser(userId) {
-        const response = await fetch(`http://localhost:3500/users/${userId}`);
+    getUser: async function getUser(userId, token) {
+        // den första userId ska egentligen vara loginId
+        const response = await fetch(`http://localhost:3500/v1/users/${userId}/${userId}`,
+        {
+            headers: {
+                'x-access-token': token,
+            },
+        });
         const data = await response.json();
         return data;
     },
 
     updateUser: async function updateUser(user) {
-        const response = await fetch(`http://localhost:3500/users/${user.userId}`, {
+        // den första user._id ska egentligen vara loginId
+        const response = await fetch(`http://localhost:3500/v1/users/${user._id}/${user._id}`, {
             body: JSON.stringify(user),
             headers: {
                 'content-type': 'application/json'
@@ -37,7 +50,8 @@ const usersModel = {
     },
 
     deleteUser: async function deleteUser(user) {
-        const response = await fetch(`http://localhost:3500/users/${user.userId}`, {
+        // den första user._id ska egentligen vara loginId
+        const response = await fetch(`http://localhost:3500/v1/users/${user._id}/${user._id}`, {
             headers: {
                 'content-type': 'application/json'
             },

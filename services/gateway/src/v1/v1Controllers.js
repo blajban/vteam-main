@@ -1,5 +1,7 @@
+const axios = require('axios').default;
 const { MessageBroker } = require('../../../../shared/mq')
 const { host, eventTypes } = require('../../../../shared/resources');
+const { MongoWrapper } = require('../../../../shared/mongowrapper');
 const mesBroker = new MessageBroker(host, "gateway");
 
 
@@ -15,6 +17,66 @@ const success = (description, content) => {
         description: description,
         content: content
     };
+}
+
+/**
+ * Rest response when token is not valid.
+ * @returns
+ */
+function notValidToken() {
+    return {
+        code: "401",
+        message: "Token is not valid"
+    };
+}
+
+/**
+ * Rest response when user doesn't have admin rights.
+ * @returns
+ */
+function notAdmin() {
+    return {
+        code: "402",
+        message: "You don't have admin rights"
+    }
+}
+
+/**
+ * Check if the token is valid.
+ * @param {string} token to check
+ * @param {number} userId to compare
+ * @returns {boolean}
+ */
+async function checkToken(token, userId) {
+    try {
+        const response = await axios.get('https://api.github.com/user', {
+            headers: {
+                authorization: `bearer ${token}`,
+            },
+        });
+
+        const result = await response.data;
+        if (result.id === userId) {
+            return true;
+        }
+        return false;
+      } catch (error) {
+        return false;
+    }
+}
+
+/**
+ * Check if the user has admin rights.
+ * @param {number} userId to check
+ * @returns {boolean}
+ */
+async function checkAdmin(userId) {
+    const mongoWrapper = await new MongoWrapper('users');
+    const user = await mongoWrapper.findOneUser('users', userId);
+    if (user.admin === true) {
+        return true;
+    }
+    return false;
 }
 
 exports.rentScooter = async (req, res) => {
@@ -254,10 +316,21 @@ exports.getChargingStations = async (req, res) => {
  * @param {object} res
  */
 exports.getUsers = async (req, res) => {
+    const token = req.headers['x-access-token'];
+    const userId = parseInt(req.params.loginId);
+    const tokenStatus = await checkToken(token, userId);
+    if (!tokenStatus) {
+        return res.json(notValidToken());
+    }
     const filter = {};
 
     if (req.params.hasOwnProperty('userId')) {
         filter._id = parseInt(req.params.userId)
+    } else {
+        const adminStatus = await checkAdmin(userId);
+        if (!adminStatus) {
+            return res.json(notAdmin());
+        }
     }
 
     const broker = await mesBroker;
@@ -273,8 +346,15 @@ exports.getUsers = async (req, res) => {
  * @param {objec} res
  */
 exports.addUser = async (req, res) => {
+    const token = req.headers['x-access-token'];
+    const userId = parseInt(req.params.loginId);
+    const tokenStatus = await checkToken(token, userId);
+    if (!tokenStatus) {
+        return res.json(notValidToken());
+    }
+
     const newUser = {
-        _id: parseInt(req.body._id),
+        _id: req.body._id,
         name: req.body.name,
         mobile: req.body.mobile,
         mail: req.body.mail,
@@ -304,6 +384,21 @@ exports.addUser = async (req, res) => {
  * @param {object} res
  */
 exports.updateUser = async (req, res) => {
+    const token = req.headers['x-access-token'];
+    const loginId = parseInt(req.params.loginId);
+    const userId = parseInt(req.params.userId);
+    const tokenStatus = await checkToken(token, loginId);
+    if (!tokenStatus) {
+        return res.json(notValidToken());
+    }
+
+    if (loginId !== userId) {
+        const adminStatus = await checkAdmin(userId);
+        if (!adminStatus) {
+            return res.json(notAdmin());
+        }
+    }
+
     const userToUpdate = {
         _id: parseInt(req.params.userId)
     };
@@ -351,6 +446,18 @@ exports.updateUser = async (req, res) => {
  * @param {object} res
  */
 exports.removeUser = async (req, res) => {
+    const token = req.headers['x-access-token'];
+    const userId = parseInt(req.params.loginId);
+    const tokenStatus = await checkToken(token, userId);
+    if (!tokenStatus) {
+        return res.json(notValidToken());
+    }
+
+    const adminStatus = await checkAdmin(userId);
+    if (!adminStatus) {
+        return res.json(notAdmin());
+    }
+
     const broker = await mesBroker;
     const removeUserEvent = broker.constructEvent(eventTypes.rpcEvents.removeUser, {
         _id: parseInt(req.params.userId)
@@ -394,23 +501,12 @@ exports.getToken = async (req, res) => {
 exports.getGitHubUser = async (req, res) => {
     const broker = await mesBroker;
     const getGitHubUserEvent = broker.constructEvent(eventTypes.accountEvents.getGitHubUser, {
-        token: req.params.token
+        token: req.headers['x-access-token']
     });
 
     broker.request(getGitHubUserEvent, (e) => {
         res.json(success("Get github user success", e));
     });
-}
-
-/**
- * Log out user.
- * @param {object} req
- * @param {object} res
- */
-exports.logout = async (req, res) => {
-    // TODO
-    console.log(req);
-    res.json("TODO");
 }
 
 exports.addInvoice = async (req, res) => {

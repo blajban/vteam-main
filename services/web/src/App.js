@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { Mapside } from './pages/MapSide'
@@ -12,9 +12,10 @@ function App() {
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
   const [code, setCode] = useState("");
+  // const [admin, setAdmin] = useState("");
 
   function login() {
-    window.location.href = 'http://localhost:3500/login';
+    window.location.href = 'http://localhost:3500/v1/login';
   }
 
   function logout() {
@@ -22,7 +23,8 @@ function App() {
   }
 
   async function testFunc() {
-    const userInfo = await usersModel.getUser(userId);
+    const userInfo = await usersModel.getUser(userId, token);
+    // setAdmin(userInfo.admin);
     console.log("Userid:", userInfo._id);
     console.log("Name:", userInfo.name);
     console.log("Mail:", userInfo.mail);
@@ -54,7 +56,6 @@ function App() {
     })();
   }, [code]);
 
-  // inom parentes token?
   useEffect(() => {
     (async () => {
       if (token && !userId) {
@@ -72,7 +73,7 @@ function App() {
   }, [userId]);
 
   return (
-    /** <Route path="/Userprofile" element={<UserProfile token={token} />}></Route>*/
+    /** <Route path="/Userprofile" element={<UserProfile token={token} userId={userId} admin={admin} />}></Route>*/
     <div className="App">
       <Navbar></Navbar>
       <Routes>
