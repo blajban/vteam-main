@@ -12,5 +12,21 @@
         "ecmaVersion": "latest"
     },
     "rules": {
-    }
+        "class-methods-use-this": "off",
+        "arrow-body-style": "off",
+        "no-undef": "off",
+        "no-underscore-dangle": "off",
+        "no-unused-vars": "off",
+        "no-restricted-syntax": "off",
+        "radix": "off",
+        "no-console": "off",
+        "no-prototype-builtins": "off",
+        "no-await-in-loop": "off",
+        "no-return-await": "off",
+        "no-param-reassign": "off",
+        "array-callback-return": "off",
+        "consistent-return": "off",
+        "max-len": ["error", 155]
+    },
+    "plugins": ["jest"]
 }
