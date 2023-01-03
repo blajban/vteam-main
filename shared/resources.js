@@ -26,6 +26,7 @@ const eventTypes = {
   accountEvents: {
     getToken: "getToken",
     getGitHubUser: "getGitHubUser",
+    checkLogin: "checkLogin"
   },
   paymentEvents: {
     invoiceCreated: "invoiceCreated",
