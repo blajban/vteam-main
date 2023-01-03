@@ -1,4 +1,4 @@
-const RatesHandler = require('./ratesHandler');
+const RatesHandler = require('../models/ratesHandler');
 
 const mongo = {
   find: jest.fn(() => {
@@ -45,6 +45,10 @@ describe('ratesHandler', () => {
   it('tests insertRate', async () => {
     expect(await ratesHandler.insertRate(mongo, e)).toEqual('function called');
     expect(mongo.insertOne).toHaveBeenCalledWith('rates', { name: 'a' });
+  });
+
+  it('tests insertRate without object', async () => {
+    expect(await ratesHandler.insertRate(mongo)).toEqual(Error('No newRate provided'));
   });
 
   it('tests deleteRate', async () => {

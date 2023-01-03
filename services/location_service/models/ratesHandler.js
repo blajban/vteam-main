@@ -50,6 +50,7 @@ class RatesHandler {
    * @returns {Object} - The result of the insert operation.
    */
   async insertRate(mongo, e) {
+    if (!e) return new Error('No newRate provided');
     try {
       return await mongo.insertOne('rates', e);
     } catch (error) {

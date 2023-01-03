@@ -1,4 +1,4 @@
-const LocationHandler = require('./locationHandler');
+const LocationHandler = require('../models/locationHandler');
 
 const mongo = {
   find: jest.fn(() => {
@@ -34,6 +34,10 @@ describe('locationHandler', () => {
     expect(mongo.find).toHaveBeenCalledWith('stockholm');
   });
 
+  it('tests getLocations without specified location', async () => {
+    expect(await locationHandler.getLocations(mongo)).toEqual(TypeError("Cannot read properties of undefined (reading 'location')"));
+  });
+
   it('tests adjustLocation', async () => {
     expect(await locationHandler.adjustLocation(mongo, ed)).toEqual('function called');
     expect(mongo.updateOne).toHaveBeenCalledWith('stockholm', { _id: 'a' }, { name: 'a' });
@@ -47,8 +51,15 @@ describe('locationHandler', () => {
     expect(mongo.insertOne).toHaveBeenCalledWith('stockholm', { name: 'a' });
   });
 
+  it('tests insertLocation without object and location', async () => {
+    expect(await locationHandler.insertLocation(mongo)).toEqual(TypeError("Cannot read properties of undefined (reading 'location')"));
+  });
+
   it('tests deleteLocation', async () => {
     expect(await locationHandler.deleteLocation(mongo, ed)).toEqual('function called');
     expect(mongo.deleteOne).toHaveBeenCalledWith('stockholm', { _id: 'a', name: 'a' });
+  });
+  it('tests deleteLocation without object', async () => {
+    expect(await locationHandler.deleteLocation(mongo)).toEqual(TypeError("Cannot read properties of undefined (reading 'location')"));
   });
 });
