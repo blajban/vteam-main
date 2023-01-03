@@ -1,7 +1,5 @@
-const axios = require('axios').default;
 const { MessageBroker } = require('../../../../shared/mq')
 const { host, eventTypes } = require('../../../../shared/resources');
-const { MongoWrapper } = require('../../../../shared/mongowrapper');
 const mesBroker = new MessageBroker(host, "gateway");
 
 
@@ -39,44 +37,6 @@ function notAdmin() {
         code: "402",
         message: "You don't have admin rights"
     }
-}
-
-/**
- * Check if the token is valid.
- * @param {string} token to check
- * @param {number} userId to compare
- * @returns {boolean}
- */
-async function checkToken(token, userId) {
-    try {
-        const response = await axios.get('https://api.github.com/user', {
-            headers: {
-                authorization: `bearer ${token}`,
-            },
-        });
-
-        const result = await response.data;
-        if (result.id === userId) {
-            return true;
-        }
-        return false;
-      } catch (error) {
-        return false;
-    }
-}
-
-/**
- * Check if the user has admin rights.
- * @param {number} userId to check
- * @returns {boolean}
- */
-async function checkAdmin(userId) {
-    const mongoWrapper = await new MongoWrapper('users');
-    const user = await mongoWrapper.findOneUser('users', userId);
-    if (user.admin === true) {
-        return true;
-    }
-    return false;
 }
 
 exports.rentScooter = async (req, res) => {
@@ -318,25 +278,35 @@ exports.getChargingStations = async (req, res) => {
 exports.getUsers = async (req, res) => {
     const token = req.headers['x-access-token'];
     const userId = parseInt(req.params.loginId);
-    const tokenStatus = await checkToken(token, userId);
-    if (!tokenStatus) {
-        return res.json(notValidToken());
+    const filter = {
+        token: token,
+        userId: userId,
+        checkAdmin: true
     }
-    const filter = {};
 
     if (req.params.hasOwnProperty('userId')) {
-        filter._id = parseInt(req.params.userId)
-    } else {
-        const adminStatus = await checkAdmin(userId);
-        if (!adminStatus) {
-            return res.json(notAdmin());
-        }
+        filter.checkAdmin = false;
     }
 
     const broker = await mesBroker;
-    const getUsersEvent = broker.constructEvent(eventTypes.rpcEvents.getUsers, filter);
-    broker.request(getUsersEvent, (e) => {
-        res.json(e);
+    const checkLoginEvent = broker.constructEvent(eventTypes.accountEvents.checkLogin, filter);
+    broker.request(checkLoginEvent, (e) => {
+        if (!e.loggedIn) {
+            return res.json(notValidToken());
+        }
+
+        if (!e.admin) {
+            return res.json(notAdmin());
+        }
+
+        const filter2 = {};
+        if (req.params.hasOwnProperty('userId')) {
+            filter2._id = parseInt(req.params.userId);
+        }
+        const getUsersEvent = broker.constructEvent(eventTypes.rpcEvents.getUsers, filter2);
+        broker.request(getUsersEvent, (e) => {
+            res.json(e);
+        })
     })
 }
 

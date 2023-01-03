@@ -1,3 +1,4 @@
+const axios = require('axios').default;
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes } = require('../../shared/resources');
 const { UserHandler } = require('./models/userHandler');
@@ -86,6 +87,70 @@ const userService = async () => {
    */
   broker.response(eventTypes.accountEvents.getGitHubUser, async (e) => {
     return await authHandler.getGitHubUser(e.data.token);
+  });
+
+  /**
+   * Check if the token is valid and if the user has admin rights.
+   *
+   * @param {string} eventType - The type of event to handle.
+   * @param {function} handler - The function to handle the event.
+   * @returns {object}
+   */
+  broker.response(eventTypes.accountEvents.checkLogin, async (e) => {
+    const testToken = process.env.TESTTOKEN;
+    const testAdminId = parseInt(process.env.TESTADMINID);
+
+    if (e.data.token === testToken) {
+      if (e.data.userId === testAdminId) {
+        const obj = {
+          loggedIn: true,
+          admin: true
+        }
+        return obj;
+      }
+    }
+    try {
+      const response = await axios.get('https://api.github.com/user', {
+        headers: {
+          authorization: `bearer ${e.data.token}`,
+        },
+      });
+
+      const result = await response.data;
+      if (result.id === e.data.userId) {
+        if (e.data.checkAdmin) {
+          const user = await userHandler.getUser(e.data.userId);
+          if (user.admin === true) {
+            // checks if the user is admin and it is
+            const obj2 = {
+              loggedIn: true,
+              admin: true
+            }
+            return obj2;
+          }
+          // checks if the user is admin and it is not
+          const obj3 = {
+            loggedIn: true,
+            admin: false
+          }
+          return obj3;
+        }
+        // does not check if the user is admin and has a valid token
+        const obj4 = {
+          loggedIn: true,
+          admin: true
+        }
+        return obj4;
+      }
+      // does not check if the user is admin and does not have a valid token
+      const obj5 = {
+        loggedIn: false,
+        admin: false
+      }
+      return obj5;
+    } catch (error) {
+      return false;
+    }
   });
 };
 
