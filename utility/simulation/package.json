@@ -5,10 +5,19 @@
     "main": "simulation.js",
     "scripts": {
         "start": "node simulation",
-        "start.dev": "nodemon -x 'node simulation.js || touch simulation.js'"
+        "start.dev": "nodemon -x 'node simulation.js || touch simulation.js'",
+        "test": "jest --verbose",
+        "eslint": "eslint . --ext .js --ignore-pattern node_modules/"
     },
     "author": "",
     "devDependencies": {
+        "eslint": "^8.28.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-plugin-import": "^2.26.0",
+        "jest": "^29.3.1",
         "nodemon": "^2.0.15"
+    },
+    "dependencies": {
+        "eslint-plugin-jest": "^27.1.7"
     }
 }

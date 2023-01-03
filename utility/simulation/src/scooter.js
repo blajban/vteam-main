@@ -152,12 +152,12 @@ class Scooter {
   outOfBounds() {
     if (this.info.properties.lat < coordinates[this.info.properties.location].latMin ||
     this.info.properties.lat > coordinates[this.info.properties.location].latMax) {
-    return true;
+      return true;
     }
     
     if (this.info.properties.lng < coordinates[this.info.properties.location].lngMin ||
     this.info.properties.lng > coordinates[this.info.properties.location].lngMax) {
-    return true;
+      return true;
     }
 
     return false;
