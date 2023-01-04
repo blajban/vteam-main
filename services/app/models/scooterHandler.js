@@ -1,4 +1,4 @@
-const API_KEY = "E/s4hAtn+NPTUv/ga6sFr1zQq9F2KIkcJ4bQOeC34iQ=";
+const API_KEY = "5UHdMIO0OISeHYGHDXQD3KYNHcacFF4GeKf6SACKQ9Y=";
 
 /**
  *  Scooter

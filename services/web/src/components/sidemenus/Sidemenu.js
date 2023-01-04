@@ -1,5 +1,8 @@
 import locationModel from "../../models/LocationModel"
 import scooterModel from "../../models/scooterModel"
+import React, { useState, useEffect, useRef } from 'react';
+
+
 
 
 function Sidemenu(props) {
@@ -27,16 +30,22 @@ function Sidemenu(props) {
     async function getScooters(e) {
       switch (e) {
         case 1:
+          setInterval(async () => {
           let stockholmScooters = await scooterModel.fetchStockholmScooter()
           props.setTargetedItems(stockholmScooters)
+          }, 4000);
           break;
         case 2:
+          setInterval(async () => {
           let goteborgScooters = await scooterModel.fetchGoteborgScooter()
           props.setTargetedItems(goteborgScooters)
+          }, 4000);
           break;
         case 3:
+          setInterval(async () => {
           let malmoScooters = await scooterModel.fetchMalmoScooter()
           props.setTargetedItems(malmoScooters)
+          }, 4000);
           break;
 
         default:
@@ -72,6 +81,26 @@ function Sidemenu(props) {
         }
     </div>
     );
+}
+
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
 }
 
 export default Sidemenu;

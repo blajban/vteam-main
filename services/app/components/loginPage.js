@@ -4,7 +4,6 @@ import * as WebBrowser from 'expo-web-browser';
 import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
 WebBrowser.maybeCompleteAuthSession();
 
-
 // Endpoint
 const discovery = {
     authorizationEndpoint: 'https://github.com/login/oauth/authorize',
@@ -19,14 +18,14 @@ function LoginPage(props) {
       clientId: '56fd540d2f775fd52e86',
       scopes: ['identity'],
       redirectUri: makeRedirectUri({
-        native: 'myapp:/auth',
-        useProxy: true,
+        scheme: 'exp://127.0.0.1:19000/--expo-auth-session'
       })
     },
     discovery
   );
 
   React.useEffect(() => {
+    console.log(response)
     if (response?.type === 'success') {
       const { code } = response.params;
     }

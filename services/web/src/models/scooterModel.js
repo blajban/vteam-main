@@ -2,17 +2,32 @@
 const scooterModel = {
 
     fetchStockholmScooter: async function fetchStockholmScooter() {
-        const response = await fetch('http://localhost:3500/city/stockholm/Scooter')
+        const response = await fetch('http://localhost:3500/v1/city/stockholm/Scooter',
+        {
+            headers: {
+                'x-api-key': "5UHdMIO0OISeHYGHDXQD3KYNHcacFF4GeKf6SACKQ9Y=",
+            },
+        });
         const data = await response.json();
         return data
     },
     fetchGoteborgScooter: async function fetchGoteborgScooter() {
-        const response = await fetch('http://localhost:3500/city/goteborg/Scooter')
+        const response = await fetch('http://localhost:3500/v1/city/goteborg/Scooter',
+        {
+            headers: {
+                'x-api-key': "5UHdMIO0OISeHYGHDXQD3KYNHcacFF4GeKf6SACKQ9Y=",
+            },
+        });
         const data = await response.json();
         return data
     },
     fetchMalmoScooter: async function fetchMalmoScooter() {
-        const response = await fetch('http://localhost:3500/city/malmo/Scooter')
+        const response = await fetch('http://localhost:3500/v1/city/malmo/Scooter',
+        {
+            headers: {
+                'x-api-key': "5UHdMIO0OISeHYGHDXQD3KYNHcacFF4GeKf6SACKQ9Y=",
+            },
+        });
         const data = await response.json();
         return data
     },
