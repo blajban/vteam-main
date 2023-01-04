@@ -8,9 +8,13 @@ jest.mock('amqplib', () => {
         assertQueue: jest.fn(() => Promise.resolve({ queue: 'queue-name' })),
         bindQueue: jest.fn(),
         consume: jest.fn((queue, cb) => cb({ 
-          content: '{"eventType":"testEvent","origin":"testService","data":{"name":"erik","email":"erik@erik.se"}}'
+          content: '{"eventType":"testEvent","origin":"testService","data":{"name":"erik","email":"erik@erik.se"}}',
+          properties: { correlationId: "5"}
         })),
-        publish: jest.fn()
+        publish: jest.fn(),
+        sendToQueue: jest.fn(),
+        prefetch: jest.fn(),
+        ack: jest.fn()
       }))
     }))
   };
@@ -128,8 +132,11 @@ describe('MessageBroker', () => {
     });
   });
 
-  describe('request - response', () => {
+  describe('request', () => {
     it('send request and receive response', async () => {
+      const callback = jest.fn();
+      const idSpy = jest.spyOn(broker, 'generateId').mockReturnValue('5');
+
       const reqEvent = {
         eventType: 'testReq',
         origin: 'testService',
@@ -138,19 +145,37 @@ describe('MessageBroker', () => {
           email: 'erik@erik.se'
         }
       };
-      const resEvent = {
-        eventType: 'testRes',
-        origin: 'testService',
-        data: {
-          name: 'erik',
-          email: 'erik@erik.se'
-        }
-      };
+
+      await broker.request(reqEvent, callback);
+
+      expect(callback).toHaveBeenCalled();
+      expect(broker.channel.consume).toHaveBeenCalled();
+      expect(broker.channel.sendToQueue).toHaveBeenCalledWith('testReq',
+        Buffer.from(JSON.stringify(reqEvent)),
+        {"correlationId": "5", "replyTo": "queue-name"}
+      );
+      expect(idSpy).toHaveBeenCalled();
+
+
 
     });
   });
-  // request
 
-  // response
+  describe('response', () => {
+    it('listen for request and send response', async () => {
+      const callbackSpy = jest.spyOn(broker, 'generateId').mockReturnValue({
+          eventType: 'testReq',
+          origin: 'testService',
+          data: {
+            name: 'erik',
+            email: 'erik@erik.se'
+          }
+        }
+      );
+
+      await broker.response('queue-name', callbackSpy);
+      expect(callbackSpy).toHaveBeenCalled();
+    });
+  });
 
 });

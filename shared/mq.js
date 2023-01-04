@@ -36,7 +36,7 @@ class MessageBroker {
    * Returns a random string for use in request-response pattern (RPC).
    * @returns {string}
    */
-  #generateId() {
+  generateId() {
     return Math.random().toString() +
            Math.random().toString() +
            Math.random().toString();
@@ -119,8 +119,7 @@ class MessageBroker {
    */
   async request(event, cb) {
     const q = await this.channel.assertQueue('', { exclusive: true });
-    const correlationId = this.#generateId();
-
+    const correlationId = this.generateId();
     this.channel.consume(q.queue, (msg) => {
       if (msg.properties.correlationId === correlationId) {
         cb(JSON.parse(msg.content));
@@ -142,13 +141,13 @@ class MessageBroker {
   async response(eventType, cb) {
     const q = await this.channel.assertQueue(eventType, { durable: false });
     this.channel.prefetch(1);
-
+    
     this.channel.consume(eventType, async (msg) => {
+      
       const data = await cb(JSON.parse(msg.content));
       this.channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(data)), {
         correlationId: msg.properties.correlationId
       });
-
       this.channel.ack(msg);
     })
   }
