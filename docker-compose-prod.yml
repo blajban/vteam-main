@@ -12,46 +12,101 @@ services:
             eventdriven:
         restart:
             "always"
-    logger:
-        build: 
-            context: .
-            dockerfile: ./utility/logger/Dockerfile
-        container_name: "logger"
+    mongodb:
+        image: "mongo"
+        container_name: "mongodb"
+        ports:
+            - "27017:27017"
         networks:
             eventdriven:
         restart:
             "always"
-    dev_gateway:
-        build: 
+    web:
+        build:
             context: .
-            dockerfile: ./utility/dev_gateway/Dockerfile
-        container_name: "dev_gateway"
+            dockerfile: ./services/web/Dockerfile
+        container_name: "web"
+        command: npm start
         networks:
             eventdriven:
+        volumes:
+            - ./services/web:/services/web
+            - /services/web/node_modules
         restart:
             "always"
         ports:
-            - "8889:8889"
-    dev_app:
-        build: 
+            - "9001:3000"
+    simulation:
+        build:
             context: .
-            dockerfile: ./utility/dev_app/Dockerfile
-        container_name: "dev_app"
+            dockerfile: ./utility/simulation/Dockerfile
+        container_name: "simulation"
+        command: npm run start.dev
         networks:
             eventdriven:
+        volumes:
+            - ./utility/simulation:/utility/simulation
+            - /utility/simulation/node_modules
         restart:
             "always"
-        ports:
-            - "8989:3000"
     scooter_service:
-        build: 
+        build:
             context: .
             dockerfile: ./services/scooter_service/Dockerfile
         container_name: "scooter_service"
+        command: npm run start.dev
         networks:
             eventdriven:
+        volumes:
+            - ./services/scooter_service:/services/scooter_service
+            - /services/scooter_service/node_modules
         restart:
             "always"
+    location_service:
+        build:
+            context: .
+            dockerfile: ./services/location_service/Dockerfile
+        container_name: "location_service"
+        command: npm run start.dev
+        networks:
+            eventdriven:
+        volumes:
+            - ./services/location_service:/services/location_service
+            - /services/location_service/node_modules
+        restart:
+            "always"
+    user_service:
+        build:
+            context: .
+            dockerfile: ./services/user_service/Dockerfile
+        container_name: "user_service"
+        command: npm run start.dev
+        networks:
+            eventdriven:
+        volumes:
+            - ./services/user_service:/services/user_service
+            - /services/user_service/node_modules
+        env_file:
+            - .env
+        restart:
+            "always"
+    gateway:
+        build:
+            context: .
+            dockerfile: ./services/gateway/Dockerfile
+        container_name: "gateway"
+        command: npm run start.dev
+        networks:
+            eventdriven:
+        volumes:
+            - ./services/gateway:/services/gateway
+            - /services/gateway/node_modules
+        env_file:
+            - .env
+        restart:
+            "always"
+        ports:
+            - "3500:3500"
     payment_service:
         build: 
             context: .
