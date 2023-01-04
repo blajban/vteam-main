@@ -101,7 +101,7 @@ class MessageBroker {
 
   /**
    * Publish event to all subscribers.
-   * @param {function} cb
+   * @param {mqEvent} event
    */
   async publishAll(event) {
     await this.channel.assertExchange(this.exchange, 'direct', { durable: false });
