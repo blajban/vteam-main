@@ -9,6 +9,7 @@ import { Marker } from "react-native-maps";
 import UserInfo from './components/userInfo'
 import QrModalPopup from './components/modals/qrCodeModal'
 import EndRideModal from './components/modals/endRideModal'
+import LoginPage from './components/loginPage';
 const parkingIcon = require('./assets/parking.png')
 const scooterIcon = require('./assets/scootericon.png')
 const qrIcon = require('./assets/qrcode.png')
@@ -24,6 +25,7 @@ export default function App() {
   const [text, setText] = useState("not yet scanned")
   const [isModalVisible, setisModalVisible] = useState(false);
   const [isEndRideModalVisible, setisEndRideModalVisible] = useState(false);
+  const [isLogged, setIsLogged] = useState(false)
 
 // Fetches users locations city
   useEffect(() => {
@@ -66,7 +68,6 @@ export default function App() {
         setMarkers(marks);
       } else {
         let data = await scooterHandler.fetchScooters(userCity)
-        console.log(data)
         let marks = data.map ((e, i) => { return <Marker key={i} description={"Status: " + e.status + " Battery: " +  e.properties.battery+ "%"} coordinate={{latitude:e.properties.lat, longitude:e.properties.lng}}>
         <Image
         source={scooterIcon}
@@ -77,6 +78,15 @@ export default function App() {
       }
     })();
   }, [rideActive]);
+
+  if (!isLogged) {
+    return (
+      <LoginPage>
+
+      </LoginPage>
+    )
+  }
+
 
   return (
     <SafeAreaView  style={styles.container}>
