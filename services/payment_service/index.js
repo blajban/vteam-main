@@ -79,9 +79,6 @@ const paymentService = async () => {
             }
         }
         return
-        
-        
-        
     });
 
     /**
@@ -90,7 +87,7 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.onEvent(eventTypes.rentScooterEvents.rideStarted, async (e) => {
-        // // for dev test
+        // for dev test
         if (e.origin === "web_server") {
             e.data.userId = "15";
             e.data.start = {
@@ -122,7 +119,7 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.onEvent(eventTypes.returnScooterEvents.rideFinished, async (e) => {
-        // // for dev test
+        // for dev test
         if (e.origin === "web_server") {
             e.data.userId = "15";
             e.data.end = {
