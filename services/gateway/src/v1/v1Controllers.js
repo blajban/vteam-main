@@ -2,6 +2,16 @@ const { MessageBroker } = require('../../../../shared/mq')
 const { host, eventTypes } = require('../../../../shared/resources');
 const mesBroker = new MessageBroker(host, "gateway");
 
+const checkLogin = (broker, req, admin, cb) => {
+  const filter = {
+      token: req.headers['x-access-token'],
+      userId: parseInt(req.params.loginId),
+      checkAdmin: admin
+  };
+
+  const checkLoginEvent = broker.constructEvent(eventTypes.accountEvents.checkLogin, filter);
+  broker.request(checkLoginEvent, cb);
+}
 
 /**
  * Formulate a rest answer.
@@ -276,38 +286,25 @@ exports.getChargingStations = async (req, res) => {
  * @param {object} res
  */
 exports.getUsers = async (req, res) => {
-    const token = req.headers['x-access-token'];
-    const userId = parseInt(req.params.loginId);
-    const filter = {
-        token: token,
-        userId: userId,
-        checkAdmin: true
-    }
-
-    if (req.params.hasOwnProperty('userId')) {
-        filter.checkAdmin = false;
-    }
-
     const broker = await mesBroker;
-    const checkLoginEvent = broker.constructEvent(eventTypes.accountEvents.checkLogin, filter);
-    broker.request(checkLoginEvent, (e) => {
-        if (!e.loggedIn) {
-            return res.json(notValidToken());
-        }
+    checkLogin(broker, req, true, (e) => {
+      if (!e.loggedIn) {
+        return res.json(notValidToken());
+      }
 
-        if (!e.admin) {
-            return res.json(notAdmin());
-        }
+      if (!e.admin) {
+        return res.json(notAdmin());
+      }
 
-        const filter2 = {};
-        if (req.params.hasOwnProperty('userId')) {
-            filter2._id = parseInt(req.params.userId);
-        }
-        const getUsersEvent = broker.constructEvent(eventTypes.rpcEvents.getUsers, filter2);
-        broker.request(getUsersEvent, (e) => {
-            res.json(e);
-        })
-    })
+      const filter2 = {};
+      if (req.params.hasOwnProperty('userId')) {
+        filter2._id = parseInt(req.params.userId);
+      }
+      const getUsersEvent = broker.constructEvent(eventTypes.rpcEvents.getUsers, filter2);
+      broker.request(getUsersEvent, (e) => {
+        res.json(e);
+      });
+    });
 }
 
 /**
@@ -316,22 +313,25 @@ exports.getUsers = async (req, res) => {
  * @param {objec} res
  */
 exports.addUser = async (req, res) => {
-    const token = req.headers['x-access-token'];
-    const userId = parseInt(req.params.loginId);
-    const tokenStatus = await checkToken(token, userId);
-    if (!tokenStatus) {
-        return res.json(notValidToken());
+  const broker = await mesBroker;
+  checkLogin(broker, req, true, (e) => {
+    if (!e.loggedIn) {
+      return res.json(notValidToken());
+    }
+
+    if (!e.admin) {
+      return res.json(notAdmin());
     }
 
     const newUser = {
-        _id: req.body._id,
-        name: req.body.name,
-        mobile: req.body.mobile,
-        mail: req.body.mail,
-        city: req.body.city,
-        address: req.body.address,
-        zip: req.body.zip,
-        balance: parseFloat(req.body.balance)
+      _id: req.body._id,
+      name: req.body.name,
+      mobile: req.body.mobile,
+      mail: req.body.mail,
+      city: req.body.city,
+      address: req.body.address,
+      zip: req.body.zip,
+      balance: parseFloat(req.body.balance)
     };
 
     if (req.body.admin === 'true') {
@@ -340,12 +340,12 @@ exports.addUser = async (req, res) => {
         newUser.admin = false;
     }
 
-    const broker = await mesBroker;
     const addUserEvent = broker.constructEvent(eventTypes.rpcEvents.addUser, newUser);
 
     broker.request(addUserEvent, (e) => {
         res.json(success("User added", e));
-    })
+    });
+  });
 }
 
 /**
@@ -354,60 +354,57 @@ exports.addUser = async (req, res) => {
  * @param {object} res
  */
 exports.updateUser = async (req, res) => {
-    const token = req.headers['x-access-token'];
-    const loginId = parseInt(req.params.loginId);
-    const userId = parseInt(req.params.userId);
-    const tokenStatus = await checkToken(token, loginId);
-    if (!tokenStatus) {
-        return res.json(notValidToken());
+  const broker = await mesBroker;
+  checkLogin(broker, req, true, (e) => {
+    if (!e.loggedIn) {
+      return res.json(notValidToken());
     }
 
-    if (loginId !== userId) {
-        const adminStatus = await checkAdmin(userId);
-        if (!adminStatus) {
-            return res.json(notAdmin());
-        }
+    if (parseInt(req.params.loginId) !== parseInt(req.params.userId) && !e.admin) {
+      return res.json(notAdmin());
     }
 
     const userToUpdate = {
-        _id: parseInt(req.params.userId)
+      _id: parseInt(req.params.userId)
     };
 
     if (req.body.hasOwnProperty('name')) {
-        userToUpdate.name = req.body.name;
+      userToUpdate.name = req.body.name;
     }
     if (req.body.hasOwnProperty('mobile')) {
-        userToUpdate.mobile = req.body.mobile;
+      userToUpdate.mobile = req.body.mobile;
     }
     if (req.body.hasOwnProperty('mail')) {
-        userToUpdate.mail = req.body.mail;
+      userToUpdate.mail = req.body.mail;
     }
     if (req.body.hasOwnProperty('city')) {
-        userToUpdate.city = req.body.city;
+      userToUpdate.city = req.body.city;
     }
     if (req.body.hasOwnProperty('address')) {
-        userToUpdate.address = req.body.address;
+      userToUpdate.address = req.body.address;
     }
     if (req.body.hasOwnProperty('zip')) {
-        userToUpdate.zip = req.body.zip;
+      userToUpdate.zip = req.body.zip;
     }
     if (req.body.hasOwnProperty('admin')) {
-        if (req.body.admin === 'true') {
-            userToUpdate.admin = true;
-        } else {
-            userToUpdate.admin = false;
-        }
+      if (req.body.admin === 'true') {
+          userToUpdate.admin = true;
+      } else {
+          userToUpdate.admin = false;
+      }
     }
     if (req.body.hasOwnProperty('balance')) {
-        userToUpdate.balance = parseFloat(req.body.balance);
+      userToUpdate.balance = parseFloat(req.body.balance);
     }
 
-    const broker = await mesBroker;
     const updateUserEvent = broker.constructEvent(eventTypes.rpcEvents.updateUser, userToUpdate);
 
     broker.request(updateUserEvent, (e) => {
-        res.json(success("Updated user", e));
+      res.json(success("Updated user", e));
     })
+    
+  });
+
 }
 
 /**
@@ -416,35 +413,23 @@ exports.updateUser = async (req, res) => {
  * @param {object} res
  */
 exports.removeUser = async (req, res) => {
-    const token = req.headers['x-access-token'];
-    const userId = parseInt(req.params.loginId);
-    const tokenStatus = await checkToken(token, userId);
-    if (!tokenStatus) {
-        return res.json(notValidToken());
+  const broker = await mesBroker;
+  checkLogin(broker, req, true, (e) => {
+    if (!e.loggedIn) {
+      return res.json(notValidToken());
     }
 
-    const adminStatus = await checkAdmin(userId);
-    if (!adminStatus) {
-        return res.json(notAdmin());
+    if (!e.admin) {
+      return res.json(notAdmin());
     }
 
-    const broker = await mesBroker;
     const removeUserEvent = broker.constructEvent(eventTypes.rpcEvents.removeUser, {
-        _id: parseInt(req.params.userId)
+      _id: parseInt(req.params.userId)
     });
     broker.request(removeUserEvent, (e) => {
         res.json(success("Removed user", e));
-    })
-}
-
-/**
- * Log in user.
- * @param {object} req
- * @param {object} res
- */
-exports.login = async (req, res) => {
-    const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=http://localhost:9001`;
-    res.redirect(url)
+    });
+  });
 }
 
 /**

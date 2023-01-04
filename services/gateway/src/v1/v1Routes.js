@@ -8,9 +8,9 @@ router.route('/eventflows/rent_scooter/:scooterId/:userId')
 router.route('/eventflows/park_scooter/:scooterId')
   .get(controllers.parkScooter);
 router.route('/eventflows/simulate_scooters')
-  .get(controllers.simulateScooters); // Todo
+  .get(controllers.simulateScooters);
 router.route('/eventflows/stop_simulation')
-  .get(controllers.stopSimulation); // Todo
+  .get(controllers.stopSimulation);
 router.route('/eventflows/addRandomScooters/:city/:number')
   .get(controllers.addRandomScooters);
 router.route('/city/:city/scooter')
@@ -32,8 +32,6 @@ router.route('/users/:loginId/:userId')
   .get(controllers.getUsers)
   .put(controllers.updateUser)
   .delete(controllers.removeUser);
-router.route('/login')
-  .get(controllers.login);
 router.route('/getToken/:code')
   .get(controllers.getToken);
 router.route('/getGitHubUser')
