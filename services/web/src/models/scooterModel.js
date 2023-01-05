@@ -1,11 +1,11 @@
-
+const api_key = require('../api-key.json')
 const scooterModel = {
 
     fetchStockholmScooter: async function fetchStockholmScooter() {
         const response = await fetch('http://localhost:3500/v1/city/stockholm/Scooter',
         {
             headers: {
-                'x-api-key': "5UHdMIO0OISeHYGHDXQD3KYNHcacFF4GeKf6SACKQ9Y=",
+                'x-api-key': api_key.key,
             },
         });
         const data = await response.json();
@@ -15,7 +15,7 @@ const scooterModel = {
         const response = await fetch('http://localhost:3500/v1/city/goteborg/Scooter',
         {
             headers: {
-                'x-api-key': "5UHdMIO0OISeHYGHDXQD3KYNHcacFF4GeKf6SACKQ9Y=",
+                'x-api-key': api_key.key,
             },
         });
         const data = await response.json();
@@ -25,7 +25,7 @@ const scooterModel = {
         const response = await fetch('http://localhost:3500/v1/city/malmo/Scooter',
         {
             headers: {
-                'x-api-key': "5UHdMIO0OISeHYGHDXQD3KYNHcacFF4GeKf6SACKQ9Y=",
+                'x-api-key': api_key.key,
             },
         });
         const data = await response.json();

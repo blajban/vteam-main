@@ -18,7 +18,7 @@ function LoginPage(props) {
       clientId: '56fd540d2f775fd52e86',
       scopes: ['identity'],
       redirectUri: makeRedirectUri({
-        scheme: 'exp://127.0.0.1:19000/--expo-auth-session'
+        scheme: 'testapp'
       })
     },
     discovery
