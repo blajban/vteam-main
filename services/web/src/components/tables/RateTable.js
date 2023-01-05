@@ -62,6 +62,7 @@ function RateTable(props) {
   useEffect(() => {
     async function fetchData(){
       console.log("fetch data ran")
+      console.log(await ratesHandler.fetchRates())
         setRates(await ratesHandler.fetchRates());
         }
       fetchData();
