@@ -37,6 +37,30 @@ class AuthHandler {
   }
 
   /**
+   * Returns the web token which we get from GitHub.
+   * @param {string} code - Temp code that we went to exchange for a token.
+   * @returns {string} The token.
+   */
+  async getWebToken(code) {
+    const clientId = process.env.GITHUB_WEB_CLIENT_ID;
+    const clientSecret = process.env.GITHUB_WEB_CLIENT_SECRET;
+
+    try {
+      const response = await axios.post(`https://github.com/login/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}`, {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+      });
+      const result = await response.data;
+      const token = result.substring(13, 53);
+      return token;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
    * Gets information about the user from GitHub's API through a token
    * @param {string} token - the token.
    * @returns {function}

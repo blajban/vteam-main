@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useImperativeHandle } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { Mapside } from './pages/MapSide'
@@ -14,7 +14,7 @@ function App() {
   const [code, setCode] = useState("");
 
   function login() {
-    window.location.href = 'http://localhost:3500/v1/login';
+    window.location.href = 'http://localhost:3500/login';
   }
 
   function logout() {
@@ -22,8 +22,6 @@ function App() {
   }
 
   async function testFunc() {
-    //const usersInfo = await usersModel.getAllUsers(token);
-    //console.log(usersInfo);
     const userInfo = await usersModel.getUser(userId, token);
     console.log("Userid:", userInfo._id);
     console.log("Name:", userInfo.name);

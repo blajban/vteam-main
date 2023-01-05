@@ -1,22 +1,24 @@
+const {apiKey} = require('../../../api-key.json');
+
 const usersModel = {
-    getAllUsers: async function getAllUsers(token) {
-        // 12345678 ska egentligen vara loginId
-        const response = await fetch('http://localhost:3500/v1/users/12345678',
-        {
+    getAllUsers: async function getAllUsers(token, loginId) {
+        const response = await fetch(`http://localhost:3500/v1/users/${loginId}`, {
             headers: {
                 'x-access-token': token,
+                'x-api-key': apiKey
             },
         });
         const data = await response.json();
         return data;
     },
 
-    addUser: async function addUser(user) {
-        // 12345678 ska egentligen vara loginId
-        const response = await fetch('http://localhost:3500/v1/users/12345678', {
+    addUser: async function addUser(user, token, loginId) {
+        const response = await fetch(`http://localhost:3500/v1/users/${loginId}`, {
             body: JSON.stringify(user),
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                'x-access-token': token,
+                'x-api-key': apiKey
             },
             method: 'POST',
         });
@@ -24,24 +26,24 @@ const usersModel = {
         await response.json();
     },
 
-    getUser: async function getUser(userId, token) {
-        // den första userId ska egentligen vara loginId
-        const response = await fetch(`http://localhost:3500/v1/users/${userId}/${userId}`,
-        {
+    getUser: async function getUser(token, userId, loginId) {
+        const response = await fetch(`http://localhost:3500/v1/users/${loginId}/${userId}`, {
             headers: {
                 'x-access-token': token,
+                'x-api-key': apiKey
             },
         });
         const data = await response.json();
         return data;
     },
 
-    updateUser: async function updateUser(user) {
-        // den första user._id ska egentligen vara loginId
-        const response = await fetch(`http://localhost:3500/v1/users/${user._id}/${user._id}`, {
+    updateUser: async function updateUser(token, user, loginId) {
+        const response = await fetch(`http://localhost:3500/v1/users/${loginId}/${user._id}`, {
             body: JSON.stringify(user),
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                'x-access-token': token,
+                'x-api-key': apiKey
             },
             method: 'PUT'
         });
@@ -49,11 +51,12 @@ const usersModel = {
         await response.json();
     },
 
-    deleteUser: async function deleteUser(user) {
-        // den första user._id ska egentligen vara loginId
-        const response = await fetch(`http://localhost:3500/v1/users/${user._id}/${user._id}`, {
+    deleteUser: async function deleteUser(token, user, loginId) {
+        const response = await fetch(`http://localhost:3500/v1/users/${loginId}/${user._id}`, {
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                'x-access-token': token,
+                'x-api-key': apiKey
             },
             method: 'DELETE'
         });
