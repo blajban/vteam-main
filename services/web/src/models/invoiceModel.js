@@ -1,18 +1,30 @@
+const {apiKey} = require('../../../api-key.json');
+
 const invoiceModel = {
 
-    getInvoices: async (object) => {
+    getInvoices: async (loginId, token, object) => {
         if (object.hasOwnProperty("userId")) {
-            const response = await fetch(`http://localhost:3500/invoice/user/${object.userId.current.value}`)
+            const response = await fetch(`http://localhost:3500/v1/invoice/${loginId}/user/${object.userId.current.value}`, {
+                headers: {
+                    'x-access-token': token,
+                    'x-api-key': apiKey
+                }
+            })
             const data = await response.json();
             console.log(data)
             return data
         }
-        const response = await fetch(`http://localhost:3500/invoice/${object.invoiceId.current.value}`)
+        const response = await fetch(`http://localhost:3500/v1/invoice/${loginId}/${object.invoiceId.current.value}`, {
+            headers: {
+                'x-access-token': token,
+                'x-api-key': apiKey
+            }
+        })
         const data = await response.json();
         return data
     },
 
-    addInvoice: async (userId, status, startLat, startLng, startTime, endLat, endLng, endTime, price) => {
+    addInvoice: async (loginId, token, userId, status, startLat, startLng, startTime, endLat, endLng, endTime, price) => {
 
         [userId, status, startLat, startLng, startTime, endLat, endLng, endTime, price].forEach(i => {
             if(!i.current.value) {
@@ -36,10 +48,12 @@ const invoiceModel = {
             price: price.current.value
         }
         console.log(newInvoice)
-        const response = await fetch(`http://localhost:3500/invoice`, {
+        const response = await fetch(`http://localhost:3500/v1/invoice/${loginId}`, {
             body: JSON.stringify({invoice: newInvoice}),
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                'x-access-token': token,
+                'x-api-key': apiKey
             },
             method: "POST"
         });

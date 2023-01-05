@@ -25,6 +25,7 @@ const eventTypes = {
   },
   accountEvents: {
     getToken: "getToken",
+    getWebToken: "getWebToken",
     getGitHubUser: "getGitHubUser",
     checkLogin: "checkLogin"
   },

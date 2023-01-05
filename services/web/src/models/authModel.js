@@ -1,6 +1,12 @@
+const {apiKey} = require('../../../api-key.json');
+
 const authModel = {
     getToken: async function getToken(code) {
-        const response = await fetch(`http://localhost:3500/v1/getToken/${code}`);
+        const response = await fetch(`http://localhost:3500/v1/getWebToken/${code}`, {
+            headers: {
+                'x-api-key': apiKey
+            },
+        });
         const data = await response.json();
         return data.content;
     },
@@ -9,6 +15,7 @@ const authModel = {
         const response = await fetch(`http://localhost:3500/v1/getGitHubUser`, {
             headers: {
                 'x-access-token': token,
+                'x-api-key': apiKey
             },
         });
         const data = await response.json();

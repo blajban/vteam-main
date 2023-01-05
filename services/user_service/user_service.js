@@ -78,6 +78,17 @@ const userService = async () => {
   });
 
   /**
+   * Exchanges the temp code for a web token from GitHub.
+   *
+   * @param {string} eventType - The type of event to handle.
+   * @param {function} handler - The function to handle the event.
+   * @returns {function}
+   */
+  broker.response(eventTypes.accountEvents.getWebToken, async (e) => {
+    return await authHandler.getWebToken(e.data.code);
+  });
+
+  /**
    * With a token, information about the user is retrieved from
    * GitHub's API.
    *
