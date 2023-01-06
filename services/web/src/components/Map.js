@@ -1,5 +1,8 @@
 import { Marker, Popup, MapContainer, TileLayer, useMap } from 'react-leaflet'
 import React, { useState, useEffect, useRef } from 'react';
+import L from "leaflet";
+import scooterIconSvg from '../assets/scooterIcon.svg'
+import parkingIconSvg from '../assets/parkingIcon.svg'
 
 
 const cities = {
@@ -8,13 +11,32 @@ const cities = {
   3: [55.60587, 13.00073]
 }
 
+const scooterIcon = L.icon({
+  iconUrl: scooterIconSvg,
+  iconSize: [20, 20],
+  iconAnchor: [12, 12],
+  popupAnchor: [0, 0],
+});
+
+const parkingIcon = L.icon({
+  iconUrl: parkingIconSvg,
+  iconSize: [20, 20],
+  iconAnchor: [12, 12],
+  popupAnchor: [0, 0],
+});
 
 function Map(props) {
   const [markers, setMarkers] = useState(<></>)
+  let icon;
+  if(props.scootersOrParkings === "parkings") {
+    icon = parkingIcon
+  } else{
+    icon = scooterIcon
+  }
   useEffect(() =>{
     console.log("updated")
   if(props.targetedItems !== 0) {
-    let Markers = props.targetedItems.map((e, index) => { return <Marker key={index} position={[e.properties.lat, e.properties.lng]} ><Popup>
+    let Markers = props.targetedItems.map((e, index) => { return <Marker icon={icon} key={index} position={[e.properties.lat, e.properties.lng]} ><Popup>
     Marker  </Popup> </Marker>})
     setMarkers(Markers)
   }

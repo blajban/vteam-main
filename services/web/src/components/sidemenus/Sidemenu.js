@@ -33,16 +33,19 @@ function Sidemenu(props) {
         let stockholmLocations = await locationModel.fetchStockholmLocations()
         console.log(stockholmLocations)
         props.setTargetedItems(stockholmLocations)
+        props.setscootersOrParkings("parkings")
         clearInter(intervals)
         break;
       case 2:
         let goteborgLocation = await locationModel.fetchGoteborgLocations()
         props.setTargetedItems(goteborgLocation)
+        props.setscootersOrParkings("parkings")
         clearInter(intervals)
         break;
       case 3:
         let malmoLocation = await locationModel.fetchMalmoLocations()
         props.setTargetedItems(malmoLocation)
+        props.setscootersOrParkings("parkings")
         clearInter(intervals)
         break;
       default:
@@ -66,6 +69,7 @@ function Sidemenu(props) {
         let stockholmScooters = await scooterModel.fetchStockholmScooter()
         props.setTargetedItems(stockholmScooters)
         }, 4000);
+        props.setscootersOrParkings("scooters")
         clearInter(intervals)
         intervals.push(sthlmInter)
         break;
@@ -74,6 +78,7 @@ function Sidemenu(props) {
         let goteborgScooters = await scooterModel.fetchGoteborgScooter()
         props.setTargetedItems(goteborgScooters)
         }, 4000);
+        props.setscootersOrParkings("scooters")
         clearInter(intervals)
         intervals.push(gbgInter)
         break;
@@ -82,6 +87,7 @@ function Sidemenu(props) {
         let malmoScooters = await scooterModel.fetchMalmoScooter()
         props.setTargetedItems(malmoScooters)
         }, 4000);
+        props.setscootersOrParkings("scooters")
         clearInter(intervals)
         intervals.push(mlmInter)
         console.log(intervals)

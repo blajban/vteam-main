@@ -7,12 +7,13 @@ import Map from '../components/Map'
 export function Mapside() {
     const [targetCity, setTargetedcity] = useState(1);
     const [targetedItems, setTargetedItems] = useState(0);
+    const [scootersOrParkings, setscootersOrParkings] = useState("parkings");
 
     return (
     <>
       <div className="container">
-        <Sidemenu setTargetedcity={setTargetedcity} targetCity={targetCity} setTargetedItems={setTargetedItems}></Sidemenu>
-        <Map targetedItems={targetedItems} targetCity={targetCity}></Map>
+        <Sidemenu setTargetedcity={setTargetedcity} targetCity={targetCity} setTargetedItems={setTargetedItems} setscootersOrParkings={setscootersOrParkings}></Sidemenu>
+        <Map targetedItems={targetedItems} targetCity={targetCity} scootersOrParkings={scootersOrParkings}></Map>
       </div>
       </>
     )
