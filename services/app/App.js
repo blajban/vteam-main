@@ -25,7 +25,7 @@ export default function App() {
   const [text, setText] = useState("not yet scanned")
   const [isModalVisible, setisModalVisible] = useState(false);
   const [isEndRideModalVisible, setisEndRideModalVisible] = useState(false);
-  const [isLogged, setIsLogged] = useState(false)
+  const [isLogged, setIsLogged] = useState(true)
 
 // Fetches users locations city
   useEffect(() => {

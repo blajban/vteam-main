@@ -1,7 +1,14 @@
 {
   "devDependencies": {
     "jest": "^29.3.1"
-  },"scripts": {
+  },
+  "scripts": {
     "test": "jest --verbose --coverage"
+  },
+  "jest": {
+    "testPathIgnorePatterns" : [
+      "<rootDir>/services/app/.",
+      "<rootDir>/services/web/."
+    ]
   }
 }

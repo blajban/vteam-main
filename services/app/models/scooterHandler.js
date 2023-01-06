@@ -1,4 +1,7 @@
-const API_KEY = "5UHdMIO0OISeHYGHDXQD3KYNHcacFF4GeKf6SACKQ9Y=";
+const API_KEY = require('../api-key.json');
+import Constants from "expo-constants";
+const { manifest } = Constants;
+const url = manifest.hostUri.split(`:`).shift().concat(`:3500`)
 
 /**
  *  Scooter
@@ -17,15 +20,15 @@ const scooterHandler = {
   fetchScooters: async function fetchScooters(city) {
     if(!city) return "No city specified";
     try {
-      const response = await fetch(`http://192.168.1.239:3500/v1/city/${city}/scooter`, {
+      const response = await fetch(`http://${url}/v1/city/${city}/scooter`, {
         headers: {
-          'x-api-key': API_KEY,
+          'x-api-key': API_KEY.key,
         },
       });
       const data = await response.json();
       return data;
     } catch (e) {
-      return null;
+      return [{}];
     }
   },
   /**
@@ -40,9 +43,9 @@ const scooterHandler = {
     if (!scooterId) return "No scooterId or UserId specified";
     if (!userId) return "No scooterId or UserId specified";
     try {
-      const response = await fetch(`http://192.168.1.239:3500/v1/eventflows/rent_scooter/${scooterId}/${userId}`, {
+      const response = await fetch(`http://${url}/v1/eventflows/rent_scooter/${scooterId}/${userId}`, {
         headers: {
-          'x-api-key': API_KEY,
+          'x-api-key': API_KEY.key,
         },
       });
       const data = await response.json();
@@ -61,9 +64,9 @@ const scooterHandler = {
   parkScooter: async function parkScooter(scooterId) {
     if (!scooterId) return "No scooterId specified";
     try {
-      const response = await fetch(`http://192.168.1.239:3500/v1/eventflows/park_scooter/${scooterId}`, {
+      const response = await fetch(`http://${url}/v1/eventflows/park_scooter/${scooterId}`, {
         headers: {
-          'x-api-key': API_KEY,
+          'x-api-key': API_KEY.key,
         },
       });
       const data = await response.json();
