@@ -49,9 +49,6 @@ const QrModalPopup = ({isModalVisible,setisModalVisible,setRideActive, text, set
                     <Text style={styles.big_text_in_modal}>
                       Vill du låsa upp scooter: {text} ?
                     </Text>
-                    <Text style={{fontSize: 15, marginRight: "auto", fontWeight: "bold"}}>
-                      Battery life:
-                    </Text>
                     <Pressable style={styles.button_positiv} onPress={() => {setisModalVisible(false), setRideActive(true), rentScooter()}}>
                           <Text style={styles.big_text_in_modal}>Lås upp</Text>
                       </Pressable>

@@ -47,8 +47,8 @@ export default function App() {
           case "Malmö":
             setUserCity("malmo")
             break;
-
           default:
+            setUserCity("stockholm")
             break;
         }
     })();
@@ -59,7 +59,7 @@ export default function App() {
     (async () => {
       if(rideActive){
         let data = await locationHandler.fetchLocations(userCity)
-        let marks = data.map ((e, i) => {return <Marker key={i} description={"Laddplats: " + String(e.charging) + "  Rate:" + (e.rate)} coordinate={{latitude:e.properties.lat, longitude:e.properties.lng} }>
+        let marks = data.map ((e, i) => {return <Marker key={i} description={"Laddplats: " + String(e.charging) + " Rate: " + (e.rate)} coordinate={{latitude:e.properties.lat, longitude:e.properties.lng} }>
         <Image
         source={parkingIcon}
         style={{height: 20, width: 20}}

@@ -1,13 +1,19 @@
 import { StyleSheet, Text, View,  Modal, Pressable } from 'react-native';
 import React from 'react';
+import scooterHandler from '../../models/scooterHandler'
 
-const EndRideModal = ({ isModalVisible, setisEndRideModalVisible, setRideActive }) => {
+
+async function parkScooter(text) {
+    console.log(await scooterHandler.parkScooter(text))
+  }
+
+const EndRideModal = ({ isModalVisible, setisEndRideModalVisible, setRideActive, text }) => {
     return (
         <Modal transparent={true} isModalVisible={isModalVisible} animationType="fade">
             <View style={styles.container}>
                 <View style={styles.modal_container}>
                     <Text style={styles.font}>Vill du avsluta resan?</Text>
-                    <Pressable style={styles.button_positive} onPress={() => {setisEndRideModalVisible(false); setRideActive(false)}}>
+                    <Pressable style={styles.button_positive} onPress={() => {setisEndRideModalVisible(false); setRideActive(false); parkScooter(text)}}>
                         <Text style={styles.button_font}>Bekräfta</Text>
                     </Pressable>
                     <Pressable style={styles.button_negative} onPress={() => setisEndRideModalVisible(false)}>
