@@ -25,7 +25,9 @@ export default function App() {
   const [text, setText] = useState("not yet scanned")
   const [isModalVisible, setisModalVisible] = useState(false);
   const [isEndRideModalVisible, setisEndRideModalVisible] = useState(false);
-  const [isLogged, setIsLogged] = useState(true)
+  const [isLogged, setIsLogged] = useState(false)
+  const [request, setRequest] = useState(null);
+  const [token, setToken] = useState(null);
 
 // Fetches users locations city
   useEffect(() => {
@@ -81,7 +83,7 @@ export default function App() {
 
   if (!isLogged) {
     return (
-      <LoginPage>
+      <LoginPage request={request} setRequest={setRequest} token={token} setToken={setToken}>
 
       </LoginPage>
     )

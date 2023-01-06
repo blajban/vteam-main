@@ -1,41 +1,70 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Linking } from 'react-native';
 import React, { useState } from 'react';
-import * as WebBrowser from 'expo-web-browser';
-import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
-WebBrowser.maybeCompleteAuthSession();
 
-// Endpoint
-const discovery = {
-    authorizationEndpoint: 'https://github.com/login/oauth/authorize',
-    tokenEndpoint: 'https://github.com/login/oauth/access_token',
-    revocationEndpoint: 'https://github.com/settings/connections/applications/56fd540d2f775fd52e86',
-  };
 
 function LoginPage(props) {
+  let pollInterval
 
-  const [request, response, promptAsync] = useAuthRequest(
-    {
-      clientId: '56fd540d2f775fd52e86',
-      scopes: ['identity'],
-      redirectUri: makeRedirectUri({
-        scheme: 'testapp'
+  async function req(){
+    const response = await fetch("https://github.com/login/device/code", {
+      method: "post",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        client_id: '56fd540d2f775fd52e86'
       })
-    },
-    discovery
-  );
+    })
+    const data = await response.json()
+    props.setRequest(data)
+    startPolling(data);
+  }
 
-  React.useEffect(() => {
-    console.log(response)
-    if (response?.type === 'success') {
-      const { code } = response.params;
-    }
-  }, [response]);
+  async function startPolling(data) {
+    console.log(data)
+    pollInterval = setInterval(() => {
+        checkForAuthentication(data);
+    }, data.interval * 2 * 1000)
+  }
+
+
+  async function checkForAuthentication(req) {
+    if(!req) return null
+    const response = await fetch("https://github.com/login/oauth/access_token", {
+      method: "post",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        client_id: '56fd540d2f775fd52e86',
+        device_code: req.device_code,
+        grant_type: 'urn:ietf:params:oauth:grant-type:device_code'
+        })
+      })
+    const data = await response.json();
+    if(data.access_token) {
+    props.setRequest(data)
+    clearInterval(pollInterval)
+  }
+  }
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.button_positive} disabled={!request} title="Login" onPress={() => { promptAsync(); }}>
+      { !props.request ? <Pressable style={styles.button_positive} title="Login" onPress={(e) => { req(); }}>
         <Text style={styles.button_font}>Logga in</Text>
-      </Pressable>
+      </Pressable> :
+      <>
+      <Text>
+      Code to enter: {props.request.user_code}
+      </Text>
+       <Text style={{color: 'blue'}}
+      onPress={() => Linking.openURL(props.request.verification_uri)}>
+        Click to enter Github
+      </Text>
+      </>
+      }
     </View>
   );
 }
