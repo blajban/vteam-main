@@ -21,4 +21,18 @@ curl -s --request GET 'http://localhost:3500/api-key' | jq '{"key":.key}' > ./se
 curl -s --request GET 'http://localhost:3500/api-key' | jq '{"key":.key}' > ./services/app/api-key.json
 
 echo "Done!"
-#docker-compose up --build
+
+PRODFILE="docker-compose-prod.yml"
+
+if [[ $1 == "--prod" ]]
+then
+    echo "$PRODFILE"
+    docker-compose -f "$PRODFILE" up -d --build payment_service
+    docker-compose -f "$PRODFILE" up -d --build user_service
+    docker-compose -f "$PRODFILE" up -d --build location_service
+    docker-compose -f "$PRODFILE" up -d --build scooter_service
+    docker-compose -f "$PRODFILE" up -d --build simulation
+    docker-compose -f "$PRODFILE" up -d --build web
+
+    echo "Up and running!"
+fi
