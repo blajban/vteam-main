@@ -17,7 +17,8 @@ docker-compose up --build -d gateway
 echo "Getting api-key..."
 sleep 3
 
-curl -s --request GET 'http://localhost:3500/api-key' | jq '{"key":.key}' > ./services/web/api-key.json
+curl -s --request GET 'http://localhost:3500/api-key' | jq '{"key":.key}' > ./services/web/src/api-key.json
+curl -s --request GET 'http://localhost:3500/api-key' | jq '{"key":.key}' > ./services/app/api-key.json
 
 echo "Done!"
 
