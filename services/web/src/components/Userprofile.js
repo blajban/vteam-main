@@ -1,7 +1,7 @@
 
 
 
-function Userprofile(props) {
+function Userprofile({userId}) {
     return (
         <div className="user-profile-container">
             <div className="image-holder">
