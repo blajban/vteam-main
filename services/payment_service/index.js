@@ -164,14 +164,23 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.onEvent(eventTypes.returnScooterEvents.establishParkingRate, async (e) => {
-        // TODO: get userId from e, and set the price for the invoice
+        const invoice = handler.find({ userId: e.data.userId, price: undefined });
+        
+        const startPrice = 10;
+        const pricePerMin = 2.5;
+        const rate = e.data.rate;
+        
+        const deltaTime =
+            (new Date(invoice.end.time.replace('|', 'T')).getTime()
+            -
+            new Date(invoice.start.time.replace('|', 'T')).getTime())
+            / 1000 * 60;
 
+        const price = startPrice + pricePerMin * deltaTime + rate
 
+        const response = handler.updateOne({ _id: invoice._id }, { price: price });
+        console.log(response);
 
-        // startprice: 10kr
-        // 2,5kr / min
-        // rate
-        // const price = 10 + 2.5 * (invoice.end.time - invoice.start.time) + rate
     });
 }
 
