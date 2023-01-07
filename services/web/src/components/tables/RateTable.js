@@ -10,14 +10,14 @@ import 'reactjs-popup/dist/index.css';
  * @async
  * @param {object} object - An object containing the rate details.
  */
-async function addRate(object){
+async function addRate(token, loginId, object){
   let newRate = {
 
     id: object.inputid.current.value,
     name: object.inputName.current.value,
     tariff: object.inputTariff.current.value,
   }
-  await ratesHandler.createRate(newRate)
+  await ratesHandler.createRate(token, loginId, newRate)
 }
 
 /**
@@ -26,8 +26,8 @@ async function addRate(object){
  * @async
  * @param {string} _id - The ID of the rate to update.
  */
-async function deleteRate(_id){
-  await ratesHandler.deleteRate(_id)
+async function deleteRate(token, loginId, _id){
+  await ratesHandler.deleteRate(token, loginId, _id)
 }
 
 
@@ -38,17 +38,17 @@ async function deleteRate(_id){
  * @param {string} _id - The ID of the rate to update.
  * @param {object} object - An object containing the updated rate details.
  */
-async function updateRate(_id, object) {
+async function updateRate(token, loginId, _id, object) {
   let updatedRate = {
     id: object.inputIdEdit.current.value,
     name: object.inputNameEdit.current.value,
     tariff: object.inputTariffEdit.current.value,
   }
-  await ratesHandler.updateRate(_id, updatedRate);
+  await ratesHandler.updateRate(token, loginId, _id, updatedRate);
 }
 
 
-function RateTable(props) {
+function RateTable({token, userId}) {
     const [rates, setRates] = useState([]);
     const [tableBox, setTableBox] = useState([]);
     const inputid = useRef(null);
@@ -84,10 +84,10 @@ function RateTable(props) {
             <input type="text" defaultValue={e.id} ref={inputIdEdit} ></input>
             <input type="text" defaultValue={e.name} ref={inputNameEdit} ></input>
             <input type="text" defaultValue={e.tariff} ref={inputTariffEdit}></input>
-            <button onClick={() => {updateRate(e._id , {inputIdEdit, inputNameEdit, inputTariffEdit})}}>Update</button>
+            <button onClick={() => {updateRate(token, userId, e._id , {inputIdEdit, inputNameEdit, inputTariffEdit})}}>Update</button>
           </Popup>
         </td>
-        <td><button value={e._id} onClick={(e) => {deleteRate(e.target.value)}}>Delete</button></td>
+        <td><button value={e._id} onClick={(e) => {deleteRate(token, userId, e.target.value)}}>Delete</button></td>
         <td></td>
       </tr>
     )
@@ -115,7 +115,7 @@ function RateTable(props) {
         <td> <input type="text" placeholder="id" ref={inputid}></input></td>
         <td> <input type="text" placeholder="name" ref={inputName}></input></td>
         <td> <input type="text" placeholder="tariff" ref={inputTariff} ></input></td>
-        <td><button onClick={() => {addRate({inputid, inputName, inputTariff})}}>Add</button></td>
+        <td><button onClick={() => {addRate({token, userId, inputid, inputName, inputTariff})}}>Add</button></td>
       </tr>
       </tbody>
     </table>
