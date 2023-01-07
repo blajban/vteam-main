@@ -1,11 +1,11 @@
-const {apiKey} = require('../../../api-key.json');
+const api_key = require('../api-key.json');
 
 const usersModel = {
     getAllUsers: async function getAllUsers(token, loginId) {
         const response = await fetch(`http://localhost:3500/v1/users/${loginId}`, {
             headers: {
                 'x-access-token': token,
-                'x-api-key': apiKey
+                'x-api-key': api_key.key
             },
         });
         const data = await response.json();
@@ -18,7 +18,7 @@ const usersModel = {
             headers: {
                 'content-type': 'application/json',
                 'x-access-token': token,
-                'x-api-key': apiKey
+                'x-api-key': api_key.key
             },
             method: 'POST',
         });
@@ -30,7 +30,7 @@ const usersModel = {
         const response = await fetch(`http://localhost:3500/v1/users/${loginId}/${userId}`, {
             headers: {
                 'x-access-token': token,
-                'x-api-key': apiKey
+                'x-api-key': api_key.key
             },
         });
         const data = await response.json();
@@ -43,7 +43,7 @@ const usersModel = {
             headers: {
                 'content-type': 'application/json',
                 'x-access-token': token,
-                'x-api-key': apiKey
+                'x-api-key': api_key.key
             },
             method: 'PUT'
         });
@@ -56,7 +56,7 @@ const usersModel = {
             headers: {
                 'content-type': 'application/json',
                 'x-access-token': token,
-                'x-api-key': apiKey
+                'x-api-key': api_key.key
             },
             method: 'DELETE'
         });

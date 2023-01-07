@@ -1,4 +1,4 @@
-const {apiKey} = require('../../../api-key.json');
+const api_key = require('../api-key.json');
 
 const invoiceModel = {
 
@@ -7,7 +7,7 @@ const invoiceModel = {
             const response = await fetch(`http://localhost:3500/v1/invoice/${loginId}/user/${object.userId.current.value}`, {
                 headers: {
                     'x-access-token': token,
-                    'x-api-key': apiKey
+                    'x-api-key': api_key.key
                 }
             })
             const data = await response.json();
@@ -17,7 +17,7 @@ const invoiceModel = {
         const response = await fetch(`http://localhost:3500/v1/invoice/${loginId}/${object.invoiceId.current.value}`, {
             headers: {
                 'x-access-token': token,
-                'x-api-key': apiKey
+                'x-api-key': api_key.key
             }
         })
         const data = await response.json();
@@ -53,7 +53,7 @@ const invoiceModel = {
             headers: {
                 "content-type": "application/json",
                 'x-access-token': token,
-                'x-api-key': apiKey
+                'x-api-key': api_key.key
             },
             method: "POST"
         });

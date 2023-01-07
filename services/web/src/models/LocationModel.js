@@ -1,4 +1,4 @@
-const api_key = require('../api-key.json')
+const api_key = require('../api-key.json');
 
 const locationModel = {
 
@@ -77,12 +77,13 @@ const locationModel = {
      * @async
      * @returns {Object} - The response from the server.
      */
-    createLocation: async function createLocation(city, newLocation) {
-        const response = await fetch(`http://localhost:3500/v1/city/${city}/parking`, {
+    createLocation: async function createLocation(token, loginId, city, newLocation) {
+        const response = await fetch(`http://localhost:3500/v1/city/${city}/parking/${loginId}`, {
             body: JSON.stringify({location: city, object:newLocation}),
             headers: {
                 'content-type': 'application/json',
                 'x-api-key': api_key.key,
+                'x-access-token': token,
             },
             method: 'POST'
         });
@@ -99,12 +100,13 @@ const locationModel = {
      * @async
      * @returns {Object} - The response from the server.
      */
-    updateLocation: async function updateLocation(city, updateLocation) {
-        const response = await fetch(`http://localhost:3500/v1/city/${city}/parking`, {
+    updateLocation: async function updateLocation(token, loginId, city, updateLocation) {
+        const response = await fetch(`http://localhost:3500/v1/city/${city}/parking/${loginId}`, {
             body: JSON.stringify({location: city, object:updateLocation}),
             headers: {
                 'content-type': 'application/json',
                 'x-api-key': api_key.key,
+                'x-access-token': token,
             },
             method: 'PUT'
         });
@@ -121,12 +123,13 @@ const locationModel = {
      * @async
      * @returns {Object} - The response from the server.
      */
-    deleteLocation: async function updateLocation(city, deleteLocation) {
-        const response = await fetch(`http://localhost:3500/v1/city/${city}/parking`, {
+    deleteLocation: async function updateLocation(token, loginId, city, deleteLocation) {
+        const response = await fetch(`http://localhost:3500/v1/city/${city}/parking/${loginId}`, {
             body: JSON.stringify({location: city, object:{_id: deleteLocation}}),
             headers: {
                 'content-type': 'application/json',
                 'x-api-key': api_key.key,
+                'x-access-token': token,
             },
             method: 'DELETE'
         });
