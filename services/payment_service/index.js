@@ -2,19 +2,18 @@ const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes} = require('../../shared/resources');
 const { MongoWrapper } = require('../../shared/mongowrapper');
 const { dbFiller } = require('./filler.js');
-
-// dummy data for testing
-const invoices = require('../../shared/dummy_data/payment_service/invoices.json');
+const { invoiceHandler } = require('./invoice_handler');
 
 
 
 const paymentService = async () => {
-
+    
     const msgBroker = await new MessageBroker(host, 'payment_service');
     const mongoWrapper = await new MongoWrapper("paymentService");
 
-    // for dev test
-    dbFiller();
+    // dummy data for testing
+    const invoices = require('../../shared/dummy_data/payment_service/invoices.json');
+    const handler = new invoiceHandler(mongoWrapper, invoices)
 
     /**
      * Add a new invoice, parsed through e.data.invoice
@@ -22,8 +21,8 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.response(eventTypes.rpcEvents.addInvoice, async (e) => {
-        const response = await mongoWrapper.insertOne("invoices", e.data);
-        console.log(response)
+        const response = await handler.insertOne(e.data);
+        console.log(response);
         return({
             "code": "200",
             "description": "Invoice added",
@@ -45,8 +44,8 @@ const paymentService = async () => {
             });
             e.data._id = data[1]._id;
         }
-        
-        const res = await mongoWrapper.updateOne("invoices", { _id: e.data._id }, { status: "success"} );
+        const res = await handler.updateOne({ _id: e.data._id }, { status: "success"});
+        // const res = await mongoWrapper.updateOne("invoices", { _id: e.data._id }, { status: "success"} );
         console.log("updated invoice!", res)
     });
 
@@ -59,12 +58,14 @@ const paymentService = async () => {
         try {
             if (e.data.hasOwnProperty("invoiceId")) {
                 console.log(`getting invoice with id ${e.data.invoiceId}`);
-                const inv = await mongoWrapper.find("invoices", { _id: e.data.invoiceId });
+                const inv = await handler.find({ _id: e.data.invoiceId });
+                // const inv = await mongoWrapper.find("invoices", { _id: e.data.invoiceId });
                 return(inv)
             }
             else if (e.data.hasOwnProperty("userId")) {
                 console.log(`getting invoices for userId ${e.data.userId}`);
-                const inv = await mongoWrapper.find("invoices", { userId: e.data.userId });
+                const inv = await handler.find({ userId: e.data.userId });
+                // const inv = await mongoWrapper.find("invoices", { userId: e.data.userId });
                 return(inv)
             }
             else {
@@ -109,8 +110,9 @@ const paymentService = async () => {
             price: undefined,
         }
 
-        const inv = await mongoWrapper.insertOne("invoices", newInvoice);
-        console.log(`Started new invoice ${inv.insertedId} for user ${newInvoice.userId}`);
+        const response = await handler.insertOne(newInvoice);
+        // const response = await mongoWrapper.insertOne("invoices", newInvoice);
+        console.log(`Started new invoice ${response.insertedId} for user ${newInvoice.userId}`);
     });
 
     /**
@@ -129,22 +131,29 @@ const paymentService = async () => {
             };
         }
 
-        let invoice = await mongoWrapper.find("invoices", { userId: e.data.userId, status: "riding" })
-        
-        const res = await mongoWrapper.updateOne(
-            "invoices", 
-            { _id: invoice[0]._id },
-            { 
-                status: "pending",
-                "end.lat": e.data.end.lat,
-                "end.lng": e.data.end.lng,
-                "end.time": e.data.end.time
-            }
-        );
-        console.log(res)
+        let invoice = await handler.find({ userId: e.data.userId, status: "riding" });
+        // let invoice = await mongoWrapper.find("invoices", { userId: e.data.userId, status: "riding" })
+        let response = await handler.updateOne({ _id: invoice[0]._id }, { 
+            status: "pending",
+            "end.lat": e.data.end.lat,
+            "end.lng": e.data.end.lng,
+            "end.time": e.data.end.time
+        });
+        // const res = await mongoWrapper.updateOne(
+        //     "invoices", 
+        //     { _id: invoice[0]._id },
+        //     { 
+        //         status: "pending",
+        //         "end.lat": e.data.end.lat,
+        //         "end.lng": e.data.end.lng,
+        //         "end.time": e.data.end.time
+        //     }
+        // );
+        console.log(response)
 
         // get the invoice from the db just to see if it updated
-        invoice = await mongoWrapper.find("invoices", { userId: e.data.userId })
+        invoice = await handler.find({ userId: e.data.userId });
+        // invoice = await mongoWrapper.find("invoices", { userId: e.data.userId })
         console.log(invoice);
 
     });

@@ -13,6 +13,7 @@ RUN npm install -g nodemon
 
 
 COPY ./services/payment_service/package.json .
+COPY ./services/payment_service/invoice_handler.js .
 COPY ./services/payment_service/index.js .
 COPY ./services/payment_service/filler.js .
 
