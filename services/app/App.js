@@ -28,6 +28,7 @@ export default function App() {
   const [isLogged, setIsLogged] = useState(false)
   const [request, setRequest] = useState(null);
   const [token, setToken] = useState(null);
+  const [loginId, setLoginId] = useState(null);
 
 // Fetches users locations city
   useEffect(() => {
@@ -83,7 +84,7 @@ export default function App() {
 
   if (!isLogged) {
     return (
-      <LoginPage request={request} setRequest={setRequest} token={token} setToken={setToken}>
+      <LoginPage request={request} setRequest={setRequest} token={token} setToken={setToken} setLoginId={setLoginId} setIsLogged={setIsLogged}>
 
       </LoginPage>
     )
@@ -137,7 +138,7 @@ export default function App() {
             <Image source={userIcon} style={styles.user_icon}></Image>
           </TouchableHighlight>
           {userInfoActive == 1?
-          <UserInfo></UserInfo>:
+          <UserInfo token={token} loginId={loginId}></UserInfo>:
           <></>
           }
       </View>

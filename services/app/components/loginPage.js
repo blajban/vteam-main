@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Pressable, Linking } from 'react-native';
 import React, { useState } from 'react';
+import authHandler from '../models/authHandler';
 
 
 function LoginPage(props) {
@@ -45,9 +46,12 @@ function LoginPage(props) {
       })
     const data = await response.json();
     if(data.access_token) {
-    props.setRequest(data)
-    clearInterval(pollInterval)
-  }
+      props.setRequest(data)
+      clearInterval(pollInterval)
+      props.setToken(data.access_token);
+      props.setLoginId(await authHandler.getGitHubUser(data.access_token));
+      props.setIsLogged(true)
+    }
   }
 
   return (
