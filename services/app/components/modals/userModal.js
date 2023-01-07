@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Modal, TextInput, Pressable } from 'react-native';
-import React from 'react';
+import React, { useState,  useEffect } from 'react';
+import userHandler from '../../models/userHandler'
 
 const ModalPopup = ({ isModalVisible, setisModalVisible }) => {
     return (

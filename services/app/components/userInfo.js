@@ -1,12 +1,21 @@
 import { StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModalPopup from './modals/userModal';
+import userHandler from '../models/userHandler'
 const plusIcon = require('../assets/plus.png');
 
 // View för krediter. Ta bort att man kan fylla på?
 function UserInfo(props) {
 // Fetcha namn o saldo, skicka med som props
   const [isModalVisible, setisModalVisible] = useState(false);
+  const [userInfo, setUserInfo]  = useState(null)
+  useEffect(() => {
+    (async () => {
+        setUserInfo(await userHandler.getUser(props.token, props.loginId, props.loginId))
+        console.log(await userHandler.getUser(props.token, props.loginId, props.loginId))
+    })();
+  }, []);
+
 return (
   <View {...props} style={styles.container}>
     <View style={styles.name_container}>
