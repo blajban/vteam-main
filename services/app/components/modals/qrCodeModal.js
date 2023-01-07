@@ -8,12 +8,11 @@ async function rentScooter(text, loginId, token) {
   console.log(await scooterHandler.rentScooter(text, loginId, token))
 }
 
-const QrModalPopup = ({isModalVisible,setisModalVisible,setRideActive, text, setText, token, loginId}) => {
+const QrModalPopup = ({isModalVisible, setisModalVisible, setRideActive, text, setText, token, loginId}) => {
     const [scanned, setScanned] = useState(false)
     const askForCameraPermission = () => {
       (async() => {
-        const {status} = await BarCodeScanner.requestPermissionsAsync();
-        setHasPermission(status == "granted")
+        await BarCodeScanner.requestPermissionsAsync();
       })()
     }
 

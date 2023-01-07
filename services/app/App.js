@@ -61,7 +61,10 @@ export default function App() {
   useEffect(() => {
     (async () => {
       if(rideActive){
-        let data = await locationHandler.fetchLocations(userCity, token)
+        //Fetching locations for all cities
+        let data = await locationHandler.fetchLocations("stockholm", token);
+        data = data.concat(await locationHandler.fetchLocations("goteborg", token));
+        data = data.concat(await locationHandler.fetchLocations("malmo", token));
         let marks = data.map ((e, i) => {return <Marker key={i} description={"Laddplats: " + String(e.charging) + " Rate: " + (e.rate)} coordinate={{latitude:e.properties.lat, longitude:e.properties.lng} }>
         <Image
         source={parkingIcon}
@@ -70,7 +73,10 @@ export default function App() {
         </Marker>})
         setMarkers(marks);
       } else {
-        let data = await scooterHandler.fetchScooters(userCity, token)
+        // Fetching scooters for all cities
+        let data = await scooterHandler.fetchScooters("stockholm", token)
+        data = data.concat(await scooterHandler.fetchScooters("goteborg", token));
+        data = data.concat(await scooterHandler.fetchScooters("malmo", token));
         let marks = data.map ((e, i) => { return <Marker key={i} description={"Status: " + e.status + " Battery: " +  e.properties.battery+ "%"} coordinate={{latitude:e.properties.lat, longitude:e.properties.lng}}>
         <Image
         source={scooterIcon}
