@@ -1,4 +1,4 @@
-const api_key = require('../api-key.json')
+const api_key = require('../api-key.json');
 const scooterModel = {
 
     fetchStockholmScooter: async function fetchStockholmScooter() {
@@ -32,22 +32,24 @@ const scooterModel = {
         return data
     },
 
-    addScooter: async (city, scooterData) => {
-        const response = await fetch(`http://localhost:3500/city/${city.current.value}/scooter`, {
+    addScooter: async (token, loginId, city, scooterData) => {
+        const response = await fetch(`http://localhost:3500/city/${city.current.value}/scooter/${loginId}`, {
             body: JSON.stringify({
                 lng: scooterData.lng.current.value,
                 lat: scooterData.lat.current.value
             }),
             headers: {
-                "content-type": "application/json"
+                'content-type': 'application/json',
+                'x-access-token': token,
+                'x-api-key': api_key.key,
             },
             method: "POST"
         });
         console.log(response)
     },
 
-    updateScooter: async (scooterId, city, status, location, lat, lng) => {
-        const response = await fetch(`http://localhost:3500/city/${city}/scooter/${scooterId}`, {
+    updateScooter: async (token, loginId, scooterId, city, status, location, lat, lng) => {
+        const response = await fetch(`http://localhost:3500/city/${city}/scooter/${scooterId}/${loginId}`, {
             body: JSON.stringify({
                 status: status.current.value,
                 location: location.current.value,
@@ -55,18 +57,22 @@ const scooterModel = {
                 lat: lat.current.value
             }),
             headers: {
-                "content-type": "application/json"
+                'content-type': 'application/json',
+                'x-access-token': token,
+                'x-api-key': api_key.key,
             },
             method: "PUT"
         });
         console.log(response)
     },
 
-    removeScooter: async (scooterId, city) => {
-        const response = await fetch(`http://localhost:3500/city/${city}/scooter/${scooterId}`, {
+    removeScooter: async (token, loginId, scooterId, city) => {
+        const response = await fetch(`http://localhost:3500/city/${city}/scooter/${scooterId}/${loginId}`, {
             body: JSON.stringify({}),
             headers: {
-                "content-type": "application/json"
+                'content-type': 'application/json',
+                'x-access-token': token,
+                'x-api-key': api_key.key,
             },
             method: "DELETE"
         });

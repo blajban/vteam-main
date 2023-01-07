@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import invoiceHandler from '../../models/invoiceModel'
 
-export function InvoiceTable() {
+export function InvoiceTable({token, loginId}) {
 
     const userId = useRef(null);
     const invoiceId = useRef(null);
@@ -22,7 +22,7 @@ export function InvoiceTable() {
       }, []);
 
     async function getInvoices(idObject) {
-        const result = await invoiceHandler.getInvoices(idObject);
+        const result = await invoiceHandler.getInvoices(loginId, token, idObject);
         setInvoices(result);
     }
 
@@ -61,7 +61,7 @@ export function InvoiceTable() {
                     <input type="text" ref={inputEndLat} placeholder="end latitude"></input>
                     <input type="text" ref={inputEndLng} placeholder="end longitude"></input>
                     <input type="text" ref={inputEndTime} placeholder="end time"></input>
-                    <button onClick={() => {invoiceHandler.addInvoice(inputUserId, inputStatus, inputStartLat, inputStartLng, inputStartTime, inputEndLat, inputEndLng, inputEndTime, inputPrice)}}>Add invoice</button>
+                    <button onClick={() => {invoiceHandler.addInvoice(loginId, token, inputUserId, inputStatus, inputStartLat, inputStartLng, inputStartTime, inputEndLat, inputEndLng, inputEndTime, inputPrice)}}>Add invoice</button>
                 </div>
                 <hr className="line"></hr>
             </div>

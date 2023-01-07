@@ -12,8 +12,8 @@ import 'reactjs-popup/dist/index.css';
 * @param {string} city - The city where the location is located.
 * @param {string} _id - The ID of the location to update.
 */
-async function removeLocation(city, id){
-  await locationHandler.deleteLocation(city, id)
+async function removeLocation(token, loginId, city, id){
+  await locationHandler.deleteLocation(token, loginId, city, id)
 }
 
 
@@ -24,7 +24,7 @@ async function removeLocation(city, id){
  * @param {string} city - The city where the location is located.
  * @param {object} object - An object containing the location details.
  */
-async function addLocation(city, object){
+async function addLocation(token, loginId, city, object){
   let newLocation = {
     properties: {
       lat: object.inputLat.current.value,
@@ -33,7 +33,7 @@ async function addLocation(city, object){
     rate: object.inputRate.current.value,
     charging: object.inputCharging.current.value
   }
-  await locationHandler.createLocation(city, newLocation)
+  await locationHandler.createLocation(token, loginId, city, newLocation)
 }
 
 /**
@@ -44,7 +44,7 @@ async function addLocation(city, object){
 * @param {string} _id - The ID of the location to update.
 * @param {object} object - An object containing the updated location details.
 */
-async function updateLocation(city, _id ,object){
+async function updateLocation(token, loginId, city, _id ,object){
   let updatedLocation = {
     _id: _id,
     properties: {
@@ -54,10 +54,10 @@ async function updateLocation(city, _id ,object){
     rate: object.inputRateEdit.current.value,
     charging: object.inputChargingEdit.current.value
   }
-  await locationHandler.updateLocation(city, updatedLocation)
+  await locationHandler.updateLocation(token, loginId, city, updatedLocation)
 }
 
-function LocationTable(props) {
+function LocationTable({token, loginId}) {
     const [parkings, setParkings] = useState([]);
     const [tableBox, setTableBox] = useState([]);
     const [city, setCity] = useState("stockholm");
@@ -111,10 +111,10 @@ function LocationTable(props) {
               <option>false</option>
               <option>true</option>
             </select>
-            <button onClick={() => {updateLocation(city,e._id , {inputLatEdit, inputLngEdit, inputRateEdit, inputChargingEdit})}}>Update</button>
+            <button onClick={() => {updateLocation(token, loginId, city,e._id , {inputLatEdit, inputLngEdit, inputRateEdit, inputChargingEdit})}}>Update</button>
           </Popup>
         </td>
-        <td><button value={e._id} onClick={(e) => {removeLocation(city, e.target.value)}}>Delete</button></td>
+        <td><button value={e._id} onClick={(e) => {removeLocation(token, loginId, city, e.target.value)}}>Delete</button></td>
       </tr>
     )
   })
@@ -153,7 +153,7 @@ function LocationTable(props) {
             <option>true</option>
           </select>
         </td>
-        <td><button onClick={() => {addLocation(city, {inputLng, inputLat, inputRate, inputCharging})}}>Add</button></td>
+        <td><button onClick={() => {addLocation(token, loginId, city, {inputLng, inputLat, inputRate, inputCharging})}}>Add</button></td>
       </tr>
       </tbody>
     </table>

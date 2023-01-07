@@ -4,7 +4,7 @@ import Popup from 'reactjs-popup';
 
 
 
-function ScooterTable() {
+function ScooterTable({token, userId}) {
 
     const [scooters, setScooters] = useState(null);
     const [noScooters, setNoScooters] = useState(false);
@@ -46,7 +46,7 @@ function ScooterTable() {
                 <input type="text" ref={inputLng} placeholder="longitude"></input>
                 <input type="text" ref={inputLat} placeholder="latitude"></input>
                 <input type="text" ref={inputCity} placeholder="city"></input>
-                <button className="small-btn" onClick={() => {scooterModel.addScooter(inputCity, {lng: inputLng, lat: inputLat})}}>Add scooter</button>
+                <button className="small-btn" onClick={() => {scooterModel.addScooter(token, userId, inputCity, {lng: inputLng, lat: inputLat})}}>Add scooter</button>
             </div>
         )
     }
@@ -88,10 +88,10 @@ function ScooterTable() {
                                         <input type="text" defaultValue={scooter.properties.location} ref={inputLocationEdit}></input>
                                         <input type="text" defaultValue={scooter.properties.lat} ref={inputLatEdit} ></input>
                                         <input type="text" defaultValue={scooter.properties.lng} ref={inputLngEdit} ></input>
-                                        <button onClick={() => {scooterModel.updateScooter(scooter._id, scooter.properties.location, inputStatusEdit, inputLocationEdit, inputLatEdit, inputLngEdit)}}>Update</button>
+                                        <button onClick={() => {scooterModel.updateScooter(token, userId, scooter._id, scooter.properties.location, inputStatusEdit, inputLocationEdit, inputLatEdit, inputLngEdit)}}>Update</button>
                                     </Popup>
                                 </td>
-                                <td><button onClick={() => {scooterModel.removeScooter(scooter._id, scooter.properties.location)}}>Delete</button></td>
+                                <td><button onClick={() => {scooterModel.removeScooter(token, userId, scooter._id, scooter.properties.location)}}>Delete</button></td>
                             </tr>
                         ))}
                     </tbody>
