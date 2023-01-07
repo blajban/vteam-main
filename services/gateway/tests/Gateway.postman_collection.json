@@ -1,0 +1,1946 @@
+{
+	"info": {
+		"_postman_id": "8066994e-be99-425e-9351-9ee3a884e6a0",
+		"name": "Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20215439"
+	},
+	"item": [
+		{
+			"name": "API-key",
+			"item": [
+				{
+					"name": "Get new api key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(200);",
+									"    pm.expect(jsonResponse.description).to.eql(\"API key generated\");",
+									"    pm.expect(jsonResponse.key).to.be.a(\"string\");",
+									"",
+									"    pm.globals.set(\"api-key\", jsonResponse.key);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3500/api-key",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"api-key"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Scooters",
+			"item": [
+				{
+					"name": "Addscooter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Scooter added\");",
+									"    pm.expect(jsonResponse.content._id).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.content.properties.lat).to.eql(57.70217050702175);",
+									"",
+									"    pm.globals.set(\"scooter_added\", jsonResponse.content._id);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "lat",
+									"value": "57.70217050702175",
+									"type": "text"
+								},
+								{
+									"key": "lng",
+									"value": "11.956726116767982",
+									"type": "text"
+								},
+								{
+									"key": "1",
+									"value": "{lat: 57.70217050702175, lng: 11.956726116767982}",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/city/malmo/scooter/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"city",
+								"malmo",
+								"scooter",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetScooters all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.a(\"array\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/city/malmo/scooter/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"city",
+								"malmo",
+								"scooter",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetScooters specific",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse._id).to.eql(pm.globals.get(\"scooter_added\"));",
+									"    pm.expect(jsonResponse.properties.lat).to.eql(57.70217050702175);",
+									"",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/city/malmo/scooter/{{scooter_added}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"city",
+								"malmo",
+								"scooter",
+								"{{scooter_added}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Updatescooter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.content._id).to.eql(pm.globals.get(\"scooter_added\"));",
+									"    pm.expect(jsonResponse.content.properties.lat).to.eql(55.5);",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "status",
+									"value": "available",
+									"type": "text"
+								},
+								{
+									"key": "lat",
+									"value": "55.5",
+									"type": "text"
+								},
+								{
+									"key": "battery",
+									"value": "15",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/city/malmo/scooter/{{scooter_added}}/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"city",
+								"malmo",
+								"scooter",
+								"{{scooter_added}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteScooter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.content._id).to.eql(pm.globals.get(\"scooter_added\"));",
+									"    pm.expect(jsonResponse.content.properties.lat).to.eql(55.5);",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/city/malmo/scooter/{{scooter_added}}/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"city",
+								"malmo",
+								"scooter",
+								"{{scooter_added}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Locations",
+			"item": [
+				{
+					"name": "Add parking spot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Parkingspot added\");",
+									"    pm.expect(jsonResponse.content.acknowledged).to.eql(true);",
+									"    pm.expect(jsonResponse.content.insertedId).to.be.a(\"string\");",
+									"",
+									"    pm.globals.set(\"parking_added\", jsonResponse.content.insertedId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"location\": \"malmo\",\n    \"object\": {\n        \"properties\": {\n            \"lat\": \"55\",\n            \"lng\": \"55\"\n        },\n        \"charging\": true,\n        \"rate\": 55\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3500/v1/city/malmo/parking/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"city",
+								"malmo",
+								"parking",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get parkingspots",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.a(\"array\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3500/v1/city/malmo/parking",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"city",
+								"malmo",
+								"parking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update parking spot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Updated parkingspot\");",
+									"    pm.expect(jsonResponse.content.acknowledged).to.eql(true);",
+									"    pm.expect(jsonResponse.content.modifiedCount).to.eql(1);",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"location\": \"malmo\",\n    \"object\": {\n        \"_id\": \"{{parking_added}}\",\n        \"properties\": {\n            \"lat\": \"10\",\n            \"lng\": \"10\"\n        },\n        \"charging\": false,\n        \"rate\": \"10\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/city/malmo/parking/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"city",
+								"malmo",
+								"parking",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove parking spot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Removed parkingspot\");",
+									"    pm.expect(jsonResponse.content.acknowledged).to.eql(true);",
+									"    pm.expect(jsonResponse.content.deletedCount).to.eql(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"location\": \"malmo\",\n    \"object\": {\n        \"_id\": \"{{parking_added}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/city/malmo/parking/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"city",
+								"malmo",
+								"parking",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Add user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"User added\");",
+									"    pm.expect(jsonResponse.content.name).to.eql(\"Erik\");",
+									"    pm.expect(jsonResponse.content.admin).to.eql(false);",
+									"",
+									"    pm.globals.set(\"user_added\", jsonResponse.content._id);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Erik",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "75",
+									"type": "text"
+								},
+								{
+									"key": "mail",
+									"value": "erik@erik.se",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "malmo",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "gatan",
+									"type": "text"
+								},
+								{
+									"key": "zip",
+									"value": "41326",
+									"type": "text"
+								},
+								{
+									"key": "admin",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "balance",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "_id",
+									"value": "{{$randomInt}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.a(\"array\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse._id).to.eql(pm.globals.get(\"user_added\"));",
+									"    pm.expect(jsonResponse.name).to.eql(\"Erik\");",
+									"    pm.expect(jsonResponse.admin).to.eql(false);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/users/1/{{user_added}}/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"users",
+								"1",
+								"{{user_added}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Updated user\");",
+									"    pm.expect(jsonResponse.content.name).to.eql(\"emma\");",
+									"",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "emma",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/users/1/{{user_added}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"users",
+								"1",
+								"{{user_added}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Removed user\");",
+									"    //pm.expect(jsonResponse.content._id).to.eql(pm.globals.get(\"user_added\"));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/users/1/{{user_added}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"users",
+								"1",
+								"{{user_added}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Invoices",
+			"item": [
+				{
+					"name": "Add user for inoice tests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"User added\");",
+									"    pm.expect(jsonResponse.content._id).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.content.name).to.eql(\"Erik\");",
+									"    pm.expect(jsonResponse.content.admin).to.eql(false);",
+									"",
+									"    pm.globals.set(\"user_added\", jsonResponse.content._id);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Erik",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "75",
+									"type": "text"
+								},
+								{
+									"key": "mail",
+									"value": "erik@erik.se",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "malmo",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "gatan",
+									"type": "text"
+								},
+								{
+									"key": "zip",
+									"value": "41326",
+									"type": "text"
+								},
+								{
+									"key": "admin",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "balance",
+									"value": "0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add invoice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Invoice added\");",
+									"    pm.globals.set(\"invoice_added\", jsonResponse.content._id);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"invoice\": {\n      \"userId\": \"{{user_added}}\",\n      \"status\": \"pending\",\n      \"start\": {\n        \"lat\": -56.7328081203713,\n        \"lng\": -39.13274924126475,\n        \"time\": \"2030-05-21|14:09:11\"\n      },\n      \"end\": {\n        \"lat\": -22.025850982025247,\n        \"lng\": 17.74819199428495,\n        \"time\": \"2030-07-02|02:46:29\"\n      },\n      \"price\": 262\n    } \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/invoice/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"invoice",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all invoices for a specific user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.a(\"array\");",
+									"",
+									"    pm.globals.set(\"invoice_added\", jsonData[0]._id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/invoice/1/user/{{user_added}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"invoice",
+								"1",
+								"user",
+								"{{user_added}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get invoice with specific ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.a(\"array\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/invoice/1/{{invoice_added}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"invoice",
+								"1",
+								"{{invoice_added}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rates",
+			"item": [
+				{
+					"name": "Add rate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Rate added\");",
+									"    pm.expect(jsonResponse.content.insertedId).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.content.acknowledged).to.eql(true);",
+									"",
+									"    pm.globals.set(\"rate_added\", jsonResponse.content.insertedId);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newRate\": {\n        \"id\": \"en_rate\",\n        \"name\": \"testar\",\n        \"tariff\": 72\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/rates/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"rates",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all rates",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.a(\"array\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Erik",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "mobile",
+									"value": "75",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "mail",
+									"value": "erik@erik.se",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "city",
+									"value": "malmo",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "address",
+									"value": "gatan",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "zip",
+									"value": "41326",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "admin",
+									"value": "false",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "balance",
+									"value": "0",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/rates",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"rates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update rate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Updated rate\");",
+									"    pm.expect(jsonResponse.content.modifiedCount).to.eql(1);",
+									"    pm.expect(jsonResponse.content.acknowledged).to.eql(true);",
+									"",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"_id\": \"{{rate_added}}\",\n    \"object\": {\n        \"name\": \"testar\",\n        \"tariff\": 82\n    }\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/rates/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"rates",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove rate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Removed rate\");",
+									"    pm.expect(jsonResponse.content.deletedCount).to.eql(1);",
+									"    pm.expect(jsonResponse.content.acknowledged).to.eql(true);",
+									"",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"_id\": \"{{rate_added}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/rates/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"rates",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Eventflows",
+			"item": [
+				{
+					"name": "Add scooter for event flows test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Scooter added\");",
+									"    pm.expect(jsonResponse.content._id).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.content.properties.lat).to.eql(57.70217050702175);",
+									"",
+									"    pm.globals.set(\"scooter_added\", jsonResponse.content._id);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "lat",
+									"value": "57.70217050702175",
+									"type": "text"
+								},
+								{
+									"key": "lng",
+									"value": "11.956726116767982",
+									"type": "text"
+								},
+								{
+									"key": "1",
+									"value": "{lat: 57.70217050702175, lng: 11.956726116767982}",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3500/v1/city/malmo/scooter/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"city",
+								"malmo",
+								"scooter",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rent scooter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Renting scooter\");",
+									"    pm.expect(jsonResponse.content._id).to.eql(pm.globals.get(\"scooter_added\"));",
+									"    pm.expect(jsonResponse.content.userId).to.eql(pm.globals.get(\"user_added\"));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/eventflows/rent_scooter/{{scooter_added}}/{{user_added}}/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"eventflows",
+								"rent_scooter",
+								"{{scooter_added}}",
+								"{{user_added}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Park scooter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Parking scooter\");",
+									"    pm.expect(jsonResponse.content._id).to.eql(pm.globals.get(\"scooter_added\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/eventflows/park_scooter/{{scooter_added}}/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"eventflows",
+								"park_scooter",
+								"{{scooter_added}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Simulate scooters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Simulating scooters\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/eventflows/simulate_scooters/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"eventflows",
+								"simulate_scooters",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stop simulation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Stopping simulation\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/eventflows/stop_simulation/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"eventflows",
+								"stop_simulation",
+								"1"
+							],
+							"query": [
+								{
+									"key": "api-key",
+									"value": "zOl+03zoK+BUvkUL3DLbhbNHz7BqPf5Drj2ucguO9Y0=",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add random scooters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct information\", () => {",
+									"    const jsonResponse = pm.response.json();",
+									"",
+									"    pm.expect(jsonResponse.code).to.eql(\"200\");",
+									"    pm.expect(jsonResponse.description).to.eql(\"Added scooters to system\");",
+									"    pm.expect(jsonResponse.content.number).to.eql(\"20\");",
+									"    pm.expect(jsonResponse.content.location).to.eql(\"malmo\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "testa1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3500/v1/eventflows/addRandomScooters/malmo/20/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3500",
+							"path": [
+								"v1",
+								"eventflows",
+								"addRandomScooters",
+								"malmo",
+								"20",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
