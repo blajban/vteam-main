@@ -61,7 +61,7 @@ export default function App() {
   useEffect(() => {
     (async () => {
       if(rideActive){
-        let data = await locationHandler.fetchLocations(userCity)
+        let data = await locationHandler.fetchLocations(userCity, token)
         let marks = data.map ((e, i) => {return <Marker key={i} description={"Laddplats: " + String(e.charging) + " Rate: " + (e.rate)} coordinate={{latitude:e.properties.lat, longitude:e.properties.lng} }>
         <Image
         source={parkingIcon}
@@ -70,7 +70,7 @@ export default function App() {
         </Marker>})
         setMarkers(marks);
       } else {
-        let data = await scooterHandler.fetchScooters(userCity)
+        let data = await scooterHandler.fetchScooters(userCity, token)
         let marks = data.map ((e, i) => { return <Marker key={i} description={"Status: " + e.status + " Battery: " +  e.properties.battery+ "%"} coordinate={{latitude:e.properties.lat, longitude:e.properties.lng}}>
         <Image
         source={scooterIcon}
@@ -110,6 +110,8 @@ export default function App() {
           setRideActive={setRideActive}
           text={text}
           setText={setText}
+          token={token}
+          loginId={loginId}
         >
         </QrModalPopup>
         : <></> }
@@ -120,6 +122,8 @@ export default function App() {
           setRideActive={setRideActive}
           text={text}
           setText={setText}
+          token={token}
+          loginId={loginId}
         >
         </EndRideModal>
         : <></> }

@@ -2,7 +2,7 @@ const controllers = require('./v1Controllers.js');
 const express = require('express')
 const router = express.Router()
 
-router.route('/eventflows/rent_scooter/:scooterId/:userId:loginId')
+router.route('/eventflows/rent_scooter/:scooterId/:userId/:loginId')
   .get(controllers.rentScooter);
 router.route('/eventflows/park_scooter/:scooterId/:loginId')
   .get(controllers.parkScooter);
