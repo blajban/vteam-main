@@ -102,7 +102,7 @@ class Scooter {
     const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
     const speed = (distance / (this.driveIntervalTime / 1000));
 
-    this.info.properties.speed = speed * 3.6;
+    this.info.properties.speed = Math.round(speed * 3.6);
 
     // Battery and new tick
     this.info.properties.battery--;
@@ -142,7 +142,7 @@ class Scooter {
    * @return {boolean}
    */
   lowBattery() {
-    return this.info.properties.battery < 20;
+    return this.info.properties.battery < 10;
   }
 
   /**

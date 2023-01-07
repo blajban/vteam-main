@@ -43,11 +43,11 @@ class ScooterHandler {
     for (let i = 0; i < this.scooters.length; i += 1) {
       if (this.scooters[i]._id === scooterToUpdate._id) {
         this.scooters[i] = scooterToUpdate;
-        return true;
+        return;
       }
     }
 
-    throw new Error(`Scooter with ID ${scooterToUpdate._id} not found`);
+    this.addActiveScooter(scooterToUpdate);
   }
 
   lowBattery(lowBatteryScooter) {
@@ -56,14 +56,13 @@ class ScooterHandler {
     for (const scooterId of this.scootersWithLowBattery) {
       if (scooterId === lowBatteryScooter._id) {
         lowBattery = true;
+        break;
       }
     }
 
     if (!lowBattery) {
       this.scootersWithLowBattery.push(lowBatteryScooter._id)
     }
-
-    console.log(this.scootersWithLowBattery);
   }
 
   /**
@@ -151,7 +150,7 @@ class ScooterHandler {
   /**
    * Updates the status and user ID of a locked scooter
    * @param {object} lockedScooter - The scooter with updated status and user ID
-   * @return {Object} The updated scooter
+   * @return {object} The updated scooter
    * @throws {Error} If the scooter with the ID is not found
    */
   scooterLocked(lockedScooter) {
@@ -168,16 +167,17 @@ class ScooterHandler {
   }
 
   /**
-   * Updates the position of a scooter
-   * @param {object} reportingScooter - The scooter with updated position
+   * Updates the status of a scooter
+   * @param {object} reportingScooter - The scooter with updated status
    * @throws {Error} If the scooter with the ID is not found
    */
-  updateScooterPosition(reportingScooter) {
+  updateScooterStatus(reportingScooter) {
     for (const scooter of this.scooters) {
       if (scooter._id === reportingScooter._id) {
         scooter.properties.lat = reportingScooter.properties.lat;
         scooter.properties.lng = reportingScooter.properties.lng;
         scooter.properties.speed = reportingScooter.properties.speed;
+        scooter.properties.battery = reportingScooter.properties.battery;
         console.log(`Scooter ${scooter._id} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`);
         return true;
       }
