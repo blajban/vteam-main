@@ -23,6 +23,20 @@ const authHandler = {
     });
     const data = await response.json();
     return data;
+  },
+
+  updateUser: async function updateUser(token, user, loginId) {
+    const response = await fetch(`http://${url}/v1/users/${loginId}/${user._id}`, {
+      body: JSON.stringify(user),
+      headers: {
+        'content-type': 'application/json',
+        'x-access-token': token,
+        'x-api-key': API_KEY.key,
+      },
+      method: 'PUT',
+    });
+
+    await response.json();
 },
 };
 

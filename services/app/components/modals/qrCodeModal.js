@@ -3,8 +3,12 @@ import React, { useState,  useEffect } from 'react';
 import scooterHandler from '../../models/scooterHandler'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
+async function rentScooter(text, loginId, token) {
+  console.log(token)
+  console.log(await scooterHandler.rentScooter(text, loginId, token))
+}
 
-const QrModalPopup = ({isModalVisible,setisModalVisible,setRideActive, text, setText}) => {
+const QrModalPopup = ({isModalVisible,setisModalVisible,setRideActive, text, setText, token, loginId}) => {
     const [scanned, setScanned] = useState(false)
     const askForCameraPermission = () => {
       (async() => {
@@ -21,12 +25,6 @@ const QrModalPopup = ({isModalVisible,setisModalVisible,setRideActive, text, set
     const handleBarCodeScanned = ({type, data}) => {
       setScanned(true)
       setText(data)
-    }
-
-    // rent a scooter function
-    async function rentScooter() {
-      console.log("scooter" + text)
-      console.log(await scooterHandler.rentScooter(text, 1))
     }
 
     // Pupup for qrCodescanner and  renting scooter
@@ -49,7 +47,7 @@ const QrModalPopup = ({isModalVisible,setisModalVisible,setRideActive, text, set
                     <Text style={styles.big_text_in_modal}>
                       Vill du låsa upp scooter: {text} ?
                     </Text>
-                    <Pressable style={styles.button_positiv} onPress={() => {setisModalVisible(false), setRideActive(true), rentScooter()}}>
+                    <Pressable style={styles.button_positiv} onPress={() => {setisModalVisible(false), setRideActive(true), rentScooter(text, loginId, token)}}>
                           <Text style={styles.big_text_in_modal}>Lås upp</Text>
                       </Pressable>
                   </View>

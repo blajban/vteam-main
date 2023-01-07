@@ -2,7 +2,14 @@ import { StyleSheet, Text, View, Modal, TextInput, Pressable } from 'react-nativ
 import React, { useState,  useEffect } from 'react';
 import userHandler from '../../models/userHandler'
 
-const ModalPopup = ({ isModalVisible, setisModalVisible }) => {
+
+// Updates balance
+async function updateBalance(balance, token, loginId) {
+    await userHandler.updateUser(token, {_id: loginId, balance: balance}, loginId)
+}
+
+const ModalPopup = ({ isModalVisible, setisModalVisible, loginId, token  }) => {
+    const [balance, setBalance] = useState('');
     return (
         <Modal transparent={true} isModalVisible={isModalVisible} animationType="fade">
             <View style={styles.container}>
@@ -10,10 +17,12 @@ const ModalPopup = ({ isModalVisible, setisModalVisible }) => {
                     <Text style={styles.font}>Hur mycket vill du lägga in?</Text>
                     <TextInput
                         style={styles.input}
+                        onChangeText={newText => setBalance(newText)}
                         placeholder="Summa"
                         keyboardType="numeric"
+                        defaultValue={balance}
                     />
-                    <Pressable style={styles.button_positive} onPress={() => setisModalVisible(false)}>
+                    <Pressable style={styles.button_positive} onPress={() => {setisModalVisible(false), updateBalance(balance, token, loginId )}}>
                         <Text style={styles.button_font}>Bekräfta</Text>
                     </Pressable>
                     <Pressable style={styles.button_negative} onPress={() => setisModalVisible(false)}>

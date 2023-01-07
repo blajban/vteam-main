@@ -4,9 +4,7 @@ import ModalPopup from './modals/userModal';
 import userHandler from '../models/userHandler'
 const plusIcon = require('../assets/plus.png');
 
-// View för krediter. Ta bort att man kan fylla på?
 function UserInfo(props) {
-// Fetcha namn o saldo, skicka med som props
   const [isModalVisible, setisModalVisible] = useState(false);
   const [userInfo, setUserInfo]  = useState(null)
   useEffect(() => {
@@ -18,19 +16,23 @@ function UserInfo(props) {
 
 return (
   <View {...props} style={styles.container}>
+    {!userInfo ? <></>:
+    <>
     <View style={styles.name_container}>
-      <Text style={styles.name_font}>Förnamn</Text>
-      <Text>Efternamn</Text>
+      <Text style={styles.name_font}>{userInfo.name}</Text>
+      <Text>{userInfo.mail}</Text>
     </View>
     <View style={styles.credit_container} testID={'saldoContainer'}>
       <Text>Ditt saldo</Text>
-      <Text style={styles.font_credit}>235 kr</Text>
-      {isModalVisible ?<ModalPopup isModalVisible={isModalVisible} setisModalVisible={setisModalVisible}></ModalPopup>:
+      <Text style={styles.font_credit}>{userInfo.balance}</Text>
+      {isModalVisible ?<ModalPopup isModalVisible={isModalVisible} setisModalVisible={setisModalVisible} token={props.token} loginId={props.loginId}></ModalPopup>:
     <></>}
       <TouchableHighlight style={{position: 'absolute', right: 0}} onPress={() => setisModalVisible(true)}>
         <Image source={plusIcon} style={{marginRight: 5, marginTop: 5, position: 'absolute', right: 0 } } />
       </TouchableHighlight>
     </View>
+    </>
+    }
   </View>
 );
 }

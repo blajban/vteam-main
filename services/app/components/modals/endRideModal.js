@@ -3,17 +3,17 @@ import React from 'react';
 import scooterHandler from '../../models/scooterHandler'
 
 
-async function parkScooter(text) {
-    console.log(await scooterHandler.parkScooter(text))
+async function parkScooter(text, loginId,  token) {
+    console.log(await scooterHandler.parkScooter(text, loginId, token))
   }
 
-const EndRideModal = ({ isModalVisible, setisEndRideModalVisible, setRideActive, text }) => {
+const EndRideModal = ({ isModalVisible, setisEndRideModalVisible, setRideActive, text, token, loginId }) => {
     return (
         <Modal transparent={true} isModalVisible={isModalVisible} animationType="fade">
             <View style={styles.container}>
                 <View style={styles.modal_container}>
                     <Text style={styles.font}>Vill du avsluta resan?</Text>
-                    <Pressable style={styles.button_positive} onPress={() => {setisEndRideModalVisible(false); setRideActive(false); parkScooter(text)}}>
+                    <Pressable style={styles.button_positive} onPress={() => {setisEndRideModalVisible(false); setRideActive(false); parkScooter(text, loginId, token)}}>
                         <Text style={styles.button_font}>Bekräfta</Text>
                     </Pressable>
                     <Pressable style={styles.button_negative} onPress={() => setisEndRideModalVisible(false)}>
