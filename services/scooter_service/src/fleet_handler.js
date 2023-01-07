@@ -126,6 +126,10 @@ class FleetHandler {
       filter['properties.lng'] = updatedScooter.lng;
     }
 
+    if (updatedScooter.hasOwnProperty('battery')) {
+      filter['properties.battery'] = updatedScooter.battery;
+    }
+
     await this.db.updateOne(this.collectionName, id, filter);
 
     return await this.db.findOne(this.collectionName, filter);

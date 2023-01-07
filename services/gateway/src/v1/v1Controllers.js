@@ -232,6 +232,9 @@ exports.updateScooter = async (req, res) => {
         if (req.body.hasOwnProperty('lng')) {
             scooterToUpdate.lng = parseFloat(req.body.lng);
         }
+        if (req.body.hasOwnProperty('battery')) {
+            scooterToUpdate.battery = parseInt(req.body.battery);
+        }
 
         const updateScooterEvent = broker.constructEvent(eventTypes.rpcEvents.updateScooter, scooterToUpdate);
 

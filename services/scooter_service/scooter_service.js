@@ -98,12 +98,14 @@ const scooterService = async () => {
     eventTypes.scooterEvents.scooterRemoved,
     controller.removeActiveScooter.bind(controller),
   );
-
-  // TODO
   broker.onEvent(
     eventTypes.scooterEvents.batteryLow,
     controller.lowBattery.bind(controller),
   );
+  broker.onEvent(
+    eventTypes.returnScooterEvents.rideFinished,
+    controller.removeScootersWithLowBattery.bind(controller),
+  )
 };
 
 scooterService();
