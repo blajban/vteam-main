@@ -42,15 +42,24 @@ const main = async () => {
     console.log(`Updated scooter`);
   })
 
-  broker.onEvent(eventTypes.scooterEvents.scooterRemoved, (e) => {
+  const removeFromSim = (scooter) => {
     for (let i = 0; i < scooters.length; i++) {
-      if (scooters[i].getScooterInfo()._id === e.data._id) {
+      if (scooters[i].getScooterInfo()._id === scooter._id) {
         scooters[i].remove();
         scooters.splice(i, 1);
+        break;
       }
     }
     console.log(`Removed scooter (${scooters.length} scooters still in action)`);
+  }
+
+  broker.onEvent(eventTypes.scooterEvents.scooterRemoved, (e) => {
+    removeFromSim(e.data);
   });
+
+  broker.onEvent(eventTypes.scooterEvents.lowBatteryRemoved, (e) => {
+    removeFromSim(e.data);
+  })
 
 }
 

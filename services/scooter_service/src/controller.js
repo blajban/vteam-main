@@ -78,7 +78,7 @@ class Controller {
    */
   idleReporting(e) {
     try {
-      this.scooterHandler.updateScooterPosition(e.data);
+      this.scooterHandler.updateScooterStatus(e.data);
     } catch (err) {
       console.log(err);
     }
@@ -89,7 +89,7 @@ class Controller {
    */
   scooterMoving(e) {
     try {
-      this.scooterHandler.updateScooterPosition(e.data);
+      this.scooterHandler.updateScooterStatus(e.data);
     } catch (err) {
       console.log(err);
     }
@@ -257,6 +257,25 @@ class Controller {
   removeActiveScooter(e) {
     try {
       this.scooterHandler.removeActiveScooter(e.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  /**
+   * Remove scooters with low battery from active scooters
+   */
+  async removeScootersWithLowBattery(e) {
+    try {
+      if (e.data.status === 'low_battery') {
+        await this.fleetHandler.updateScooter(e.data);
+        this.scooterHandler.removeActiveScooter(e.data);
+        const removedLowBatteryEvent = this.broker.constructEvent(
+          eventTypes.scooterEvents.lowBatteryRemoved,
+          e.data,
+        )
+        this.broker.publish(removedLowBatteryEvent);
+      }
     } catch (err) {
       console.log(err);
     }

@@ -14,7 +14,8 @@ const eventTypes = {
     outOfBounds: "outOfBounds",
     scooterAdded: "scooterAdded",
     scooterUpdated: "scooterUpdated",
-    scooterRemoved: "scooterRemoved"
+    scooterRemoved: "scooterRemoved",
+    lowBatteryRemoved: "lowBatteryRemoved"
   },
   returnScooterEvents: {
     parkScooter: "parkScooter",
