@@ -3,7 +3,6 @@
 echo "Initialising.."
 
 touch .env
-touch api-key.json
 
 npm install
 
