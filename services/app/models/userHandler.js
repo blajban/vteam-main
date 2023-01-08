@@ -46,7 +46,7 @@ const authHandler = {
     });
 
     await response.json();
-},
+  },
 };
 
 module.exports = authHandler;

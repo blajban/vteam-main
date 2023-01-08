@@ -1,7 +1,8 @@
-const API_KEY = require('../api-key.json');
-import Constants from "expo-constants";
+import Constants from 'expo-constants';
+
 const { manifest } = Constants;
-const url = manifest.hostUri.split(`:`).shift().concat(`:3500`)
+const url = manifest.hostUri.split(':').shift().concat(':3500');
+const API_KEY = require('../api-key.json');
 
 /**
  *  Scooter
@@ -18,7 +19,7 @@ const scooterHandler = {
    * @returns {(Object[]|null)} An array of scooter objects, or null if an error occurred.
    */
   fetchScooters: async function fetchScooters(city, token) {
-    if(!city) return "No city specified";
+    if (!city) return 'No city specified';
     try {
       const response = await fetch(`http://${url}/v1/city/${city}/scooter`, {
         headers: {
