@@ -98,21 +98,8 @@ const paymentService = async () => {
             };
         }
 
-        const newInvoice = {
-            userId: e.data.userId,
-            status: "riding",
-            start: e.data.start,
-            end: {
-                lat: undefined,
-                lng: undefined,
-                time: undefined
-            },
-            price: undefined,
-        }
-
-        const response = await handler.insertOne(newInvoice);
-        // const response = await mongoWrapper.insertOne("invoices", newInvoice);
-        console.log(`Started new invoice ${response.insertedId} for user ${newInvoice.userId}`);
+        const response = await handler.startInvoice(e.data);
+        console.log(response);
     });
 
     /**
@@ -131,31 +118,8 @@ const paymentService = async () => {
             };
         }
 
-        let invoice = await handler.find({ userId: e.data.userId, status: "riding" });
-        // let invoice = await mongoWrapper.find("invoices", { userId: e.data.userId, status: "riding" })
-        let response = await handler.updateOne({ _id: invoice[0]._id }, { 
-            status: "pending",
-            "end.lat": e.data.end.lat,
-            "end.lng": e.data.end.lng,
-            "end.time": e.data.end.time
-        });
-        // const res = await mongoWrapper.updateOne(
-        //     "invoices", 
-        //     { _id: invoice[0]._id },
-        //     { 
-        //         status: "pending",
-        //         "end.lat": e.data.end.lat,
-        //         "end.lng": e.data.end.lng,
-        //         "end.time": e.data.end.time
-        //     }
-        // );
+        const response = await handler.endInvoice(e.data);
         console.log(response)
-
-        // get the invoice from the db just to see if it updated
-        invoice = await handler.find({ userId: e.data.userId });
-        // invoice = await mongoWrapper.find("invoices", { userId: e.data.userId })
-        console.log(invoice);
-
     });
     
     /**
@@ -164,23 +128,14 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.onEvent(eventTypes.returnScooterEvents.establishParkingRate, async (e) => {
-        const invoice = handler.find({ userId: e.data.userId, price: undefined });
+        // for dev test
+        if (e.origin === "web_server") {
+            e.data.userId = "15";
+            e.data.rate = 50;
+        }
         
-        const startPrice = 10;
-        const pricePerMin = 2.5;
-        const rate = e.data.rate;
-        
-        const deltaTime =
-            (new Date(invoice.end.time.replace('|', 'T')).getTime()
-            -
-            new Date(invoice.start.time.replace('|', 'T')).getTime())
-            / 1000 * 60;
-
-        const price = startPrice + pricePerMin * deltaTime + rate
-
-        const response = handler.updateOne({ _id: invoice._id }, { price: price });
+        const response = await handler.fixParkingRate(e.data);
         console.log(response);
-
     });
 }
 
