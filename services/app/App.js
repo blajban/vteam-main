@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableHighlight, Modal, Pressable, Button } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableHighlight } from 'react-native';
 import * as Location from 'expo-location';
 import React, { useState,  useEffect } from 'react';
 import locationHandler from './models/locationHandler'
 import scooterHandler from './models/scooterHandler'
 import MapView from 'react-native-maps';
-import { Marker } from "react-native-maps";
+import { Marker, Callout } from "react-native-maps";
 import UserInfo from './components/userInfo'
 import QrModalPopup from './components/modals/qrCodeModal'
 import EndRideModal from './components/modals/endRideModal'
@@ -65,11 +65,19 @@ export default function App() {
         let data = await locationHandler.fetchLocations("stockholm", token);
         data = data.concat(await locationHandler.fetchLocations("goteborg", token));
         data = data.concat(await locationHandler.fetchLocations("malmo", token));
-        let marks = data.map ((e, i) => {return <Marker key={i} description={"Laddplats: " + String(e.charging) + " Rate: " + (e.rate)} coordinate={{latitude:e.properties.lat, longitude:e.properties.lng} }>
+        let marks = data.map ((e, i) => {return <Marker key={i}
+        description={"Laddplats: " + String(e.charging) + " Rate: " + (e.rate)}
+        coordinate={{latitude:e.properties.lat, longitude:e.properties.lng} }>
         <Image
         source={parkingIcon}
         style={{height: 20, width: 20}}
         />
+        <Callout>
+            <View style={styles.bubble}>
+            <Text> Laddplats: {String(e.charging)} </Text>
+            <Text> Rate: {e.rate}</Text>
+          </View>
+          </Callout>
         </Marker>})
         setMarkers(marks);
       } else {
@@ -77,11 +85,19 @@ export default function App() {
         let data = await scooterHandler.fetchScooters("stockholm", token)
         data = data.concat(await scooterHandler.fetchScooters("goteborg", token));
         data = data.concat(await scooterHandler.fetchScooters("malmo", token));
-        let marks = data.map ((e, i) => { return <Marker key={i} description={"Status: " + e.status + " Battery: " +  e.properties.battery+ "%"} coordinate={{latitude:e.properties.lat, longitude:e.properties.lng}}>
-        <Image
-        source={scooterIcon}
-        style={{height: 20, width: 20}}
-        />
+        let marks = data.map ((e, i) => { return <Marker key={i}
+          description={"Status: " + e.status + " Battery: " +  e.properties.battery+ "%"}
+          coordinate={{latitude:e.properties.lat, longitude:e.properties.lng}}>
+          <Image
+          source={scooterIcon}
+          style={{height: 20, width: 20}}
+          />
+          <Callout>
+            <View style={styles.bubble}>
+            <Text> Status: {e.status} </Text>
+            <Text> Battery: {e.properties.battery}%</Text>
+          </View>
+          </Callout>
         </Marker>})
         setMarkers(marks);
       }
@@ -148,7 +164,7 @@ export default function App() {
             <Image source={userIcon} style={styles.user_icon}></Image>
           </TouchableHighlight>
           {userInfoActive == 1?
-          <UserInfo token={token} loginId={loginId}></UserInfo>:
+          <UserInfo token={token} loginId={loginId} setUserInfoActive={setUserInfoActive}></UserInfo>:
           <></>
           }
       </View>
@@ -223,6 +239,10 @@ const styles = StyleSheet.create({
     width: 200,
     justifyContent: "center",
     alignItems: "center"
+  },
+  bubble:{
+    height: 50,
+    width: 150
   },
   map: {
     ...StyleSheet.absoluteFillObject,

@@ -58,7 +58,7 @@ const scooterHandler = {
     }
   },
   /**
-   * parks scooter.
+   * Parks scooter.
    *
    * @async
    * @param {string} scooterId - specified scooter to rent

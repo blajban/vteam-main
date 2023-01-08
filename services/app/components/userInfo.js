@@ -10,7 +10,7 @@ function UserInfo(props) {
   useEffect(() => {
     (async () => {
         setUserInfo(await userHandler.getUser(props.token, props.loginId, props.loginId))
-        console.log(await userHandler.getUser(props.token, props.loginId, props.loginId))
+        await userHandler.getUser(props.token, props.loginId, props.loginId)
     })();
   }, []);
 
@@ -25,7 +25,7 @@ return (
     <View style={styles.credit_container} testID={'saldoContainer'}>
       <Text>Ditt saldo</Text>
       <Text style={styles.font_credit}>{userInfo.balance}</Text>
-      {isModalVisible ?<ModalPopup isModalVisible={isModalVisible} setisModalVisible={setisModalVisible} token={props.token} loginId={props.loginId}></ModalPopup>:
+      {isModalVisible ?<ModalPopup isModalVisible={isModalVisible} setisModalVisible={setisModalVisible} userInfo={userInfo} token={props.token} loginId={props.loginId} setUserInfoActive={props.setUserInfoActive}></ModalPopup>:
     <></>}
       <TouchableHighlight style={{position: 'absolute', right: 0}} onPress={() => setisModalVisible(true)}>
         <Image source={plusIcon} style={{marginRight: 5, marginTop: 5, position: 'absolute', right: 0 } } />

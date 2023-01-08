@@ -3,13 +3,25 @@ import React, { useState,  useEffect } from 'react';
 import scooterHandler from '../../models/scooterHandler'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
+
+/**
+ * rentScooter function, calls on scooterHandler.rentscooter.
+ *
+ * @async
+ * @param {string} text - id of the scooter to rent
+ * @param {string} loginId - The users id.
+ * @param {string} token - github token.
+ */
 async function rentScooter(text, loginId, token) {
-  console.log(token)
-  console.log(await scooterHandler.rentScooter(text, loginId, token))
+  await scooterHandler.rentScooter(text, loginId, token)
 }
 
 const QrModalPopup = ({isModalVisible, setisModalVisible, setRideActive, text, setText, token, loginId}) => {
     const [scanned, setScanned] = useState(false)
+
+    /**
+     * Asks user for camera permission.
+     */
     const askForCameraPermission = () => {
       (async() => {
         await BarCodeScanner.requestPermissionsAsync();
@@ -20,8 +32,11 @@ const QrModalPopup = ({isModalVisible, setisModalVisible, setRideActive, text, s
       askForCameraPermission();
     }, []);
 
-    // what happens when we scan the bar code
-    const handleBarCodeScanned = ({type, data}) => {
+    /**
+     * When scanned sets scooter id as text.
+     * @param {string} data - Scooter id
+     */
+    const handleBarCodeScanned = ({data}) => {
       setScanned(true)
       setText(data)
     }
@@ -30,31 +45,31 @@ const QrModalPopup = ({isModalVisible, setisModalVisible, setRideActive, text, s
     return (
         <Modal transparent={true} isModalVisible={isModalVisible} animationType="fade">
             <View style={styles.modal_container}>
-                {!scanned ?
-                <View style={styles.barcode_container}>
-                <BarCodeScanner
-                  onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                  style={styles.barcode}
-                />
+              {!scanned ?
+              <View style={styles.barcode_container}>
+              <BarCodeScanner
+                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                style={styles.barcode}
+              />
+              </View>
+              :
+              <View style={{ flex: 1 , padding: 20, justifyContent: "center", alignItems: "center"}}>
+                <View style={{flex: 0.4, backgroundColor: "#ffffff",
+                  width: "90%", height: 50,  marginBottom: 30,
+                  borderColor: "black", borderWidth: 1, borderRadius: 20,
+                  justifyContent: "center", alignItems: "center", padding: 30}}>
+                  <Text style={styles.big_text_in_modal}>
+                    Vill du låsa upp scooter: {text} ?
+                  </Text>
+                  <Pressable style={styles.button_positiv} onPress={() => {setisModalVisible(false), setRideActive(true), rentScooter(text, loginId, token)}}>
+                    <Text style={styles.big_text_in_modal}>Lås upp</Text>
+                  </Pressable>
+                  <Pressable style={styles.button_negative} onPress={() => setisModalVisible(false)}>
+                    <Text style={styles.big_text_in_modal}>Avbryt</Text>
+                  </Pressable>
                 </View>
-                :
-                <View style={{ flex: 1 , padding: 20, justifyContent: "center", alignItems: "center"}}>
-                  <View style={{flex: 0.4, backgroundColor: '#fff',
-                    width: "90%", height: 100,  marginBottom: 30,
-                    borderColor: "black", borderWidth: 1, borderRadius: 20,
-                    justifyContent: "center", alignItems: "center", padding: 30}}>
-                    <Text style={styles.big_text_in_modal}>
-                      Vill du låsa upp scooter: {text} ?
-                    </Text>
-                    <Pressable style={styles.button_positiv} onPress={() => {setisModalVisible(false), setRideActive(true), rentScooter(text, loginId, token)}}>
-                          <Text style={styles.big_text_in_modal}>Lås upp</Text>
-                      </Pressable>
-                  </View>
-                </View>
-                }
-              <Pressable style={styles.button_negative} onPress={() => setisModalVisible(false)}>
-                          <Text style={styles.big_text_in_modal}>Avbryt</Text>
-              </Pressable>
+              </View>
+              }
             </View>
         </Modal>
       )
@@ -76,8 +91,7 @@ const styles = StyleSheet.create({
     },
     big_text_in_modal: {
       fontSize: 25,
-      fontWeight: "bold",
-      color: "white"
+      fontWeight: "bold"
     },
     barcode_container: {
       borderRadius: 30,

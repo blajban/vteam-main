@@ -8,11 +8,11 @@ const url = manifest.hostUri.split(':').shift().concat(':3500');
 const authHandler = {
 
   /**
-   * fetches locations.
+   * Fetches information about the user.
    *
    * @async
    * @param {string} city - specified city to fetch locations from
-   * @returns {(Object[]|null)} returns array of objects , or null if an error occurred.
+   * @returns {Object} returns object containing information about the user.
    */
   getUser: async function getUser(token, userId, loginId) {
     const response = await fetch(`http://${url}/v1/users/${loginId}/${userId}`, {
@@ -25,6 +25,15 @@ const authHandler = {
     return data;
   },
 
+  /**
+   * Updates users information in database.
+   *
+   * @async
+   * @param {string} token - github token
+   * @param {object} user - Object containing information about user
+   * @param {string} login - users logIn id
+   * @returns {Object} returns object containing information about the user
+   */
   updateUser: async function updateUser(token, user, loginId) {
     const response = await fetch(`http://${url}/v1/users/${loginId}/${user._id}`, {
       body: JSON.stringify(user),
