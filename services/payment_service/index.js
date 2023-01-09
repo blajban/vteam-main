@@ -1,7 +1,6 @@
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes} = require('../../shared/resources');
 const { MongoWrapper } = require('../../shared/mongowrapper');
-const { dbFiller } = require('./filler.js');
 const { invoiceHandler } = require('./invoice_handler');
 
 
@@ -45,7 +44,6 @@ const paymentService = async () => {
             e.data._id = data[1]._id;
         }
         const res = await handler.updateOne({ _id: e.data._id }, { status: "success"});
-        // const res = await mongoWrapper.updateOne("invoices", { _id: e.data._id }, { status: "success"} );
         console.log("updated invoice!", res)
     });
 
@@ -59,13 +57,11 @@ const paymentService = async () => {
             if (e.data.hasOwnProperty("invoiceId")) {
                 console.log(`getting invoice with id ${e.data.invoiceId}`);
                 const inv = await handler.find({ _id: e.data.invoiceId });
-                // const inv = await mongoWrapper.find("invoices", { _id: e.data.invoiceId });
                 return(inv)
             }
             else if (e.data.hasOwnProperty("userId")) {
                 console.log(`getting invoices for userId ${e.data.userId}`);
                 const inv = await handler.find({ userId: e.data.userId });
-                // const inv = await mongoWrapper.find("invoices", { userId: e.data.userId });
                 return(inv)
             }
             else {
@@ -94,7 +90,7 @@ const paymentService = async () => {
             e.data.start = {
                 lat: 57.54296029650948,
                 lon: 15.018597642963284,
-                time: "3022-11-01|11:17:25"
+                time: "3022-11-01T11:17:25.000Z"
             };
         }
 
@@ -114,7 +110,7 @@ const paymentService = async () => {
             e.data.end = {
                 lat: 157.54296029650948,
                 lon: 115.018597642963284,
-                time: "3022-11-01|11:32:03"
+                time: "3022-11-01T11:32:03.000Z"
             };
         }
 

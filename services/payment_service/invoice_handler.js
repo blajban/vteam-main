@@ -87,9 +87,14 @@ class invoiceHandler {
         let invoice = await this.find({ userId: data.userId, status: "riding" });
         let response = await this.updateOne({ _id: invoice[0]._id }, { 
             status: "pending",
-            "end.lat": data.end.lat,
-            "end.lng": data.end.lng,
-            "end.time": data.end.time
+            end: {
+                lat: data.end.lat,
+                lng: data.end.lng,
+                time: data.end.time
+            }
+            // "end.lat": data.end.lat,
+            // "end.lng": data.end.lng,
+            // "end.time": data.end.time
         });
         return response;
     }
@@ -107,9 +112,9 @@ class invoiceHandler {
         const rate = data.rate;
         
         const deltaTime =
-            (new Date(invoice[0].end.time.replace('|', 'T')).getTime()
+            (new Date(invoice[0].end.time).getTime()
             -
-            new Date(invoice[0].start.time.replace('|', 'T')).getTime())
+            new Date(invoice[0].start.time).getTime())
             / 1000 * 60;
 
         const price = startPrice + pricePerMin * deltaTime + rate;
