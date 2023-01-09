@@ -74,7 +74,7 @@ class Scooter {
     this.info.userId = userId;
     this.info.properties.speed = 0;
     
-    this.startTime = null;
+    this.start = null;
     clearInterval(this.driveInterval);
   }
 
