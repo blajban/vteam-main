@@ -3,6 +3,8 @@
 echo "Initialising.."
 
 touch .env
+touch ./services/web/src/api-key.json
+touch ./services/app/api-key.json
 
 npm install
 
@@ -10,11 +12,10 @@ npm install
 
 docker-compose up -d mongodb
 docker-compose up -d rabbitmq
-
 docker-compose up --build -d gateway
 
 echo "Getting api-key..."
-sleep 3
+sleep 8
 
 curl -s --request GET 'http://localhost:3500/api-key' | jq '{"key":.key}' > ./services/web/src/api-key.json
 curl -s --request GET 'http://localhost:3500/api-key' | jq '{"key":.key}' > ./services/app/api-key.json
@@ -25,7 +26,6 @@ PRODFILE="docker-compose-prod.yml"
 
 if [[ $1 == "--prod" ]]
 then
-    echo "$PRODFILE"
     docker-compose -f "$PRODFILE" up -d --build payment_service
     docker-compose -f "$PRODFILE" up -d --build user_service
     docker-compose -f "$PRODFILE" up -d --build location_service
@@ -35,3 +35,5 @@ then
 
     echo "Up and running!"
 fi
+
+
