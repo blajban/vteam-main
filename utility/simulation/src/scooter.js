@@ -45,7 +45,11 @@ class Scooter {
     console.log(`Unlocking ${this.info._id}`);
     this.info.status = status;
     this.info.userId = userId;
-    this.startTime = new Date();
+    this.start = {
+      time: new Date(),
+      lat: this.info.properties.lat,
+      lng: this.info.properties.lng
+    };
     this.driveInterval = driveInterval;
     this.driveIntervalTime = driveIntervalTime;
   }
@@ -58,15 +62,19 @@ class Scooter {
   lockScooter(status, userId) {
     console.log(`Locking ${this.info._id}`);
     this.info.log.push({
-    userId: this.info.userId,
-    start: this.startTime,
-    end: new Date() 
+      userId: this.info.userId,
+      start: this.start,
+      end: {
+        time: new Date(),
+        lat: this.info.properties.lat,
+        lng: this.info.properties.lng
+      },
     });
     this.info.status = status;
     this.info.userId = userId;
     this.info.properties.speed = 0;
     
-    this.startTime = null;
+    this.start = null;
     clearInterval(this.driveInterval);
   }
 
