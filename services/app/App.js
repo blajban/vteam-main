@@ -85,7 +85,8 @@ export default function App() {
         let data = await scooterHandler.fetchScooters('stockholm', token);
         data = data.concat(await scooterHandler.fetchScooters('goteborg', token));
         data = data.concat(await scooterHandler.fetchScooters('malmo', token));
-        const marks = data.map((e, i) => { return <Marker key={i}
+        const filteredData = data.filter((e) => e.status === 'available');
+        const marks = filteredData.map((e, i) => { return <Marker key={i}
           description={`Status: ${e.status} Battery: ${e.properties.battery}%`}
           coordinate={{ latitude: e.properties.lat, longitude: e.properties.lng }}>
           <Image
@@ -94,6 +95,7 @@ export default function App() {
           />
           <Callout>
             <View style={styles.bubble}>
+            <Text> Scooter: {e._id} </Text>
             <Text> Status: {e.status} </Text>
             <Text> Battery: {e.properties.battery}%</Text>
           </View>
@@ -240,7 +242,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bubble: {
-    height: 50,
+    height: 80,
     width: 150,
   },
   map: {
