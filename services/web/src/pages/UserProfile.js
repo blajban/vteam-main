@@ -2,9 +2,9 @@ import SidemenuUser from "../components/sidemenus/SidemenuUser"
 import HistoryTable from "../components/tables/HistoryTable"
 import Userprofile from "../components/Userprofile";
 import "../assets/css/style.css"
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-export function UserProfile({token, userId, admin}) {
+export function UserProfile({token, userId}) {
     const [loadedUserPage, setLoadedUserPage] = useState(1);
 
     function linkToLogin() {
@@ -18,9 +18,9 @@ export function UserProfile({token, userId, admin}) {
                 <SidemenuUser setLoadedUserPage={setLoadedUserPage}></SidemenuUser>
 
                 {(loadedUserPage === 1) ?
-                <Userprofile userId={userId}/>:
+                <Userprofile token={token} userId={userId}/>:
 
-                <HistoryTable></HistoryTable>
+                <HistoryTable token={token} userId={userId}></HistoryTable>
                 }
             </>
             :
