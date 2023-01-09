@@ -115,7 +115,7 @@ function RateTable({token, userId}) {
         <td> <input type="text" placeholder="id" ref={inputid}></input></td>
         <td> <input type="text" placeholder="name" ref={inputName}></input></td>
         <td> <input type="text" placeholder="tariff" ref={inputTariff} ></input></td>
-        <td><button onClick={() => {addRate({token, userId, inputid, inputName, inputTariff})}}>Add</button></td>
+        <td><button onClick={() => {addRate(token, userId, {inputid, inputName, inputTariff})}}>Add</button></td>
       </tr>
       </tbody>
     </table>

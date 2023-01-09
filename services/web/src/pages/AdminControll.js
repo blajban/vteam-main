@@ -5,8 +5,8 @@ import LocationTable from "../components/tables/LocationTable";
 import RateTable from "../components/tables/RateTable";
 import InvoiceTable from "../components/tables/InvoiceTable";
 import ScooterTable from "../components/tables/ScooterTable";
-// import UserTable from "../components/tables/UserTable";
-// import UserProfile from "../components/Userprofile";
+import UserTable from "../components/tables/UserTable";
+import Userprofile from "../components/Userprofile";
 
 export function AdminControll({token, userId, admin}) {
     const [loadedAdminPage, setLoadedAdminPage] = useState(1);
@@ -17,13 +17,13 @@ export function AdminControll({token, userId, admin}) {
                 <>
                     <SidemenuAdmin setLoadedAdminPage={setLoadedAdminPage}></SidemenuAdmin>
                     {(loadedAdminPage === 1)?
-                    <div>UserProfile ska uppdateras</div>:
+                    <Userprofile token={token} userId={userId}></Userprofile>:
                     (loadedAdminPage === 2) ?
                     <LocationTable token={token} userId={userId}></LocationTable>:
                     (loadedAdminPage === 3) ?
                     <ScooterTable token={token} userId={userId}/>:
                     (loadedAdminPage === 4) ?
-                    <div>UserTable ska uppdateras</div>:
+                    <UserTable token={token} userId={userId}></UserTable>:
                     (loadedAdminPage === 5) ?
                     <RateTable token={token} userId={userId}></RateTable>:
                     (loadedAdminPage === 6) ?
