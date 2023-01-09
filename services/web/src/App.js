@@ -72,7 +72,7 @@ function App() {
             <Route path="/" element={<Home/>}></Route>
             <Route path="/Map" element={<Mapside token={token} userId={userId} />}></Route>
             <Route path="/Admincontroll" element={<AdminControll token={token} userId={userId} admin={admin} />}></Route>
-            <Route path="/Userprofile" element={<UserProfile token={token} userId={userId} admin={admin} />}></Route>
+            <Route path="/Userprofile" element={<UserProfile token={token} userId={userId} />}></Route>
           </Routes>
           <button onClick={logout}>Logout</button>
         </>
@@ -84,7 +84,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home/>}></Route>
               <Route path="/Map" element={<Mapside token={token} userId={userId} />}></Route>
-              <Route path="/Userprofile" element={<UserProfile token={token} userId={userId} admin={admin} />}></Route>
+              <Route path="/Userprofile" element={<UserProfile token={token} userId={userId} />}></Route>
             </Routes>
             <button onClick={logout}>Logout</button>
           </>
