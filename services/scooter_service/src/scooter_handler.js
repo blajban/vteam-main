@@ -158,6 +158,7 @@ class ScooterHandler {
       if (scooter._id === lockedScooter._id) {
         scooter.status = lockedScooter.status;
         scooter.userId = lockedScooter.userId;
+        scooter.log = lockedScooter.log;
         console.log(`Scooter ${scooter._id} locked`);
         return scooter;
       }
