@@ -51,8 +51,8 @@ const usersModel = {
         await response.json();
     },
 
-    deleteUser: async function deleteUser(token, user, loginId) {
-        const response = await fetch(`http://localhost:3500/v1/users/${loginId}/${user._id}`, {
+    deleteUser: async function deleteUser(token, userId, loginId) {
+        const response = await fetch(`http://localhost:3500/v1/users/${loginId}/${userId}`, {
             headers: {
                 'content-type': 'application/json',
                 'x-access-token': token,
