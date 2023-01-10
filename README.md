@@ -1,11 +1,11 @@
-# vteam-main
+# vteam
 
-A scooter rental system school project at Blekinge Teknisks Högskola.
+A scooter rental system school project at Blekinge Tekniska Högskola.
 
 ![Scooter app](https://github.com/blajban/vteam-main/blob/main/readme/scooter_app.png "Scooter app")
 
 ## Install and run
-You need two different GitHub OAuth apps for the system to be able to log in and use the system as intended.
+You need two different GitHub OAuth apps for the system to be able to log in and use the system as intended. Make sure the one for CLIENT has device flow enabled.
 
 1. Clone repo
 2. Add a `.env` file to root folder and add the following:
