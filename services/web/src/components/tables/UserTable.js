@@ -5,29 +5,6 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
 /**
- * Adds a new user.
- *
- * @async
- * @param {string} token - OAuth token.
- * @param {number} loginId - id of the user who is logged in.
- * @param {object} userObject - An object containing the user details.
- */
-async function addUser(token, loginId, userObject){
-  const newUser = {
-    _id: userObject.inputId.current.value,
-    name: userObject.inputName.current.value,
-    mobile: userObject.inputPhone.current.value,
-    mail: userObject.inputMail.current.value,
-    city: userObject.inputCity.current.value,
-    address: userObject.inputAddress.current.value,
-    zip: userObject.inputZip.current.value,
-    admin: userObject.inputAdmin.current.value,
-    balance: userObject.inputBalance.current.value
-  }
-  await usersHandler.addUser(newUser, token, loginId);
-}
-
-/**
  * Deletes an user.
  *
  * @async
@@ -84,6 +61,22 @@ function UserTable({token, userId}) {
   const inputAdminEdit = useRef(null);
   const inputBalanceEdit = useRef(null);
 
+  async function addUser(){
+    const newUser = {
+      _id: inputId.current.value,
+      name: inputName.current.value,
+      mobile: inputPhone.current.value,
+      mail: inputMail.current.value,
+      city: inputCity.current.value,
+      address: inputAddress.current.value,
+      zip: inputZip.current.value,
+      admin: inputAdmin.current.value,
+      balance: inputBalance.current.value
+    }
+    await usersHandler.addUser(newUser, token, userId);
+    setUsers(await usersHandler.getAllUsers(token, userId));
+  }
+
   useEffect(() => {
     (async () => {
         setUsers(await usersHandler.getAllUsers(token, userId));
@@ -101,7 +94,7 @@ function UserTable({token, userId}) {
         <td>{user.address}</td>
         <td>{user.zip}</td>
         <td>{user.city}</td>
-        <td>{user.admin}</td>
+        <td>{user.admin.toString()}</td>
         <td>{user.balance}</td>
 
         <td>
@@ -113,7 +106,7 @@ function UserTable({token, userId}) {
             <input type="text" defaultValue={user.address} ref={inputAddressEdit}></input>
             <input type="text" defaultValue={user.zip} ref={inputZipEdit} ></input>
             <input type="text" defaultValue={user.city} ref={inputCityEdit}></input>
-            <input type="text" defaultValue={user.admin} ref={inputAdminEdit} ></input>
+            <input type="text" defaultValue={user.admin.toString()} ref={inputAdminEdit} ></input>
             <input type="number" step="0.01" defaultValue={user.balance} ref={inputBalanceEdit}></input>
             <button onClick={() => {updateUser(token, userId, user._id,
                 {inputNameEdit, inputPhoneEdit, inputMailEdit, inputAddressEdit,
@@ -156,8 +149,7 @@ function UserTable({token, userId}) {
         <td> <input type="text" placeholder="city" ref={inputCity}></input></td>
         <td> <input type="text" placeholder="admin" ref={inputAdmin}></input></td>
         <td> <input type="number" step="0.01" placeholder="balance" ref={inputBalance} ></input></td>
-        <td><button onClick={() => {addUser(token, userId, {inputId, inputName, inputPhone,
-        inputMail, inputAddress, inputZip, inputCity, inputAdmin, inputBalance})}}>Add</button></td>
+        <td><button onClick={() => {addUser}}>Add</button></td>
       </tr>
       </tbody>
     </table>
