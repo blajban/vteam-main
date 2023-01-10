@@ -26,18 +26,19 @@ it('tests getGitHubUser with valid input', async () => {
   {
     'x-access-token': 'token',
     'x-api-key': API_KEY.key }
-  },
-  ),
+  });
 });
 
 it('tests req with valid input', async () => {
   await authHandler.req('token');
   expect(fetch).toHaveBeenCalledWith('https://github.com/login/device/code', {
-    body: '{}',
-    headers:
-     { Accept: 'application/json',
-       'Content-Type': 'application/json',
-     },
+    body: JSON.stringify({
+      client_id: '56fd540d2f775fd52e86',
+    }),
+    headers:{
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
     method: 'post',
   });
 });
