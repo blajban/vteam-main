@@ -24,7 +24,7 @@ print("Adding scooters...")
 
 route = "/v1/eventflows/addRandomScooters/"
 for city in CITIES:
-    response = requests.request("GET", f"{URL}{route}{city}/1000/{ADM_ID}", headers=HEADERS, data={})
+    response = requests.request("GET", f"{URL}{route}{city}/500/{ADM_ID}", headers=HEADERS, data={})
 
 print("Added scooters...")
 
