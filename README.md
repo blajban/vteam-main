@@ -22,6 +22,7 @@ The `TESTTOKEN` and `TESTADMINID` can be used with the REST API to test the syst
 GITHUB_CLIENT_ID="your_id" 
 ```
 This OAuth app needs to have device flow enabled.
+
 4. Run `./init.bash --prod` to get the system up and running.
 5. Run the `demo.py` script to add content like scooters and parking spots to the system.
 
