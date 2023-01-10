@@ -8,17 +8,27 @@ jest.mock('expo-constants', () => ({
   },
 }));
 
-test('tests without city', async () => {
+test('tests locationHandler without city', async () => {
   const locations = await locationHandler.fetchLocations();
   expect(locations).toEqual('No city specified');
 });
 
-test('tests without token', async () => {
+test('tests locationHandler without token', async () => {
   const locations = await locationHandler.fetchLocations('stockholm');
   expect(locations).toEqual('No token specified');
 });
 
-test('tests with city expect null', async () => {
+test('tests locationHandler with city expect null', async () => {
   const locations = await locationHandler.fetchLocations('stockholm', 'token');
+  expect(locations).toEqual([{}]);
+});
+
+test('tests locationHandler rate without token', async () => {
+  const locations = await locationHandler.fetchRates();
+  expect(locations).toEqual('No token specified');
+});
+
+test('tests locationHandler rate with token', async () => {
+  const locations = await locationHandler.fetchRates('token');
   expect(locations).toEqual([{}]);
 });
