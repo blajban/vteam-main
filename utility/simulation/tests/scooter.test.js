@@ -45,7 +45,7 @@ describe('Scooter', () => {
     });
     it('start time set', () => {
       scooter.unlockScooter(1, 3000, 'claimed', '200');
-      expect(scooter.startTime).toBeInstanceOf(Date);
+      expect(scooter.start.time).toBeInstanceOf(Date);
     });
   });
 
@@ -59,13 +59,13 @@ describe('Scooter', () => {
       scooter.unlockScooter(1, 3000, 'claimed', '200');
       scooter.lockScooter('available', '0');
       expect(scooter.info.log[0].userId).toBe('200');
-      expect(scooter.info.log[0].start).toBeInstanceOf(Date);
-      expect(scooter.info.log[0].end).toBeInstanceOf(Date);
+      expect(scooter.info.log[0].start.time).toBeInstanceOf(Date);
+      expect(scooter.info.log[0].end.time).toBeInstanceOf(Date);
     });
     it('startTime reset to null', () => {
       scooter.unlockScooter(1, 3000, 'claimed', '200');
       scooter.lockScooter('available', '0');
-      expect(scooter.startTime).toBeNull();
+      expect(scooter.start).toBeNull();
     });
   });
 
@@ -95,9 +95,9 @@ describe('Scooter', () => {
   });
 
   describe('lowBattery', () => {
-    it('expect battery to be low when < 20', () => {
-      scooter.info.properties.battery = 19;
-      expect(scooter.info.properties.battery).toBe(19);
+    it('expect battery to be low when < 10', () => {
+      scooter.info.properties.battery = 9;
+      expect(scooter.info.properties.battery).toBe(9);
       const batteryStatus = scooter.lowBattery();
       expect(batteryStatus).toBe(true);
     });

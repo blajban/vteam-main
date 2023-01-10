@@ -28,7 +28,7 @@ describe('ScooterEvents', () => {
         lat: 76,
         lng: 77,
         speed: 0,
-        battery: 19,
+        battery: 9,
         location: "malmo",
       },
     };
