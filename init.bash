@@ -2,7 +2,6 @@
 
 echo "Initialising.."
 
-touch .env
 touch ./services/web/src/api-key.json
 touch ./services/app/api-key.json
 
