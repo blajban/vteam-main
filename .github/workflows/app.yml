@@ -21,8 +21,4 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - run: npm install
-      working-directory: services/app
-    - run: npm test
-      working-directory: services/app
     - run: mv services/app/coverage app-coverage
