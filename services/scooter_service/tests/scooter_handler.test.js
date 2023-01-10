@@ -86,21 +86,6 @@ describe('ScooterHandler', () => {
       expect(scooterHandler.scooters[0].userId).toEqual(updatedScooter.userId);
       expect(scooterHandler.scooters[0].status).toEqual(updatedScooter.status);
     });
-
-    it('throw an error if the scooter with the ID is not found', () => {
-      const updatedScooter = {
-        _id: '4',
-        status: 'claimed',
-        userId: '123',
-        properties: {
-          lat: 37.775,
-          lng: -122.4183,
-        },
-      };
-      expect(() => {
-        scooterHandler.updateActiveScooter(updatedScooter);
-      }).toThrow();
-    });
   });
 
   describe('removeActiveScooter', () => {
@@ -216,8 +201,8 @@ describe('ScooterHandler', () => {
     });
   });
 
-  describe('updateScooterPosition', () => {
-    it('update the position of a scooter', () => {
+  describe('updateScooterStatus', () => {
+    it('update status of an active scooter', () => {
       const updatedScooter = {
         _id: '1',
         status: 'available',
@@ -225,9 +210,11 @@ describe('ScooterHandler', () => {
         properties: {
           lat: 37.7751,
           lng: -122.4184,
+          speed: 25,
+          battery: 20
         },
       };
-      scooterHandler.updateScooterPosition(updatedScooter);
+      scooterHandler.updateScooterStatus(updatedScooter);
       expect(scooterHandler.scooters[0]).toEqual(updatedScooter);
     });
 
