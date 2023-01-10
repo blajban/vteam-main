@@ -15,7 +15,9 @@
         "class-methods-use-this": "off",
         "no-underscore-dangle": "off",
         "no-return-await": "off",
-        "arrow-body-style": "off"
+        "arrow-body-style": "off",
+        "no-unused-vars": "off",
+        "radix": "off"
     },
     "plugins": ["jest"]
 }

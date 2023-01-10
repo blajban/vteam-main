@@ -7,12 +7,6 @@ const { MongoWrapper } = require('../../../shared/mongowrapper');
  */
 class AuthHandler {
   /**
-   * Creates a new AuthHandler instance
-   */
-  constructor() {
-  }
-
-  /**
    * Returns the token which we get from GitHub.
    * @param {string} code - Temp code that we went to exchange for a token.
    * @returns {string} The token.
