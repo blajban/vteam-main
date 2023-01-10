@@ -115,8 +115,8 @@ const userService = async () => {
       if (e.data.userId === testAdminId) {
         const obj = {
           loggedIn: true,
-          admin: true
-        }
+          admin: true,
+        };
         return obj;
       }
     }
@@ -135,29 +135,29 @@ const userService = async () => {
             // checks if the user is admin and it is
             const obj2 = {
               loggedIn: true,
-              admin: true
-            }
+              admin: true,
+            };
             return obj2;
           }
           // checks if the user is admin and it is not
           const obj3 = {
             loggedIn: true,
-            admin: false
-          }
+            admin: false,
+          };
           return obj3;
         }
         // does not check if the user is admin and has a valid token
         const obj4 = {
           loggedIn: true,
-          admin: true
-        }
+          admin: true,
+        };
         return obj4;
       }
       // does not check if the user is admin and does not have a valid token
       const obj5 = {
         loggedIn: false,
-        admin: false
-      }
+        admin: false,
+      };
       return obj5;
     } catch (error) {
       return false;
