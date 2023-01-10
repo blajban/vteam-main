@@ -59,6 +59,12 @@ export default function App() {
   useEffect(() => {
     (async () => {
       if (rideActive) {
+        // Fetches rates
+        const rates = await locationHandler.fetchRates(token);
+        let ratesMap = new Map();
+        rates.forEach((e) => {
+          ratesMap.set(e.id, e.tariff);
+        })
         //  Fetching locations for all cities
         let data = await locationHandler.fetchLocations('stockholm', token);
         data = data.concat(await locationHandler.fetchLocations('goteborg', token));
@@ -74,7 +80,7 @@ export default function App() {
         <Callout>
             <View style={styles.bubble}>
             <Text> Laddplats: {String(e.charging)} </Text>
-            <Text> Rate: {e.rate}</Text>
+            <Text> Rate: {ratesMap.get(e.rate)}kr</Text>
           </View>
           </Callout>
         </Marker>;

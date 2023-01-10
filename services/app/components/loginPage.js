@@ -12,7 +12,6 @@ function LoginPage(props) {
    * @param {object} req Contains information from github;
    */
   async function checkForAuthentication(req) {
-    if (!req) return null;
     const data = await authHandler.checkForAuth(req);
     if (data.access_token) {
       props.setRequest(data);

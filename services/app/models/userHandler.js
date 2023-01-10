@@ -15,6 +15,9 @@ const authHandler = {
    * @returns {Object} returns object containing information about the user.
    */
   getUser: async function getUser(token, userId, loginId) {
+    if (!token) return 'No token specified';
+    if (!userId) return 'No userid specified';
+    if (!loginId) return 'No loginId specified';
     const response = await fetch(`http://${url}/v1/users/${loginId}/${userId}`, {
       headers: {
         'x-access-token': token,
@@ -35,6 +38,9 @@ const authHandler = {
    * @returns {Object} returns object containing information about the user
    */
   updateUser: async function updateUser(token, user, loginId) {
+    if (!token) return 'No token specified';
+    if (!user) return 'No userid specified';
+    if (!loginId) return 'No loginId specified';
     const response = await fetch(`http://${url}/v1/users/${loginId}/${user._id}`, {
       body: JSON.stringify(user),
       headers: {
