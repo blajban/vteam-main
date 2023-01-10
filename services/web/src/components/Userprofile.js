@@ -110,7 +110,7 @@ function Userprofile({token, userId}) {
                     />
                 </label>
                 <br></br>
-                <button onClick={(e) => updateUser(e)}>Uppdatera uppgifter</button>
+                <button onClick={(e) => updateUser(e)}>Edit information</button>
             </form>
         </div>
         )
