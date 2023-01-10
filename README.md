@@ -8,19 +8,22 @@ A scooter rental system school project at Blekinge Tekniska Högskola.
 You need two different GitHub OAuth apps for the system to be able to log in and use the system as intended. Make sure the one for CLIENT has device flow enabled.
 
 1. Clone repo
-2. Add a `.env` file to root folder and add the following:
+2. Add a `.env` file to the root folder and add the following:
 ```
 TESTTOKEN="testa1"
 TESTADMINID="1"
-GITHUB_CLIENT_ID="your_id" 
-GITHUB_CLIENT_SECRET="your_id"
 GITHUB_WEB_CLIENT_ID="your_id"
-GITHUB_WEB_CLIENT_SECRET="your_id"
+GITHUB_WEB_CLIENT_SECRET="your_secret"
 ```
 The `TESTTOKEN` and `TESTADMINID` can be used with the REST API to test the system, including adding your Github account as an admin after you have logged in through the app or the web and created the user.
 
-3. Run `./init.bash --prod` to get the system up and running.
-4. Run the `demo.py` script to add content like scooters and parking spots to the system.
+3. Add a `.env` file to the `/services/app` folder and add the following:
+```
+GITHUB_CLIENT_ID="your_id" 
+```
+This OAuth app needs to have device flow enabled.
+4. Run `./init.bash --prod` to get the system up and running.
+5. Run the `demo.py` script to add content like scooters and parking spots to the system.
 
 ### Web application
 Go to `localhost:9001` to use the web application. A user account is created automatically when you login via Github OAuth. You can give this user admin rights via the gateway once you have logged in. 
