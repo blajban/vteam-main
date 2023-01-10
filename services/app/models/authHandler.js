@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import { GITHUB_CLIENT_ID } from '@env';
 
 const API_KEY = require('../api-key.json');
 
@@ -39,7 +40,7 @@ const authHandler = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        client_id: '56fd540d2f775fd52e86',
+        client_id: GITHUB_CLIENT_ID,
       }),
     });
     const data = await response.json();
@@ -62,7 +63,7 @@ const authHandler = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        client_id: '56fd540d2f775fd52e86',
+        client_id: GITHUB_CLIENT_ID,
         device_code: req.device_code,
         grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
       }),

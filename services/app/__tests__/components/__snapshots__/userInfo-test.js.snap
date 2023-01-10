@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserInfo Renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "borderColor": "#228377",
+      "borderRadius": 10,
+      "borderWidth": 5,
+      "flex": 1,
+      "marginBottom": 30,
+      "width": "80%",
+    }
+  }
+/>
+`;
+
+exports[`Userinfo Renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "borderColor": "#228377",
+      "borderRadius": 10,
+      "borderWidth": 5,
+      "flex": 1,
+      "marginBottom": 30,
+      "width": "80%",
+    }
+  }
+/>
+`;
