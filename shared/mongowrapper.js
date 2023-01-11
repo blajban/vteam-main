@@ -1,5 +1,5 @@
-const  ObjectID = require('mongodb').ObjectId;
-const mongo = require("mongodb").MongoClient;
+const ObjectID = require('mongodb').ObjectId;
+const mongo = require('mongodb').MongoClient;
 
 /**
  * A class for creating MongoDB wrapper objects.
@@ -16,24 +16,25 @@ class MongoWrapper {
    * Initiate, used to get around constructor async limitations.
    * @returns {object}
    */
-  async #connectClient(dbName){
-    this.url = "mongodb://mongodb:27017/mydb";
+  async #connectClient(dbName) {
+    this.url = 'mongodb://mongodb:27017/mydb';
     this.dbName = dbName;
 
     try {
-      const client = await mongo.connect(this.url, { useNewUrlParser: true,
-      useUnifiedTopology: true, });
+      const client = await mongo.connect(this.url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
       this.client = client;
       return this;
-    } catch(e) {
-        return {
-          errors: {
-            message: "could not connect to mongo",
-          }
-        };
+    } catch (e) {
+      return {
+        errors: {
+          message: 'could not connect to mongo',
+        },
+      };
     }
   }
-
 
   /**
    * Gets a collection from MongoDB.
@@ -46,15 +47,15 @@ class MongoWrapper {
   }
 
   async getNextId(collectionName, idName) {
-    const counterCollectionName = collectionName + "Counter";
+    const counterCollectionName = `${collectionName}Counter`;
     const collection = await this.getCollection(counterCollectionName);
 
-    const lastId = await collection.findOne( { "_id" : idName });
+    const lastId = await collection.findOne({ '_id': idName });
 
     if (lastId === null) {
       const newId = {
         _id: idName,
-        seq: 0
+        seq: 0,
       };
 
       collection.insertOne(newId);
@@ -65,13 +66,12 @@ class MongoWrapper {
     collection.deleteOne({ _id: lastId._id });
     const newId = {
       _id: idName,
-      seq: lastId.seq + 1
+      seq: lastId.seq + 1,
     };
 
     collection.insertOne(newId);
 
     return newId.seq;
-
   }
 
   /**
@@ -116,7 +116,7 @@ class MongoWrapper {
    */
   async updateOne(collectionName, objectId, update) {
     const collection = await this.getCollection(collectionName);
-    return collection.updateOne( {"_id" : ObjectID(objectId._id)}, {$set: update});
+    return collection.updateOne({ '_id': ObjectID(objectId._id) }, { $set: update });
   }
 
   /**
@@ -128,7 +128,7 @@ class MongoWrapper {
    */
   async updateOneUser(collectionName, userId, update) {
     const collection = await this.getCollection(collectionName);
-    return await collection.updateOne( {"_id" : userId}, {$set: update});
+    return await collection.updateOne({ '_id': userId }, { $set: update });
   }
 
   /**
@@ -139,7 +139,7 @@ class MongoWrapper {
    */
   async deleteOne(collectionName, deleteObject) {
     const collection = await this.getCollection(collectionName);
-    return collection.deleteOne( { "_id" : ObjectID(deleteObject._id) });
+    return collection.deleteOne({ '_id': ObjectID(deleteObject._id) });
   }
 
   /**
@@ -150,7 +150,7 @@ class MongoWrapper {
    */
   async deleteOneUser(collectionName, userId) {
     const collection = await this.getCollection(collectionName);
-    return await collection.deleteOne( { "_id" : userId });
+    return await collection.deleteOne({ '_id': userId });
   }
 
   /**
@@ -159,7 +159,6 @@ class MongoWrapper {
    * @returns {Object[]} - The documents.
    */
   async find(collectionName, query = {}) {
-
     if (query.hasOwnProperty('_id')) {
       query._id = ObjectID(query._id);
     }
@@ -201,9 +200,9 @@ class MongoWrapper {
    */
   async findOneUser(collectionName, userId) {
     const collection = await this.getCollection(collectionName);
-    const filter = { _id: userId};
+    const filter = { _id: userId };
     return await collection.findOne(filter);
   }
 }
 
-  module.exports = { MongoWrapper }
+module.exports = { MongoWrapper };

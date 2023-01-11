@@ -22,7 +22,8 @@
         "no-return-await": "off",
         "no-param-reassign": "off",
         "array-callback-return": "off",
-        "consistent-return": "off"
+        "consistent-return": "off",
+        "no-plusplus": "off"
     },
     "plugins": ["jest"]
 }

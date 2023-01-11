@@ -1,10 +1,7 @@
-
-
 const { MessageBroker } = require('../../shared/mq');
 const { host, eventTypes } = require('../../shared/resources');
-const { ScooterEvents } = require('./src/scooter_events')
+const { ScooterEvents } = require('./src/scooter_events');
 const { Scooter } = require('./src/scooter');
-
 
 /**
  * Initializes the simulation.
@@ -22,15 +19,12 @@ const main = async () => {
       scooterEvents.init(scooter);
       scooters.push(scooter);
     }
-    console.log(`Initialised ${scooters.length} scooters from scooter_service...`);
-
   });
 
   broker.onEvent(eventTypes.scooterEvents.scooterAdded, (e) => {
     const scooter = new Scooter(e.data);
     scooterEvents.init(scooter);
     scooters.push(scooter);
-    console.log(`Scooter added for a total of ${scooters.length} scooters.`);
   });
 
   broker.onEvent(eventTypes.scooterEvents.scooterUpdated, (e) => {
@@ -39,8 +33,7 @@ const main = async () => {
         scooters[i].update(e.data);
       }
     }
-    console.log(`Updated scooter`);
-  })
+  });
 
   const removeFromSim = (scooter) => {
     for (let i = 0; i < scooters.length; i++) {
@@ -50,8 +43,7 @@ const main = async () => {
         break;
       }
     }
-    console.log(`Removed scooter (${scooters.length} scooters still in action)`);
-  }
+  };
 
   broker.onEvent(eventTypes.scooterEvents.scooterRemoved, (e) => {
     removeFromSim(e.data);
@@ -59,10 +51,8 @@ const main = async () => {
 
   broker.onEvent(eventTypes.scooterEvents.lowBatteryRemoved, (e) => {
     removeFromSim(e.data);
-  })
-
-}
+  });
+};
 
 // Run simulation
 main();
-

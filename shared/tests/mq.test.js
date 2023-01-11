@@ -7,20 +7,18 @@ jest.mock('amqplib', () => {
         assertExchange: jest.fn(() => Promise.resolve()),
         assertQueue: jest.fn(() => Promise.resolve({ queue: 'queue-name' })),
         bindQueue: jest.fn(),
-        consume: jest.fn((queue, cb) => cb({ 
+        consume: jest.fn((queue, cb) => cb({
           content: '{"eventType":"testEvent","origin":"testService","data":{"name":"erik","email":"erik@erik.se"}}',
-          properties: { correlationId: "5"}
+          properties: { correlationId: '5' },
         })),
         publish: jest.fn(),
         sendToQueue: jest.fn(),
         prefetch: jest.fn(),
-        ack: jest.fn()
-      }))
-    }))
+        ack: jest.fn(),
+      })),
+    })),
   };
 });
-
-
 
 describe('MessageBroker', () => {
   let broker;
@@ -43,7 +41,7 @@ describe('MessageBroker', () => {
       const eventType = 'testEvent';
       const data = {
         name: 'erik',
-        email: 'erik@erik.se'
+        email: 'erik@erik.se',
       };
 
       const event = broker.constructEvent(eventType, data);
@@ -53,8 +51,8 @@ describe('MessageBroker', () => {
         origin: 'testService',
         data: {
           name: 'erik',
-          email: 'erik@erik.se'
-        }
+          email: 'erik@erik.se',
+        },
       });
     });
   });
@@ -70,8 +68,8 @@ describe('MessageBroker', () => {
         origin: 'testService',
         data: {
           name: 'erik',
-          email: 'erik@erik.se'
-        }
+          email: 'erik@erik.se',
+        },
       };
 
       await broker.publish(event);
@@ -87,8 +85,8 @@ describe('MessageBroker', () => {
         origin: 'testService',
         data: {
           name: 'erik',
-          email: 'erik@erik.se'
-        }
+          email: 'erik@erik.se',
+        },
       };
       await broker.publish(event);
       expect(broker.channel.assertExchange).toHaveBeenCalledWith('system', 'direct', { durable: false });
@@ -106,8 +104,8 @@ describe('MessageBroker', () => {
         origin: 'testService',
         data: {
           name: 'erik',
-          email: 'erik@erik.se'
-        }
+          email: 'erik@erik.se',
+        },
       };
 
       await broker.publish(event);
@@ -123,8 +121,8 @@ describe('MessageBroker', () => {
         origin: 'testService',
         data: {
           name: 'erik',
-          email: 'erik@erik.se'
-        }
+          email: 'erik@erik.se',
+        },
       };
       await broker.publishAll(event);
       expect(broker.channel.assertExchange).toHaveBeenCalledWith('system', 'direct', { durable: false });
@@ -142,40 +140,39 @@ describe('MessageBroker', () => {
         origin: 'testService',
         data: {
           name: 'erik',
-          email: 'erik@erik.se'
-        }
+          email: 'erik@erik.se',
+        },
       };
 
       await broker.request(reqEvent, callback);
 
       expect(callback).toHaveBeenCalled();
       expect(broker.channel.consume).toHaveBeenCalled();
-      expect(broker.channel.sendToQueue).toHaveBeenCalledWith('testReq',
+      expect(broker.channel.sendToQueue).toHaveBeenCalledWith(
+        'testReq',
         Buffer.from(JSON.stringify(reqEvent)),
-        {"correlationId": "5", "replyTo": "queue-name"}
+        {
+          'correlationId': '5',
+          'replyTo': 'queue-name',
+        },
       );
       expect(idSpy).toHaveBeenCalled();
-
-
-
     });
   });
 
   describe('response', () => {
     it('listen for request and send response', async () => {
       const callbackSpy = jest.spyOn(broker, 'generateId').mockReturnValue({
-          eventType: 'testReq',
-          origin: 'testService',
-          data: {
-            name: 'erik',
-            email: 'erik@erik.se'
-          }
-        }
-      );
+        eventType: 'testReq',
+        origin: 'testService',
+        data: {
+          name: 'erik',
+          email: 'erik@erik.se',
+        },
+      });
 
       await broker.response('queue-name', callbackSpy);
       expect(callbackSpy).toHaveBeenCalled();
     });
   });
-
 });

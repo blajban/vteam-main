@@ -19,7 +19,8 @@ class MessageBroker {
   }
 
   /**
-   * Initialize and return object to constructor (used to get around limitations in async in constructor).
+   * Initialize and return object to constructor
+   * (used to get around limitations in async in constructor).
    * @param {string} host
    * @param {string} serviceName
    * @returns {object}
@@ -27,9 +28,9 @@ class MessageBroker {
   async #init(host, serviceName) {
     this.exchange = 'system';
     this.serviceName = serviceName;
-    this.connection = await amqp.connect(host)
-    this.channel = await this.connection.createChannel()
-    return this
+    this.connection = await amqp.connect(host);
+    this.channel = await this.connection.createChannel();
+    return this;
   }
 
   /**
@@ -37,13 +38,14 @@ class MessageBroker {
    * @returns {string}
    */
   generateId() {
-    return Math.random().toString() +
-           Math.random().toString() +
-           Math.random().toString();
+    return Math.random().toString()
+           + Math.random().toString()
+           + Math.random().toString();
   }
 
   /**
-   * Construct event to use in the system. All events are assumed to have a type, an origin and a js object containing the data.
+   * Construct event to use in the system.
+   * All events are assumed to have a type, an origin and a js object containing the data.
    * @param {string} eventType
    * @param {object} data
    * @returns {mqEvent}
@@ -52,14 +54,15 @@ class MessageBroker {
     return {
       eventType: eventType,
       origin: this.serviceName,
-      data: data
+      data: data,
     };
   }
 
   /**
    * Listen for events of a certain type and then execute callback.
    * @param {string} eventType
-   * @param {function} cb - the message will be converted to js object and then sent to callback function.
+   * @param {function} cb - the message will be converted to js object
+   * and then sent to callback function.
    */
   async onEvent(eventType, cb) {
     await this.channel.assertExchange(this.exchange, 'direct', { durable: false });
@@ -113,7 +116,8 @@ class MessageBroker {
   }
 
   /**
-   * Request data from a service via RPC-pattern. Sends a request event and runs callback when a reply arrives.
+   * Request data from a service via RPC-pattern.
+   * Sends a request event and runs callback when a reply arrives.
    * @param {mqEvent} event
    * @param {function} cb
    */
@@ -128,29 +132,29 @@ class MessageBroker {
 
     this.channel.sendToQueue(event.eventType, Buffer.from(JSON.stringify(event)), {
       correlationId: correlationId,
-      replyTo: q.queue
+      replyTo: q.queue,
     });
   }
 
   /**
    * Responds with data via RPC-pattern.
-   * Listens for events with a certain type and runs a callback (that must return a js object) and then replies to the requester.
+   * Listens for events with a certain type and runs a callback
+   * (that must return a js object) and then replies to the requester.
    * @param {string} eventType
    * @param {function} cb - expects a callback function that returns data as a js object.
    */
   async response(eventType, cb) {
     const q = await this.channel.assertQueue(eventType, { durable: false });
     this.channel.prefetch(1);
-    
+
     this.channel.consume(eventType, async (msg) => {
-      
       const data = await cb(JSON.parse(msg.content));
       this.channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(data)), {
-        correlationId: msg.properties.correlationId
+        correlationId: msg.properties.correlationId,
       });
       this.channel.ack(msg);
-    })
+    });
   }
 }
 
-module.exports = { MessageBroker }
+module.exports = { MessageBroker };

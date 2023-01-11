@@ -273,7 +273,7 @@ class Controller {
         const removedLowBatteryEvent = this.broker.constructEvent(
           eventTypes.scooterEvents.lowBatteryRemoved,
           e.data,
-        )
+        );
         this.broker.publish(removedLowBatteryEvent);
       }
     } catch (err) {
