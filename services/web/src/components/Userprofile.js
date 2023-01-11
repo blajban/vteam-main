@@ -18,19 +18,22 @@ function Userprofile({token, userId}) {
 
     async function updateUser(e) {
         e.preventDefault();
+
         const userToUpdate = {
             _id: userId,
-            name: name,
-            mail: mail,
-            mobile: mobile,
-            address: address,
-            zip: zip,
-            city: city,
+            name: name === '' ? user.name : name,
+            mail: mail === '' ? user.mail : mail,
+            mobile: mobile === '' ? user.mobile : mobile,
+            address: address === '' ? user.address : address,
+            zip: zip === '' ? user.zip : zip,
+            city: city === '' ? user.city : city,
             admin: user.admin,
-            balance: balance
+            balance: balance === null || balance === '' ? user.balance : balance
         }
+
         await usersHandler.updateUser(token, userToUpdate, userId);
         await getUserInfo();
+
     }
 
     useEffect(() => {
