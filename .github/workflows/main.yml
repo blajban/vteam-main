@@ -24,6 +24,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - run: npm install
+    - run: (cd ./shared && exec npm install)
     - run: npm test
     - run: mv services/app/coverage app-coverage
     - run: mv services/web/coverage web-coverage
