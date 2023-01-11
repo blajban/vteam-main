@@ -48,7 +48,7 @@ function HistoryTable({token, userId}) {
                 <td>{currentInvoice.price}</td>
                 <td style={{ color: currentInvoice.status === "success" ? "green" : currentInvoice.status === "pending" ? "orange" : currentInvoice.status === "riding" ? "gray" : "black"}}>{currentInvoice.status}</td>
                 {currentInvoice.status === 'pending' && currentInvoice.price && (
-                  <td><button onClick={() => {invoiceHandler.payInvoice(userId, token, currentInvoice._id)}}>Pay</button></td>
+                  <td><button onClick={() => {invoiceHandler.payInvoice(userId, token, currentInvoice._id, currentInvoice.userId, currentInvoice.price)}}>Pay</button></td>
                 )}
               </tr>
             </tbody>

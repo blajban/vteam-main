@@ -602,17 +602,16 @@ exports.addInvoice = async (req, res) => {
 exports.payInvoice = async (req, res) => {
     const broker = await mesBroker;
   
-    checkLogin(broker, req, true, (e) => {
+    checkLogin(broker, req, true, async (e) => {
       if (!e.loggedIn) {
         return res.json(notValidToken());
       }
-      const data = {
-        _id: req.param.invoiceId
-      }
-      const newEvent = broker.constructEvent(eventTypes.paymentEvents.invoicePaid, data);
+      const newEvent = broker.constructEvent(eventTypes.paymentEvents.invoicePaid, {
+        _id: req.params.invoiceId
+      });
   
       await broker.publish(newEvent);
-      res.json(success("Payed for invoiceId:", data._id));
+      res.json(success("Payed for invoiceId:", req.params.invoiceId));
     });
   }
   

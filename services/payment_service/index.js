@@ -43,6 +43,7 @@ const paymentService = async () => {
             });
             e.data._id = data[1]._id;
         }
+        console.log(e)
         const res = await handler.updateOne({ _id: e.data._id }, { status: "success"});
         console.log("updated invoice!", res)
     });
@@ -55,13 +56,13 @@ const paymentService = async () => {
     msgBroker.response(eventTypes.rpcEvents.getInvoices, async (e) => {
         try {
             if (e.data.hasOwnProperty("invoiceId")) {
-                console.log(`getting invoice with id ${e.data.invoiceId}`);
                 const inv = await handler.find({ _id: e.data.invoiceId });
+                console.log(`getting invoice with id ${e.data.invoiceId}`, inv);
                 return(inv)
             }
             else if (e.data.hasOwnProperty("userId")) {
-                console.log(`getting invoices for userId ${e.data.userId}`);
                 const inv = await handler.find({ userId: e.data.userId });
+                console.log(`getting invoices for userId ${e.data.userId}`, inv);
                 return(inv)
             }
             else {
