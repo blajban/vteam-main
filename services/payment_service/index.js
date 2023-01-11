@@ -1,139 +1,152 @@
+const haversine = require('haversine-distance');
 const { MessageBroker } = require('../../shared/mq');
-const { host, eventTypes} = require('../../shared/resources');
+const { host, eventTypes } = require('../../shared/resources');
+const RatesHandler = require('./models/ratesHandler');
+const LocationHandler = require('./models/locationHandler');
 const { MongoWrapper } = require('../../shared/mongowrapper');
-const { invoiceHandler } = require('./invoice_handler');
 
+/**
+ *  Locationservice
+ *  Handles
+ *  Events and RPC-calls when it comes to:
+ *  Parkingspots/Chargingspots
+ *  Rates
+ */
 
+const locationService = async () => {
+  const broker = await new MessageBroker(host, 'location_service');
+  const mongoWrapper = await new MongoWrapper('locations');
+  const locationHandler = await new LocationHandler();
+  const ratesHandler = await new RatesHandler();
 
-const paymentService = async () => {
-    
-    const msgBroker = await new MessageBroker(host, 'payment_service');
-    const mongoWrapper = await new MongoWrapper("paymentService");
-
-    // dummy data for testing
-    const invoices = require('../../shared/dummy_data/payment_service/invoices.json');
-    const handler = new invoiceHandler(mongoWrapper, invoices)
-
-    /**
-     * Add a new invoice, parsed through e.data.invoice
-     * @param {string} eventTypes - the type of event to handle 
-     * @param {function} - the function handeling the event
-     */
-    msgBroker.response(eventTypes.rpcEvents.addInvoice, async (e) => {
-        const response = await handler.insertOne(e.data);
-        console.log(response);
-        return({
-            "code": "200",
-            "description": "Invoice added",
-            "content": e.data.invoice
-        })
+  /**
+   * Listen on lockScooter event.
+   * Creates establishParkingRate event
+   *
+   * @param {string} eventType - The type of event to handle.
+   * @param {function} handler - fetches rates and filters on rate input.
+   * @returns {function} - Publishes establishParkingRate event with filtered Rate
+   */
+  broker.onEvent(eventTypes.returnScooterEvents.lockScooter, async (e) => {
+    const locations = await locationHandler.getLocations(mongoWrapper, e.data.properties);
+    let rate = locations.map((k) => {
+      const distanceInMeter = haversine(
+        { lat: e.data.properties.lat, lng: e.data.properties.lng },
+        { lat: k.properties.lat, lng: k.properties.lng },
+      );
+      if (distanceInMeter < 30) {
+        return k.rate;
+      }
     });
+    rate = rate.filter((item) => item);
+    if (!rate[0]) {
+      const rates = await ratesHandler.getRates(mongoWrapper);
+      rate = rates.filter((item) => item.id === 'd');
+    }
+    const userId = e.data.log[e.data.log.length - 1].userId;
+    console.log(userId)
+    const data = { rate: rate[0], userId: userId };
+    const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.establishParkingRate, data);
+    broker.publish(newEvent);
+  });
 
-    /**
-     * Updates status of a invoice once it has been payed for
-     * @param {string} eventTypes - the type of event to handle 
-     * @param {function} - the function handeling the event
-     */
-    msgBroker.onEvent(eventTypes.paymentEvents.invoicePaid, async (e) => {
-        // // for dev test
-        if (e.origin === "web_server") {
-            const collection = await mongoWrapper.find("invoices");
-            const data = collection.map(function(result) {
-                return result;
-            });
-            e.data._id = data[1]._id;
-        }
-        console.log(e)
-        const res = await handler.updateOne({ _id: e.data._id }, { status: "success"});
-        console.log("updated invoice!", res)
-    });
+  /**
+   * Registers a response to getParkingSpots event.
+   *
+   *
+   * @param {string} eventType - Listen on getParkingSpots rpc-call.
+   * @param {function} handler - The function to handle the event.
+   * @returns {function}  - Runs getLocations
+   */
+  broker.response(eventTypes.rpcEvents.getParkingSpots, async (e) => {
+    return await locationHandler.getLocations(mongoWrapper, e.data);
+  });
 
-    /**
-     * Handles requests for invoices and returns the requested invoices.
-     * @param {object} e - the event object containing the request data
-     * @returns {object} - the requested invoices
-     */
-    msgBroker.response(eventTypes.rpcEvents.getInvoices, async (e) => {
-        try {
-            if (e.data.hasOwnProperty("invoiceId")) {
-                const inv = await handler.find({ _id: e.data.invoiceId });
-                console.log(`getting invoice with id ${e.data.invoiceId}`, inv);
-                return(inv)
-            }
-            else if (e.data.hasOwnProperty("userId")) {
-                const inv = await handler.find({ userId: e.data.userId });
-                console.log(`getting invoices for userId ${e.data.userId}`, inv);
-                return(inv)
-            }
-            else {
-                console.error("neither invoiceId or userId is defined");
-            }
-        } catch (e) {
-            if (e instanceof TypeError) {
-                console.error(e, " This could be caused by making a getInvoice request with an empty _id, this is e: ", e)
-            }
-            else {
-                console.error(e, " This error was caught in getInvoices, this is e: ", e)
-            }
-        }
-        return
-    });
+  /**
+   * Registers a response to updateParkingSpot event.
+   *
+   *
+   * @param {string} eventType - Listen on updateParkingSpot rpc-call.
+   * @param {function} handler - .
+   * @returns {function}  - Runs adjustLocation
+   */
+  broker.response(eventTypes.rpcEvents.updateParkingSpot, async (e) => {
+    return await locationHandler.adjustLocation(mongoWrapper, e.data);
+  });
 
-    /**
-     * Starts a new invoice and populating it with data from object 'e'
-     * @param {string} eventTypes - the type of event to handle 
-     * @param {function} - the function handeling the event
-     */
-    msgBroker.onEvent(eventTypes.rentScooterEvents.rideStarted, async (e) => {
-        // for dev test
-        if (e.origin === "web_server") {
-            e.data.userId = "15";
-            e.data.start = {
-                lat: 57.54296029650948,
-                lon: 15.018597642963284,
-                time: "3022-11-01T11:17:25.000Z"
-            };
-        }
+  /**
+   * Registers a response to addParkingSpot event.
+   *
+   *
+   * @param {string} eventType - Listen on addParkingSpot rpc-call.
+   * @param {function} handler - The function to handle the event.
+   * @returns {function}  - runs insertLocation
+   */
+  broker.response(eventTypes.rpcEvents.addParkingSpot, async (e) => {
+    return await locationHandler.insertLocation(mongoWrapper, e.data);
+  });
 
-        const response = await handler.startInvoice(e.data);
-        console.log(response);
-    });
+  /**
+   * Registers a response to removeParkingSpot event.
+   *
+   *
+   * @param {string} eventType - Listen on removeParkingSpot rpc-call.
+   * @param {function} handler - The function to handle the event.
+   * @returns {function}  - Runs deleteLocation
+   */
+  broker.response(eventTypes.rpcEvents.removeParkingSpot, async (e) => {
+    return await locationHandler.deleteLocation(mongoWrapper, e.data);
+  });
 
-    /**
-     * Updates invoice with data about finished ride.
-     * @param {string} eventTypes - the type of event to handle 
-     * @param {function} - the function handeling the event
-     */
-    msgBroker.onEvent(eventTypes.returnScooterEvents.rideFinished, async (e) => {
-        // for dev test
-        if (e.origin === "web_server") {
-            e.data.userId = "15";
-            e.data.end = {
-                lat: 157.54296029650948,
-                lon: 115.018597642963284,
-                time: "3022-11-01T11:32:03.000Z"
-            };
-        }
+  /**
+   * Registers a response to getRates event.
+   *
+   *
+   * @param {string} eventType - The type of event to handle.
+   * @param {function} handler - The function to handle the event.
+   * @returns {function}
+   */
+  broker.response(eventTypes.rpcEvents.getRates, async (e) => {
+    return await ratesHandler.getRates(mongoWrapper, e.data);
+  });
 
-        const response = await handler.endInvoice(e.data);
-        console.log(response)
-    });
-    
-    /**
-     * Updates invoice with the price of the ride.
-     * @param {string} eventTypes - the type of event to handle 
-     * @param {function} - the function handeling the event
-     */
-    msgBroker.onEvent(eventTypes.returnScooterEvents.establishParkingRate, async (e) => {
-        // for dev test
-        if (e.origin === "web_server") {
-            e.data.userId = "15";
-            e.data.rate = 50;
-        }
-        
-        const response = await handler.fixParkingRate(e.data);
-        console.log(response);
-    });
-}
+  /**
+   * Registers a response to updateRate event.
+   *
+   *
+   * @param {string} eventType - The type of event to handle.
+   * @param {function} handler - The function to handle the event.
+   * @returns {function}
+   */
+  broker.response(eventTypes.rpcEvents.updateRate, async (e) => {
+    return await ratesHandler.adjustRate(mongoWrapper, e.data);
+  });
 
-paymentService();
+  /**
+   * Registers a response to addRate event.
+   *
+   *
+   * @param {string} eventType - The type of event to handle.
+   * @param {function} handler - The function to handle the event.
+   * @returns {function}
+   */
+  broker.response(eventTypes.rpcEvents.addRate, async (e) => {
+    return await ratesHandler.insertRate(mongoWrapper, e.data);
+  });
+
+  /**
+   * Registers a response to removeRate event.
+   *
+   *
+   * @param {string} eventType - The type of event to handle.
+   * @param {function} handler - The function to handle the event.
+   * @returns {function}
+   */
+  broker.response(eventTypes.rpcEvents.removeRate, async (e) => {
+    return await ratesHandler.deleteRate(mongoWrapper, e.data);
+  });
+};
+
+locationService();
+
+module.exports = locationService;

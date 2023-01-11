@@ -43,7 +43,9 @@ const locationService = async () => {
       const rates = await ratesHandler.getRates(mongoWrapper);
       rate = rates.filter((item) => item.id === 'd');
     }
-    const data = { rate: rate[0], userId: e.data.userId };
+    const userId = e.data.log[e.data.log.length - 1].userId;
+    console.log(userId)
+    const data = { rate: rate[0], userId: userId };
     const newEvent = broker.constructEvent(eventTypes.returnScooterEvents.establishParkingRate, data);
     broker.publish(newEvent);
   });
