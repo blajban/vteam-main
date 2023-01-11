@@ -27,7 +27,7 @@ export function AdminControll({token, userId, admin}) {
                     (loadedAdminPage === 5) ?
                     <RateTable token={token} userId={userId}></RateTable>:
                     (loadedAdminPage === 6) ?
-                    <InvoiceTable token={token} userId={userId}/>:
+                    <InvoiceTable token={token} loginId={userId}/>:
                     <div></div>
                     }
                 </>

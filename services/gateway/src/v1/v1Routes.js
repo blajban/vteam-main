@@ -42,6 +42,8 @@ router.route('/getGitHubUser')
   .get(controllers.getGitHubUser);
 router.route('/invoice/:loginId')
   .post(controllers.addInvoice);
+router.route('/invoice/:loginId/pay/:invoiceId')
+  .put(controllers.payInvoice);
 router.route('/invoice/:loginId/user/:userId')
   .get(controllers.getInvoices);
 router.route('/invoice/:loginId/:invoiceId')

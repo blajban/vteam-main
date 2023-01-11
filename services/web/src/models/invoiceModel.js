@@ -11,7 +11,6 @@ const invoiceModel = {
                 }
             })
             const data = await response.json();
-            console.log(data)
             return data
         }
         const response = await fetch(`http://localhost:3500/v1/invoice/${loginId}/${object.invoiceId.current.value}`, {
@@ -57,7 +56,24 @@ const invoiceModel = {
             },
             method: "POST"
         });
+    },
+
+    payInvoice: async (loginId, token, invoiceId) => {
+        console.log(loginId, token, invoiceId)
+        const response = await fetch(`http://localhost:3500/v1/invoice/${loginId}/pay/${invoiceId}`, {
+            headers: {
+                'content-type': 'application/json',
+                'x-access-token': token,
+                'x-api-key': api_key.key,
+            },
+            method: "PUT"
+        });
+
+        // TODO: update user balance
+
+        console.log(response)
     }
+    
 }
 
 export default invoiceModel;
