@@ -616,6 +616,23 @@ exports.addInvoice = async (req, res) => {
   });
 };
 
+exports.payInvoice = async (req, res) => {
+    const broker = await mesBroker;
+  
+    checkLogin(broker, req, true, async (e) => {
+      if (!e.loggedIn) {
+        return res.json(notValidToken());
+      }
+      const newEvent = broker.constructEvent(eventTypes.paymentEvents.invoicePaid, {
+        _id: req.params.invoiceId
+      });
+  
+      await broker.publish(newEvent);
+      res.json(success("Payed for invoiceId:", req.params.invoiceId));
+    });
+  }
+  
+
 /**
  * Get all invoices for a specific user or an invoice with a specific ID.
  * @param {object} req

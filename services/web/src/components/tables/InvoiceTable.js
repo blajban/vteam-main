@@ -18,7 +18,6 @@ export function InvoiceTable({token, loginId}) {
     const inputPrice = useRef(null);
 
     useEffect(() => {
-        getInvoices({ userId: { current: { value: "2" } } });
       }, []);
 
     async function getInvoices(idObject) {
@@ -85,7 +84,7 @@ export function InvoiceTable({token, loginId}) {
                 <MakeInvoice/>
                 <GetForUserBtn/>
                 <GetForInvoiceBtn/>
-                userId '{userId}' has no invoices
+                userId '{loginId}' has no invoices
             </div>
         )
     }
