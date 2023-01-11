@@ -19,7 +19,7 @@ export function AdminControll({token, userId, admin}) {
                     {(loadedAdminPage === 1)?
                     <Userprofile token={token} userId={userId}></Userprofile>:
                     (loadedAdminPage === 2) ?
-                    <LocationTable token={token} userId={userId}></LocationTable>:
+                    <LocationTable token={token} loginId={userId}></LocationTable>:
                     (loadedAdminPage === 3) ?
                     <ScooterTable token={token} userId={userId}/>:
                     (loadedAdminPage === 4) ?
