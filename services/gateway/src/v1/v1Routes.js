@@ -1,6 +1,7 @@
-const controllers = require('./v1Controllers.js');
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const controllers = require('./v1Controllers');
+
+const router = express.Router();
 
 router.route('/eventflows/rent_scooter/:scooterId/:userId/:loginId')
   .get(controllers.rentScooter);
@@ -13,20 +14,20 @@ router.route('/eventflows/stop_simulation/:loginId')
 router.route('/eventflows/addRandomScooters/:city/:number/:loginId')
   .get(controllers.addRandomScooters);
 router.route('/city/:city/scooter')
-  .get(controllers.getScooters)
+  .get(controllers.getScooters);
 router.route('/city/:city/scooter/:loginId')
   .post(controllers.addScooter);
 router.route('/city/:city/scooter/:scooterId')
-  .get(controllers.getScooters)
+  .get(controllers.getScooters);
 router.route('/city/:city/scooter/:scooterId/:loginId')
   .put(controllers.updateScooter)
   .delete(controllers.removeScooter);
 router.route('/city/:city/parking')
-  .get(controllers.getParkingspots)
+  .get(controllers.getParkingspots);
 router.route('/city/:city/parking/:loginId')
   .post(controllers.addParkingspot)
   .put(controllers.updateParkingspot)
-  .delete(controllers.removeParkingspot)
+  .delete(controllers.removeParkingspot);
 router.route('/users/:loginId')
   .get(controllers.getUsers)
   .post(controllers.addUser);
@@ -47,7 +48,7 @@ router.route('/invoice/:loginId/user/:userId')
 router.route('/invoice/:loginId/:invoiceId')
   .get(controllers.getInvoices);
 router.route('/rates')
-  .get(controllers.getRates)
+  .get(controllers.getRates);
 router.route('/rates/:loginId')
   .post(controllers.addRate)
   .put(controllers.updateRate)
