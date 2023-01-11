@@ -1,34 +1,40 @@
 const api_key = require('../api-key.json');
 const scooterModel = {
 
-    fetchStockholmScooter: async function fetchStockholmScooter() {
-        const response = await fetch('http://localhost:3500/v1/city/stockholm/Scooter',
+    fetchStockholmScooter: async function fetchStockholmScooter(token, loginId) {
+        const response = await fetch(`http://localhost:3500/v1/city/stockholm/scooter`,
         {
             headers: {
                 'x-api-key': api_key.key,
+                'x-access-token': token,
             },
         });
         const data = await response.json();
+        console.log(data);
         return data
     },
-    fetchGoteborgScooter: async function fetchGoteborgScooter() {
-        const response = await fetch('http://localhost:3500/v1/city/goteborg/Scooter',
+    fetchGoteborgScooter: async function fetchGoteborgScooter(token, loginId) {
+        const response = await fetch(`http://localhost:3500/v1/city/goteborg/scooter`,
         {
             headers: {
                 'x-api-key': api_key.key,
+                'x-access-token': token,
             },
         });
         const data = await response.json();
+        console.log(data);
         return data
     },
-    fetchMalmoScooter: async function fetchMalmoScooter() {
-        const response = await fetch('http://localhost:3500/v1/city/malmo/Scooter',
+    fetchMalmoScooter: async function fetchMalmoScooter(token, loginId) {
+        const response = await fetch(`http://localhost:3500/v1/city/malmo/scooter`,
         {
             headers: {
                 'x-api-key': api_key.key,
+                'x-access-token': token,
             },
         });
         const data = await response.json();
+        console.log(data);
         return data
     },
 

@@ -20,15 +20,30 @@ function ScooterTable({token, userId}) {
     const inputCity = useRef(null);
 
     async function getScooters(city) {
-        const response = await fetch(`http://localhost:3500/city/${city}/scooter`)
-        const data = await response.json();
-        setScooters(data);
-        if (data.length === 0) {
-            setNoScooters(true);
-        } else {
-            setNoScooters(false);
+        console.log("fetch data ran")
+        switch(city) {
+          case "stockholm":
+            setScooters(await scooterModel.fetchStockholmScooter(token, userId));
+            break;
+          case "goteborg":
+            setScooters(await scooterModel.fetchGoteborgScooter(token, userId));
+            break;
+          case "malmo":
+            setScooters(await scooterModel.fetchMalmoScooter(token, userId));
+            break;
+          default:
+            throw new error("not a valid city", city);
         }
     }
+    useEffect(() => {
+        if (scooters) {
+            if (scooters.length === 0) {
+                setNoScooters(true);
+            } else {
+                setNoScooters(false);
+            }
+        }
+        }, [scooters])
 
     function GetScooterBtns() {
         return (
