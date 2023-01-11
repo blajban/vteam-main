@@ -48,7 +48,6 @@ const locationModel = {
      * @returns {Object} - The response from the server.
      */
     updateRate: async function updateRate(token, loginId, _id, updatedRate) {
-        console.log(token)
         const response = await fetch(`http://localhost:3500/v1/rates/${loginId}`, {
             body: JSON.stringify({_id: _id, object:updatedRate}),
             headers: {

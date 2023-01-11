@@ -78,8 +78,6 @@ const locationModel = {
      * @returns {Object} - The response from the server.
      */
     createLocation: async function createLocation(token, loginId, city, newLocation) {
-        console.log(token)
-        console.log(loginId)
         const response = await fetch(`http://localhost:3500/v1/city/${city}/parking/${loginId}`, {
             body: JSON.stringify({location: city, object:newLocation}),
             headers: {
