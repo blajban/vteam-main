@@ -105,7 +105,7 @@ const scooterService = async () => {
   broker.onEvent(
     eventTypes.returnScooterEvents.rideFinished,
     controller.removeScootersWithLowBattery.bind(controller),
-  )
+  );
 };
 
 scooterService();

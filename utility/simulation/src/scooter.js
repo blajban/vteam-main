@@ -31,7 +31,7 @@ class Scooter {
    * @return {object}
    */
   getScooterInfo() {
-      return this.info;
+    return this.info;
   }
 
   /**
@@ -42,13 +42,12 @@ class Scooter {
    * @param {string} userId - user who unlocked the scooter.
    */
   unlockScooter(driveInterval, driveIntervalTime, status, userId) {
-    console.log(`Unlocking ${this.info._id}`);
     this.info.status = status;
     this.info.userId = userId;
     this.start = {
       time: new Date(),
       lat: this.info.properties.lat,
-      lng: this.info.properties.lng
+      lng: this.info.properties.lng,
     };
     this.driveInterval = driveInterval;
     this.driveIntervalTime = driveIntervalTime;
@@ -60,20 +59,19 @@ class Scooter {
    * @param {string} userId
    */
   lockScooter(status, userId) {
-    console.log(`Locking ${this.info._id}`);
     this.info.log.push({
       userId: this.info.userId,
       start: this.start,
       end: {
         time: new Date(),
         lat: this.info.properties.lat,
-        lng: this.info.properties.lng
+        lng: this.info.properties.lng,
       },
     });
     this.info.status = status;
     this.info.userId = userId;
     this.info.properties.speed = 0;
-    
+
     this.start = null;
     clearInterval(this.driveInterval);
   }
@@ -82,26 +80,24 @@ class Scooter {
    * Simulates scooter movement.
    */
   simulateScooter() {
-    console.log(`Simulating scooter ${this.info._id}!`);
-
     // Set movement angle
     if (this.tick > 3) {
-    this.angle += Math.random() * 20 + 10;
-    this.angle %= 360;
-    this.tick = 0;
-    };
+      this.angle += Math.random() * 20 + 10;
+      this.angle %= 360;
+      this.tick = 0;
+    }
 
     // Move scooter and update position
-    let acceleration = Math.random() * 10; // in meters per second squared
+    const acceleration = Math.random() * 10; // in meters per second squared
 
-    this.vx = acceleration * Math.cos(this.angle);  // In meters per second
+    this.vx = acceleration * Math.cos(this.angle); // In meters per second
     this.vy = acceleration * Math.sin(this.angle);
 
-    const distanceX = this.vx * this.driveIntervalTime / 1000;
-    const distanceY = this.vy * this.driveIntervalTime / 1000;
+    const distanceX = (this.vx * this.driveIntervalTime) / 1000;
+    const distanceY = (this.vy * this.driveIntervalTime) / 1000;
 
     const latDistance = distanceY / 111111;
-    const lngDistance = distanceX / (111111 * Math.cos(this.info.properties.lat * Math.PI / 180));
+    const lngDistance = distanceX / (111111 * Math.cos((this.info.properties.lat * Math.PI) / 180));
 
     this.info.properties.lat += latDistance;
     this.info.properties.lng += lngDistance;
@@ -115,9 +111,6 @@ class Scooter {
     // Battery and new tick
     this.info.properties.battery--;
     this.tick++;
-
-    console.log(`Scooter speed: ${this.info.properties.speed} km/h`);
-
   }
 
   /**
@@ -125,7 +118,6 @@ class Scooter {
    * @param {number} idleInterval - interval for when the scooter is idle.
    */
   activate(idleInterval) {
-    console.log(`Activating ${this.info._id}`);
     this.idleInterval = idleInterval;
   }
 
@@ -133,7 +125,6 @@ class Scooter {
    * Removes the scooter by clearing idle interval.
    */
   remove() {
-    console.log(`Removing ${this.info._id}`);
     clearInterval(this.idleInterval);
   }
 
@@ -158,13 +149,13 @@ class Scooter {
    * @return {boolean}
    */
   outOfBounds() {
-    if (this.info.properties.lat < coordinates[this.info.properties.location].latMin ||
-    this.info.properties.lat > coordinates[this.info.properties.location].latMax) {
+    if (this.info.properties.lat < coordinates[this.info.properties.location].latMin
+    || this.info.properties.lat > coordinates[this.info.properties.location].latMax) {
       return true;
     }
-    
-    if (this.info.properties.lng < coordinates[this.info.properties.location].lngMin ||
-    this.info.properties.lng > coordinates[this.info.properties.location].lngMax) {
+
+    if (this.info.properties.lng < coordinates[this.info.properties.location].lngMin
+    || this.info.properties.lng > coordinates[this.info.properties.location].lngMax) {
       return true;
     }
 

@@ -22,7 +22,12 @@
         "no-return-await": "off",
         "no-param-reassign": "off",
         "array-callback-return": "off",
-        "consistent-return": "off"
+        "consistent-return": "off",
+        "quote-props": "off",
+        "no-constructor-return": "off",
+        "object-shorthand": "off",
+        "class-methods-use-this": "off",
+        "arrow-body-style": "off"
     },
     "plugins": ["jest"]
 }

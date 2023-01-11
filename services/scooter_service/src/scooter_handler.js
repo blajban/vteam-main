@@ -61,7 +61,7 @@ class ScooterHandler {
     }
 
     if (!lowBattery) {
-      this.scootersWithLowBattery.push(lowBatteryScooter._id)
+      this.scootersWithLowBattery.push(lowBatteryScooter._id);
     }
   }
 
@@ -111,7 +111,6 @@ class ScooterHandler {
       if (scooter._id === unlockedScooter._id) {
         scooter.status = unlockedScooter.status;
         scooter.userId = unlockedScooter.userId;
-        console.log(`Scooter ${scooter._id} unlocked`);
         return scooter;
       }
     }
@@ -128,7 +127,6 @@ class ScooterHandler {
   lockScooter(scooterId) {
     for (const scooter of this.scooters) {
       if (scooter._id === scooterId) {
-
         scooter.status = 'available';
         scooter.userId = 0;
 
@@ -159,7 +157,6 @@ class ScooterHandler {
         scooter.status = lockedScooter.status;
         scooter.userId = lockedScooter.userId;
         scooter.log = lockedScooter.log;
-        console.log(`Scooter ${scooter._id} locked`);
         return scooter;
       }
     }
@@ -179,7 +176,6 @@ class ScooterHandler {
         scooter.properties.lng = reportingScooter.properties.lng;
         scooter.properties.speed = reportingScooter.properties.speed;
         scooter.properties.battery = reportingScooter.properties.battery;
-        console.log(`Scooter ${scooter._id} at lat: ${scooter.properties.lat} lng: ${scooter.properties.lng}.`);
         return true;
       }
     }

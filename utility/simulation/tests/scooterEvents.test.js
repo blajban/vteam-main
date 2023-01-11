@@ -1,5 +1,6 @@
 const { Scooter } = require('../src/scooter');
 const { ScooterEvents } = require('../src/scooter_events');
+const { MessageBroker } = require('../../../shared/mq');
 
 jest.mock('../../../shared/mq', () => {
   const mq = {
@@ -7,10 +8,10 @@ jest.mock('../../../shared/mq', () => {
       onEvent: jest.fn(),
       constructEvent: jest.fn().mockImplementation(() => ({
         type: 'fakeEvent',
-        data: { fake: 'data' }
+        data: { fake: 'data' },
       })),
-			publish: jest.fn()
-    }
+      publish: jest.fn(),
+    },
   };
   return mq;
 });
@@ -23,20 +24,19 @@ describe('ScooterEvents', () => {
 
   beforeEach(() => {
     scooterInfo = {
-      _id: "55",
+      _id: '55',
       properties: {
         lat: 76,
         lng: 77,
         speed: 0,
         battery: 9,
-        location: "malmo",
+        location: 'malmo',
       },
     };
 
-  jest.useFakeTimers();
+    jest.useFakeTimers();
 
-  const { MessageBroker } = require('../../../shared/mq');
-  	broker = MessageBroker;
+    broker = MessageBroker;
     scooter = new Scooter(scooterInfo);
     scooterEvents = new ScooterEvents(broker);
   });
@@ -47,7 +47,6 @@ describe('ScooterEvents', () => {
 
   describe('init', () => {
     it('onEvent called twice, interval once and scooter activate once', () => {
-
       const brokerOnEventSpy = jest.spyOn(broker, 'onEvent');
       const mockSetInterval = jest.spyOn(global, 'setInterval');
       const scooterActivateSpy = jest.spyOn(scooter, 'activate');
@@ -70,5 +69,4 @@ describe('ScooterEvents', () => {
       brokerPublishSpy.mockRestore();
     });
   });
-
 });

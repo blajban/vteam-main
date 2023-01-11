@@ -211,7 +211,7 @@ describe('ScooterHandler', () => {
           lat: 37.7751,
           lng: -122.4184,
           speed: 25,
-          battery: 20
+          battery: 20,
         },
       };
       scooterHandler.updateScooterStatus(updatedScooter);

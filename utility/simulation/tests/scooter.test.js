@@ -6,13 +6,13 @@ describe('Scooter', () => {
 
   beforeEach(() => {
     scooterInfo = {
-      _id: "55",
+      _id: '55',
       properties: {
         lat: 76,
         lng: 77,
         speed: 0,
         battery: 100,
-        location: "malmo",
+        location: 'malmo',
       },
     };
     scooter = new Scooter(scooterInfo);
@@ -113,7 +113,5 @@ describe('Scooter', () => {
       scooter.info.properties.lng = 13;
       expect(scooter.outOfBounds()).toBe(false);
     });
-
   });
-
 });

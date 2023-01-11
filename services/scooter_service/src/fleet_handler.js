@@ -88,8 +88,6 @@ class FleetHandler {
         modifiedCount += 1;
       }
     }
-
-    console.log(`Modified ${modifiedCount} scooters`);
   }
 
   /**
