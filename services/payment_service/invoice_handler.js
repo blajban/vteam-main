@@ -1,3 +1,5 @@
+const { pricePerMin } = require('../../shared/resources');
+
 /**
  * Class for handling operations related to invoices stored in a MongoDB database.
  */
@@ -62,10 +64,16 @@ class invoiceHandler {
      * @returns {object} - The result of the insert operation.
      */
     async startInvoice(data) {
+        const now = new Date();
+        console.log(now.toISOString());
         const newInvoice = {
             userId: data.userId,
             status: "riding",
-            start: data.start,
+            start: {
+                lat: data.properties.lat,
+                lng: data.properties.lng,
+                time: now.toISOString()
+            },
             end: {
                 lat: undefined,
                 lng: undefined,
@@ -84,17 +92,24 @@ class invoiceHandler {
      * @returns {object} - The result of the update operation.
      */
     async endInvoice(data) {
-        let invoice = await this.find({ userId: data.userId, status: "riding" });
+        console.log(data.log);
+        const now = new Date();
+        console.log(now.toISOString());
+
+        const userId = data.log[data.log.length - 1].userId;
+        console.log(userId)
+
+        let invoice = await this.find({ userId: userId, status: "riding" });
+        if (invoice.length === 0) {
+            return(`No invoice for given userId: '${userId}' and status: 'riding'`);
+        }
         let response = await this.updateOne({ _id: invoice[0]._id }, { 
             status: "pending",
             end: {
-                lat: data.end.lat,
-                lng: data.end.lng,
-                time: data.end.time
+                lat: data.properties.lat,
+                lng: data.properties.lng,
+                time: now.toISOString()
             }
-            // "end.lat": data.end.lat,
-            // "end.lng": data.end.lng,
-            // "end.time": data.end.time
         });
         return response;
     }
@@ -105,22 +120,20 @@ class invoiceHandler {
      * @returns {object} - The result of the update operation.
      */
     async fixParkingRate(data) {
-        const invoice = await this.find({ userId: data.userId, price: undefined });
+        let response = null
+        setTimeout( async () => {
+            const invoice = await this.find({ userId: data.userId, price: undefined });
 
-        const startPrice = 10;
-        const pricePerMin = 2.5;
-        const rate = data.rate;
-        
-        const deltaTime =
-            (new Date(invoice[0].end.time).getTime()
-            -
-            new Date(invoice[0].start.time).getTime())
-            / 1000 * 60;
+            let date1 = new Date(invoice[0].start.time);
+            let date2 = new Date(invoice[0].end.time);
 
-        const price = startPrice + pricePerMin * deltaTime + rate;
+            let minutes = (date2.getTime() - date1.getTime()) / 60000;
+            
+            const price = pricePerMin * minutes + data.rate;
 
-        const response = await this.updateOne({ _id: invoice[0]._id }, { price: price });
-        return response
+            response = await this.updateOne({ _id: invoice[0]._id }, { price: price });
+            return response
+        }, 5000);
     }
 
 }

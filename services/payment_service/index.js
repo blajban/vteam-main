@@ -1,5 +1,5 @@
 const { MessageBroker } = require('../../shared/mq');
-const { host, eventTypes} = require('../../shared/resources');
+const { host, eventTypes } = require('../../shared/resources');
 const { MongoWrapper } = require('../../shared/mongowrapper');
 const { invoiceHandler } = require('./invoice_handler');
 
@@ -11,8 +11,8 @@ const paymentService = async () => {
     const mongoWrapper = await new MongoWrapper("paymentService");
 
     // dummy data for testing
-    const invoices = require('../../shared/dummy_data/payment_service/invoices.json');
-    const handler = new invoiceHandler(mongoWrapper, invoices)
+    // const invoices = require('../../shared/dummy_data/payment_service/invoices.json');
+    const handler = new invoiceHandler(mongoWrapper)
 
     /**
      * Add a new invoice, parsed through e.data.invoice
@@ -85,6 +85,7 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.onEvent(eventTypes.rentScooterEvents.rideStarted, async (e) => {
+        console.log("in rideStarted", e)
         // for dev test
         if (e.origin === "web_server") {
             e.data.userId = "15";
@@ -96,7 +97,7 @@ const paymentService = async () => {
         }
 
         const response = await handler.startInvoice(e.data);
-        console.log(response);
+        // console.log(response);
     });
 
     /**
@@ -116,7 +117,7 @@ const paymentService = async () => {
         }
 
         const response = await handler.endInvoice(e.data);
-        console.log(response)
+        // console.log(response)
     });
     
     /**
