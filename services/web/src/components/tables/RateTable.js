@@ -61,8 +61,6 @@ function RateTable({token, userId}) {
   // Fetches the data
   useEffect(() => {
     async function fetchData(){
-      console.log("fetch data ran")
-      console.log(await ratesHandler.fetchRates())
         setRates(await ratesHandler.fetchRates());
         }
       fetchData();

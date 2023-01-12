@@ -88,6 +88,7 @@ const locationModel = {
             method: 'POST'
         });
         const data = await response.json();
+        console.log(data)
         return data
     },
 
