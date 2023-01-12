@@ -19,7 +19,7 @@ The `TESTTOKEN` and `TESTADMINID` can be used with the REST API to test the syst
 
 3. Add a `.env` file to the `/services/app` folder and add the following:
 ```
-GITHUB_CLIENT_ID="your_id" 
+GITHUB_CLIENT_ID="your_id"
 ```
 This OAuth app needs to have device flow enabled.
 
@@ -27,7 +27,7 @@ This OAuth app needs to have device flow enabled.
 5. Run the `demo.py` script to add content like scooters and parking spots to the system.
 
 ### Web application
-Go to `localhost:9001` to use the web application. A user account is created automatically when you login via Github OAuth. You can give this user admin rights via the gateway once you have logged in. 
+Go to `localhost:9001` to use the web application. A user account is created automatically when you login via Github OAuth. You can give this user admin rights via the gateway once you have logged in.
 
 ### Gateway/REST API
 The gateway/REST API is found at `localhost:3500`. See the [documentation](https://github.com/blajban/vteam-main/wiki/REST-API-docs-v1) for more information. Use the `TESTTOKEN` and `TESTADMINID` to get started, such as giving yourself admin rights.
@@ -49,3 +49,7 @@ Run the app using your phone:
 2. Scan the qr code using the Expo Go app on your phone.
 3. Login to the system, all locations and scooters should load automatically (in Stockholm, Gothenburg and Malmö)
 4. To rent a scooter, create and scan a qr code using a scooter id (touch a scooter to see the id).
+
+### Coverage report
+backend ./coverage
+App     ./services/app/coverage
