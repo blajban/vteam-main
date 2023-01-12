@@ -91,4 +91,6 @@ const coordinates = {
   },
 };
 
-module.exports = { host, eventTypes, coordinates };
+const pricePerMin = 2.5;
+
+module.exports = { host, eventTypes, coordinates, pricePerMin };

@@ -1,3 +1,5 @@
+const { pricePerMin } = require('../../shared/resources');
+
 /**
  * Class for handling operations related to invoices stored in a MongoDB database.
  */
@@ -118,21 +120,20 @@ class invoiceHandler {
      * @returns {object} - The result of the update operation.
      */
     async fixParkingRate(data) {
-        const invoice = await this.find({ userId: data.userId, price: undefined });
+        let response = null
+        setTimeout( async () => {
+            const invoice = await this.find({ userId: data.userId, price: undefined });
 
-        const pricePerMin = 2.5;
-        const rate = data.rate;
-        
-        const deltaTime =
-            (new Date(invoice[0].end.time).getTime()
-            -
-            new Date(invoice[0].start.time).getTime())
-            / 1000 * 60;
+            let date1 = new Date(invoice[0].start.time);
+            let date2 = new Date(invoice[0].end.time);
 
-        const price = pricePerMin * deltaTime + rate;
+            let minutes = (date2.getTime() - date1.getTime()) / 60000;
+            
+            const price = pricePerMin * minutes + data.rate;
 
-        const response = await this.updateOne({ _id: invoice[0]._id }, { price: price });
-        return response
+            response = await this.updateOne({ _id: invoice[0]._id }, { price: price });
+            return response
+        }, 5000);
     }
 
 }

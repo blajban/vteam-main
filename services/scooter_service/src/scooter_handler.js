@@ -128,6 +128,7 @@ class ScooterHandler {
     for (const scooter of this.scooters) {
       if (scooter._id === scooterId) {
         scooter.status = 'available';
+        const lastUserId = scooter.userId;
         scooter.userId = 0;
 
         for (let i = 0; i < this.scootersWithLowBattery.length; i++) {
@@ -138,7 +139,9 @@ class ScooterHandler {
           }
         }
 
-        return scooter;
+        let returnScooter = scooter;
+        returnScooter.lastUserId = lastUserId;
+        return returnScooter;
       }
     }
 

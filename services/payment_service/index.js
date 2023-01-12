@@ -1,5 +1,5 @@
 const { MessageBroker } = require('../../shared/mq');
-const { host, eventTypes} = require('../../shared/resources');
+const { host, eventTypes } = require('../../shared/resources');
 const { MongoWrapper } = require('../../shared/mongowrapper');
 const { invoiceHandler } = require('./invoice_handler');
 
@@ -97,7 +97,7 @@ const paymentService = async () => {
         }
 
         const response = await handler.startInvoice(e.data);
-        console.log(response);
+        // console.log(response);
     });
 
     /**
@@ -106,7 +106,6 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.onEvent(eventTypes.returnScooterEvents.rideFinished, async (e) => {
-        console.log("in rideFinished", e);
         // for dev test
         if (e.origin === "web_server") {
             e.data.userId = "15";
@@ -118,7 +117,7 @@ const paymentService = async () => {
         }
 
         const response = await handler.endInvoice(e.data);
-        console.log(response)
+        // console.log(response)
     });
     
     /**
@@ -127,7 +126,6 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.onEvent(eventTypes.returnScooterEvents.establishParkingRate, async (e) => {
-        console.log("in establishParkingRate", e)
         // for dev test
         if (e.origin === "web_server") {
             e.data.userId = "15";
