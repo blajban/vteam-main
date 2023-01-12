@@ -2,23 +2,23 @@
 
     {
       "id": "a",
-      "name": "A rate name",
-      "tariff": 200
+      "name": "best rate",
+      "tariff": 10
     },
     {
       "id": "b",
-      "name": "Another rate name",
-      "tariff": 400
+      "name": "next best",
+      "tariff": 15
     },
     {
       "id": "c",
-      "name": "Yet another rate name",
-      "tariff": 500
+      "name": "next worst",
+      "tariff": 20
     },
     {
       "id": "d",
-      "name": "Yet another rate name",
-      "tariff": 700
+      "name": "standard",
+      "tariff": 40
     }
 
 ]
