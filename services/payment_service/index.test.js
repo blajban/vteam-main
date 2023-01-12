@@ -1,6 +1,11 @@
 const { invoiceHandler } = require("./invoice_handler");
 const dummy_invoices = require('../../shared/dummy_data/payment_service/invoices.json');
 
+afterEach(() => {
+    jest.useRealTimers();
+  });
+
+
 class mockMongo {
     constructor() {
       this.invoices = [];
@@ -27,7 +32,6 @@ class mockMongo {
 
     find(collectionName, filter) {
         let invoices = [];
-        console.log(filter)
         for (const invoice of this.invoices) {
             if (filter._id === invoice._id) {
                 invoices.push(invoice);
@@ -77,11 +81,9 @@ mongo.addInvoices(dummy_invoices.slice(0, 10))
 
 describe('paymentService', () => {
     const handler = new invoiceHandler(mongo);
-
     describe("Make invoices", () => {
         it("Add an invoice", async () => {
             const newInvoice = dummy_invoices.slice(10, 11)[0];
-    
             const response = await handler.insertOne(newInvoice);
             const invoice = await handler.find({ _id: response._id })
             expect(response.insertedCount).toEqual(1);
@@ -91,7 +93,7 @@ describe('paymentService', () => {
         it("Start an invoice", async () => {
             const data = {
                 userId: "12345",
-                start: {
+                properties: {
                     lat: 100,
                     lng: 75,
                     time: "4022-11-01T11:17:25.000Z"
@@ -106,11 +108,10 @@ describe('paymentService', () => {
 
         it("Add end-data to invoice", async () => {
             const data = {
-                userId: "12345",
-                end: {
+                log: [{userId: "12345"}],
+                properties: {
                     lat: 200,
-                    lng: 150,
-                    time: "4022-11-01T12:17:25.000Z"
+                    lng: 150
                 }
             }
             invoiceData.end = data.end;
@@ -121,9 +122,13 @@ describe('paymentService', () => {
         });
         
         it("Make rate for invoice", async () => {
+
+            jest.useFakeTimers('legacy');
+
             const data = {
                 userId: "12345",
-                rate: 100
+                rate: 100,
+                fromtest: true
             };
 
             const response = await handler.fixParkingRate(data);
