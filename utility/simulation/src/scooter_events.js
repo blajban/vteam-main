@@ -1,7 +1,7 @@
 const { eventTypes } = require('../../../shared/resources');
 
-const whileDrivingIntervalTime = 3000;
-const whileIdleIntervalTime = 20000;
+const whileDrivingIntervalTime = 10000;
+const whileIdleIntervalTime = 60000;
 
 /**
  * Handle scooter events

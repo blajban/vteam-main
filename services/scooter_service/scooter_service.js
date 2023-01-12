@@ -23,7 +23,7 @@ const scooterService = async () => {
     } catch (err) {
       console.log(err);
     }
-  }, 4000);
+  }, 10000);
 
   // Simulate scooters
   broker.onEvent(
