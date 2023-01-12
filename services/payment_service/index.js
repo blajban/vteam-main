@@ -85,7 +85,6 @@ const paymentService = async () => {
      * @param {function} - the function handeling the event
      */
     msgBroker.onEvent(eventTypes.rentScooterEvents.rideStarted, async (e) => {
-        console.log("in rideStarted", e)
         // for dev test
         if (e.origin === "web_server") {
             e.data.userId = "15";

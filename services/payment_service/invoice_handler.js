@@ -92,12 +92,8 @@ class invoiceHandler {
      * @returns {object} - The result of the update operation.
      */
     async endInvoice(data) {
-        console.log(data.log);
         const now = new Date();
-        console.log(now.toISOString());
-
         const userId = data.log[data.log.length - 1].userId;
-        console.log(userId)
 
         let invoice = await this.find({ userId: userId, status: "riding" });
         if (invoice.length === 0) {
@@ -121,7 +117,7 @@ class invoiceHandler {
      */
     async fixParkingRate(data) {
         let response = null
-        setTimeout( async () => {
+        if (data.hasOwnProperty("fromtest")) {
             const invoice = await this.find({ userId: data.userId, price: undefined });
 
             let date1 = new Date(invoice[0].start.time);
@@ -133,7 +129,20 @@ class invoiceHandler {
 
             response = await this.updateOne({ _id: invoice[0]._id }, { price: price });
             return response
+        }
+        setTimeout( async () => {
+            const invoice = await this.find({ userId: data.userId, price: undefined });
+
+            let date1 = new Date(invoice[0].start.time);
+            let date2 = new Date(invoice[0].end.time);
+
+            let minutes = (date2.getTime() - date1.getTime()) / 60000;
+            
+            const price = pricePerMin * minutes + data.rate;
+
+            response = await this.updateOne({ _id: invoice[0]._id }, { price: price });
         }, 5000);
+        return response
     }
 
 }
