@@ -39,6 +39,7 @@ const scooterService = async () => {
   broker.onEvent(
     eventTypes.rentScooterEvents.rentScooter,
     controller.unlockScooter.bind(controller),
+    console.log("in rentScooter")
   );
   broker.onEvent(
     eventTypes.rentScooterEvents.scooterUnlocked,
@@ -57,6 +58,7 @@ const scooterService = async () => {
   broker.onEvent(
     eventTypes.returnScooterEvents.parkScooter,
     controller.parkScooter.bind(controller),
+    console.log("in parkScooter")
   );
   broker.onEvent(
     eventTypes.returnScooterEvents.scooterLocked,
@@ -75,6 +77,7 @@ const scooterService = async () => {
   broker.response(
     eventTypes.rpcEvents.addScooter,
     controller.addScooter.bind(controller),
+    console.log("in addScooter")
   );
   broker.response(
     eventTypes.rpcEvents.updateScooter,

@@ -100,6 +100,7 @@ class Controller {
    */
   parkScooter(e) {
     try {
+      console.log(e.data)
       const newEvent = this.broker.constructEvent(
         eventTypes.returnScooterEvents.lockScooter,
         this.scooterHandler.lockScooter(e.data._id),
