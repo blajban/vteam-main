@@ -90,6 +90,7 @@ function App() {
           </>
           :
           <>
+            <p>Svenska Elsparkcyklar AB</p>
             <button onClick={login}>Login</button>
           </>
         }

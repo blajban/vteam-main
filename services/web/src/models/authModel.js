@@ -2,7 +2,6 @@ const api_key = require('../api-key.json');
 
 const authModel = {
     getToken: async function getToken(code) {
-        console.log(api_key.key);
         const response = await fetch(`http://localhost:3500/v1/getWebToken/${code}`, {
             headers: {
                 'x-api-key': api_key.key
